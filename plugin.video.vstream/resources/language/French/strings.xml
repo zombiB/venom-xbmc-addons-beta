@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+        <!-- general begin by 30000 - 30050 -->
+        <string id="30000">Logging</string>
+        <string id="30001">Videoplayer</string>
+        <string id="30002">anonyme Statistiken (wertet nur Plugin Start aus)</string>
+        <string id="30500">Séléctionner</string>
+        <string id="30501">Nom</string>
+
+        <!-- settingtabs begin by 30021 - 30030 -->
+        <string id="30021">Général</string>
+        <string id="30022">Plugins on/off</string>
+        <string id="30023">Plugins Préférences</string>
+        <string id="30024">Hote</string>
+        <string id="30025">Accueil</string>
+        <string id="30026">IPTV et GuideTV</string>
+        <string id="30027">Délai d'attente du lecteur (ms)</string>
+        <string id="30028">Paramètre à modifier dans l'addon PVR</string>
+		<string id="30029">Activer popup erreur</string>
+
+         <!-- premium begin by 30031 - 30075 -->
+        <string id="30031">Megavideo Premium Account</string>
+        <string id="30032">Megavideo Username</string>
+        <string id="30033">Megavideo Password</string>
+
+        <string id="30034">Duckload Premium Account</string>
+        <string id="30035">Duckload Username</string>
+        <string id="30036">Duckload Password</string>
+
+        <string id="30071">JDownloader an/aus</string>
+        <string id="30072">Host</string>
+        <string id="30073">Port</string>
+        <string id="30074">Download automatsch starten</string>
+        <string id="30075">sende nur an LinkGrabber</string>
+
+        <string id="30076">Recherche</string>
+        <string id="30077">Recherche personnalisée</string>
+        <string id="30078">Recherche personnalisée 1</string>
+        <string id="30079">Recherche personnalisée 2</string>
+        <string id="30080">Recherche personnalisée 3</string>
+        <string id="30081">Recherche personnalisée 4</string>
+
+
+        <!-- Pluginnames begin by 30201 - 30299 -->
+        <string id="30201">Ajouter à la playlist</string>
+        <string id="30202">Télécharger</string>
+        <string id="30203">Marque-Source</string>
+        <string id="30204">Aucune information</string>
+		<string id="30205">Connection Impossible</string>
+		<string id="30206">Marque-Film</string>
+		<string id="30207">Marque-Série</string>
+		<string id="30208">Marque-Diver</string>
+		<string id="30209">Supprimer Marque-page</string>
+		<string id="30210">Voir Marque-page</string>
+        <!--<string id="30205">NBA.de</string>
+        <string id="30206">Bundesliga.de</string>
+        <string id="30207">MTV.de</string>
+        <string id="30208">Kino.de</string>
+        <string id="30209">Bild.de</string>
+        <string id="30210">MovieMaze.de</string>
+        <string id="30211">Shoutcast.com</string>
+        <string id="30212">Movie2k.com</string>
+        <string id="30213">Simpsons.to</string>
+        <string id="30214">Iload.to</string>
+        <string id="30215">Br-Online.de</string>
+        <string id="30216">Anime-stream24.com</string>
+        <string id="30217">RadioTime.com</string> -->
+
+
+        <string id="30402">Laender</string>
+</strings>
+
