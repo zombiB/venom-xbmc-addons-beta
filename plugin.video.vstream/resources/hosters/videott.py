@@ -45,7 +45,7 @@ class cHoster(iHoster):
         return '';
         
     def __getIdFromUrl(self, sUrl):
-        sPattern = 'http:..video.tt\/embed\/([^<]+)'
+        sPattern = 'http:..(?:www.)video.tt\/e(?:mbed)\/([^<]+)'
         aResult = re.findall(sPattern,sUrl)
         if (aResult):
             return aResult[0]
