@@ -112,11 +112,11 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[0]))
             oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
-            oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[0]))
+            #oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[0]))
             if '/series-tv/' in sUrl or 'saison' in aEntry[0]:
-                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, '', aEntry[0], aEntry[0], oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, 'tv.png', '', '', oOutputParameterHandler)
             else:
-                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, '', aEntry[0], aEntry[0], oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, 'tv.png', '', '', oOutputParameterHandler)
         
         cConfig().finishDialog(dialog)
 
@@ -170,7 +170,7 @@ def showSeries(sSearch = ''):
                 oOutputParameterHandler.addParameter('siteUrl', str(aEntry[0]))
                 oOutputParameterHandler.addParameter('sMovieTitle', str(aEntry[1]))
                 #oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
-                oGui.addMisc(SITE_IDENTIFIER, 'serieHosters', aEntry[1], '', '', '', oOutputParameterHandler)
+                oGui.addMisc(SITE_IDENTIFIER, 'serieHosters', aEntry[1], 'tv.png', '', '', oOutputParameterHandler)
 
         cConfig().finishDialog(dialog)
 
