@@ -130,7 +130,7 @@ def showMovies(sSearch = ''):
     
     aResult = re.findall(sPattern, sHtmlContent)
     
-    print aResult
+    #print aResult
     
     if not (aResult == False):
         total = len(aResult)
@@ -161,7 +161,7 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN) + str(sUrl2))
             oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle2))
 
-            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle2, '', '', '', oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle2, 'films.png', '', '', oOutputParameterHandler)
  
         cConfig().finishDialog(dialog)
            
