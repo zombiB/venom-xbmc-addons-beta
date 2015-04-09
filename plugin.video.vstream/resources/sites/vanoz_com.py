@@ -96,7 +96,10 @@ def showGenre(): #affiche les genres
     liste.append( ['Policier','http://www.vanoz.com/twona/index.php?option=com_content&view=category&id=10:policier-&Itemid=6&layout=default'] )
     liste.append( ['Science Fiction','http://www.vanoz.com/twona/index.php?option=com_content&view=category&id=11:science-fiction-&Itemid=6&layout=default'] )
     liste.append( ['Thriller','http://www.vanoz.com/twona/index.php?option=com_content&view=category&id=12:thriller-&Itemid=6&layout=default'] )
-                
+    liste.append( ['Spectacle','http://www.vanoz.com/twona/index.php?option=com_content&view=category&id=3&Itemid=5'] )
+    liste.append( ['Documentaire','http://www.vanoz.com/twona/index.php?option=com_content&view=category&id=26&Itemid=4'] )
+    liste.append( ['Animation','http://www.vanoz.com/twona/index.php?option=com_content&view=category&id=2&Itemid=2'] )
+            
     for sTitle,sUrl in liste:#boucle
         
         oOutputParameterHandler = cOutputParameterHandler()
