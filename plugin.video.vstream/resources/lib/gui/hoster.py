@@ -135,6 +135,10 @@ class cHosterGui:
             return cHosterHandler().getHoster('nowvideo')
         if ('vk.com' in sHosterUrl):
             return cHosterHandler().getHoster('vk')
+        if ('vkontakte' in sHosterUrl):
+            return cHosterHandler().getHoster('vk')
+        if ('vkcom' in sHosterUrl):
+            return cHosterHandler().getHoster('vk')   
         #if ('videomega' in sHosterUrl):
         #    return cHosterHandler().getHoster('videomega')
         if ('vidto' in sHosterUrl):
@@ -155,6 +159,10 @@ class cHosterGui:
             return cHosterHandler().getHoster('vodlocker')
         if ('mystream' in sHosterUrl):
             return cHosterHandler().getHoster('mystream')
+        if ('streamingentiercom/videophp?type=speed' in sHosterUrl):
+            return cHosterHandler().getHoster('speedvideo')
+        if ('speedvideo' in sHosterUrl):
+            return cHosterHandler().getHoster('speedvideo')
         if ('speedvid' in sHosterUrl):
             return cHosterHandler().getHoster('speedvid')
         if ('axavid' in sHosterUrl):
@@ -175,13 +183,18 @@ class cHosterGui:
             return cHosterHandler().getHoster('googlevideo')
         if ('picasaweb' in sHosterUrl):
             return cHosterHandler().getHoster('googlevideo')
-        if ('speedvideo' in sHosterUrl):
-            return cHosterHandler().getHoster('speedvideo')
+        if ('googleusercontent' in sHosterUrl):
+            return cHosterHandler().getHoster('googlevideo')
         if ('video.tt' in sHosterUrl):
             return cHosterHandler().getHoster('videott')
         if ('playreplay' in sHosterUrl):
-            return cHosterHandler().getHoster('playreplay')            
-
+            return cHosterHandler().getHoster('playreplay')
+        if ('streamin.to' in sHosterUrl):
+            return cHosterHandler().getHoster('streaminto')
+        if ('vodlocker' in sHosterUrl):
+            return cHosterHandler().getHoster('vodlocker')
+        if ('playreplay' in sHosterUrl):
+            return cHosterHandler().getHoster('playreplay') 
 
         return False
         # step 2
