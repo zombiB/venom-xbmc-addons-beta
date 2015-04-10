@@ -194,7 +194,9 @@ class cHosterGui:
         if ('vodlocker' in sHosterUrl):
             return cHosterHandler().getHoster('vodlocker')
         if ('playreplay' in sHosterUrl):
-            return cHosterHandler().getHoster('playreplay') 
+            return cHosterHandler().getHoster('playreplay')
+        if ('flashx' in sHosterUrl):
+            return cHosterHandler().getHoster('flashx') 
 
         return False
         # step 2
