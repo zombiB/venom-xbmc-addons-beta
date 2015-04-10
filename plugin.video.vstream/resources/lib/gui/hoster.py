@@ -193,8 +193,6 @@ class cHosterGui:
             return cHosterHandler().getHoster('streaminto')
         if ('vodlocker' in sHosterUrl):
             return cHosterHandler().getHoster('vodlocker')
-        if ('playreplay' in sHosterUrl):
-            return cHosterHandler().getHoster('playreplay')
         if ('flashx' in sHosterUrl):
             return cHosterHandler().getHoster('flashx') 
 
