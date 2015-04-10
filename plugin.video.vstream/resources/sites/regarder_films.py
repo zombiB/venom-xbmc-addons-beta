@@ -99,11 +99,11 @@ def showMovies(sSearch = ''):
        
         cConfig().finishDialog(dialog)
  
-        sNextPage = __checkForNextPage(sHtmlContent)
-        if (sNextPage != False):
-            oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
+        #sNextPage = __checkForNextPage(sHtmlContent)
+        #if (sNextPage != False):
+            #oOutputParameterHandler = cOutputParameterHandler()
+            #oOutputParameterHandler.addParameter('siteUrl', sNextPage)
+            #oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
  
     if not sSearch:
         oGui.setEndOfDirectory()
