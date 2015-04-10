@@ -82,7 +82,7 @@ def showMovies(sSearch = ''):
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request();
     #sHtmlContent = sHtmlContent.replace('Programme', '').replace('F.A.Q', '').replace('Séries', '')
-    sPattern = '<ul class="is_link links">.+?</ul>|<li><a href="([^<]+)" title="([^<]+)">.+?</a></li>'
+    sPattern = '<li><a href="(http:..streamzzz.com[^<]+)" title="([^<]+)">.+?</a></li>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     
@@ -144,7 +144,7 @@ def showSeries(sSearch = ''):
     sHtmlContent = oRequestHandler.request();
     #sHtmlContent = sHtmlContent.replace('<strong>Téléchargement VOSTFR','').replace('<strong>Téléchargement VF','').replace('<strong>Téléchargement','')
  
-    sPattern = '<ul class="is_link">.+?<script type="text/javascript">|<li><a href="([^<]+)" title=".+?">([^<]+)</a></li>'
+    sPattern = '<li><a href="(http:..streamzzz.com\/page[^<]+)" title=".+?">([^<]+)<.a><.li>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
 
