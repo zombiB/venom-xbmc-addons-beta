@@ -21,7 +21,7 @@ URL_MAIN = 'http://www.regarder-film-gratuit.com/'
 SERIE_SERIES = ('http://www.regarder-film-gratuit.com/', 'showMovies')
  
 #URL_SEARCH = ('http://www.telecharger-films.ws/index.php?do=search&subaction=search&story=', 'showMovies')
-FUNCTION_SEARCH = 'showMovies'
+#FUNCTION_SEARCH = 'showMovies'
  
 def load():
     oGui = cGui()
