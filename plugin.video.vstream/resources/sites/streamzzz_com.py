@@ -26,8 +26,8 @@ SERIE_SERIES = ('http://streamzzz.com/', 'showMovies')
 
 #MOVIE_GENRES = (True, 'showGenre')
 
-URL_SEARCH = ('http://www.telecharger-films.ws/index.php?do=search&subaction=search&story=', 'showMovies')
-FUNCTION_SEARCH = 'showMovies'
+#URL_SEARCH = ('http://www.telecharger-films.ws/index.php?do=search&subaction=search&story=', 'showMovies')
+#FUNCTION_SEARCH = 'showMovies'
 
 def load():
     oGui = cGui()
