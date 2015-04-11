@@ -180,7 +180,8 @@ def showMovies(sSearch = ''):
                 break
                
             sThumb = str(aEntry[0])
-            sTitle = aEntry[2] + ' (' + aEntry[3] + ')'
+            sTitle = aEntry[2]
+            if aEntry[3] : sTitle = sTitle + ' (' + aEntry[3] + ')'
             if not 'http' in sThumb:
                 sThumb = URL_MAIN + sThumb
  
