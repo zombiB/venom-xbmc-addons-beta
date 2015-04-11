@@ -161,9 +161,9 @@ class cHosterGui:
             return cHosterHandler().getHoster('mystream')
         if ('streamingentiercom/videophp?type=speed' in sHosterUrl):
             return cHosterHandler().getHoster('speedvideo')
-        if ('speedvideo' in sHosterUrl):
+        if ('http://speedvideo.net/embed' in sHosterUrl):
             return cHosterHandler().getHoster('speedvideo')
-        if ('speedvid' in sHosterUrl):
+        if ('http://www.speedvid.net/embed' in sHosterUrl):
             return cHosterHandler().getHoster('speedvid')
         if ('axavid' in sHosterUrl):
             return cHosterHandler().getHoster('axavid') 
