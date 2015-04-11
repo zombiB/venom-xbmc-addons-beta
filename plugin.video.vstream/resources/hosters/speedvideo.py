@@ -63,7 +63,7 @@ class cHoster(iHoster):
             oRequest = cRequestHandler(self.__sUrl)
             sHtmlContent = oRequest.request()
             
-            linkfile=re.compile('var linkfile\s*=\s*"([A-Za-z0-9]+)"').findall(sHtmlContent)[0]
+            linkfile=re.compile('var linkfile\s*=\s*"([A-Za-z0-9=]+)"').findall(sHtmlContent)[0]
             linkfileb=re.compile('var linkfile\s*=\s*base64_decode\(linkfile,\s*([A-Za-z0-9]+)\);').findall(sHtmlContent)[0]
             linkfilec=re.compile('var '+linkfileb+'\s*=\s*(\d+);').findall(sHtmlContent)[0]
             linkfilec=int(linkfilec)
