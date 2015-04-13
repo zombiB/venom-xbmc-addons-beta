@@ -20,11 +20,15 @@ URL_MAIN = 'http://www.regarder-film-gratuit.com/'
  
 SERIE_SERIES = ('http://www.regarder-film-gratuit.com/', 'showMovies')
  
-#URL_SEARCH = ('http://www.telecharger-films.ws/index.php?do=search&subaction=search&story=', 'showMovies')
+URL_SEARCH = ('http://www.regarder-film-gratuit.com/?s=', 'showSeries')
 #FUNCTION_SEARCH = 'showMovies'
  
 def load():
     oGui = cGui()
+    
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
+    oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
@@ -47,8 +51,8 @@ def showSearch():
  
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-            #sUrl = 'http://www.telecharger-films.ws/index.php?do=search&subaction=search&story='+sSearchText  
-            showMovies(sUrl)
+            sUrl = 'http://www.regarder-film-gratuit.com/?s='+sSearchText  
+            showSeries(sUrl)
             oGui.setEndOfDirectory()
             return 
  
@@ -60,7 +64,6 @@ def showMovies(sSearch = ''):
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
    
- 
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request();
     sHtmlContent = sHtmlContent.replace('Programme', '').replace('F.A.Q', '').replace('Séries', '')
@@ -93,9 +96,9 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
             oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[0]))
             if '/series-tv/' in sUrl or 'saison' in aEntry[0]:
-                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, '', aEntry[0], aEntry[0], oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, 'tv.png', '', '', oOutputParameterHandler)
             else:
-                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, '', aEntry[0], aEntry[0], oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, 'tv.png', '', '', oOutputParameterHandler)
        
         cConfig().finishDialog(dialog)
  
