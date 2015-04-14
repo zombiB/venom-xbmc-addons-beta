@@ -338,9 +338,10 @@ class cGui:
     def setWatched(self):
         oInputParameterHandler = cInputParameterHandler()        
         #aParams = oInputParameterHandler.getAllParameter()
+        #print aParams
         
         sSite = oInputParameterHandler.getValue('siteUrl')
-        sTitle = oInputParameterHandler.getValue('sMovieTitle')
+        sTitle = xbmc.getInfoLabel('ListItem.label')
 
         meta = {}      
         meta['title'] = sTitle
