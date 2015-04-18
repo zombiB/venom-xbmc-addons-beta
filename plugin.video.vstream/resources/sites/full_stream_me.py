@@ -87,11 +87,11 @@ def showSearch():
 
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-            #sSearchText = cUtil().urlEncode(sSearchText)
-            sUrl = 'http://full-stream.me/index.php?do=search&subaction=search&search_start=0&full_search=0&result_from=1&story='+sSearchText  
-            showMovies(sUrl)
-            oGui.setEndOfDirectory()
-            return  
+        #sSearchText = cUtil().urlEncode(sSearchText)
+        sUrl = 'http://full-stream.me/index.php?do=search&subaction=search&search_start=0&full_search=0&result_from=1&story='+sSearchText  
+        showMovies(sUrl)
+        oGui.setEndOfDirectory()
+        return  
     
     
 def getPremiumUser():
@@ -159,18 +159,21 @@ def showMovies(sSearch = ''):
     oGui = cGui()
     if sSearch:
       sUrl = sSearch
+      sPattern = 'fullstreaming">.*?<img src="(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<.a><.h3>.+?(?:.+?<a href=".quality.+?">(.+?)<.a><.div>)'
     else:
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
+        sPattern = 'fullstreaming">.*?<img src="(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a><\/h3>.+?(?:.+?<a href=".quality.+?">(.+?)<\/a><.div>)(?:.+?<span style="font-family.+?>(.+?)<\/span>)'
    
+    #recuperation de la page
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request();
-    sHtmlContent = sHtmlContent.replace('&amp;w=240&amp;h=320','')
-    sPattern = 'fullstreaming">.*?<img src="(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<.a><.h3>.+?(?:.+?<a href=".quality.+?">(.+?)<.a><.div>|)(?:.+?<span style="font-family.+?>(.+?)<.span>)'
-   
+    
+
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
- 
+    #print aResult
+   
     if (aResult[0] == True):
         total = len(aResult[1])
         dialog = cConfig().createDialog(SITE_NAME)
@@ -178,32 +181,36 @@ def showMovies(sSearch = ''):
             cConfig().updateDialog(dialog, total)
             if dialog.iscanceled():
                 break
-               
+                
             sThumb = str(aEntry[0])
             sTitle = aEntry[2]
             if aEntry[3] : sTitle = sTitle + ' (' + aEntry[3] + ')'
             if not 'http' in sThumb:
                 sThumb = URL_MAIN + sThumb
- 
+            if sSearch:
+                sCom = ''
+            else:
+                sCom = aEntry[4]
+
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
             oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
             oOutputParameterHandler.addParameter('sThumbnail', sThumb)
             if '/seriestv/' in sUrl  or 'saison' in aEntry[1]:
-                oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sTitle, '', sThumb, aEntry[4], oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sTitle, '', sThumb,sCom, oOutputParameterHandler)
             elif '/mangas/' in sUrl:
-                oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sTitle, '', sThumb, aEntry[4], oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sTitle, '', sThumb, sCom, oOutputParameterHandler)
             else:
-                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumb, aEntry[4], oOutputParameterHandler)
-       
+                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumb, sCom, oOutputParameterHandler)
+        
         cConfig().finishDialog(dialog)
- 
+
         sNextPage = __checkForNextPage(sHtmlContent)
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
             oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
- 
+
     if not sSearch:
         oGui.setEndOfDirectory()
 
