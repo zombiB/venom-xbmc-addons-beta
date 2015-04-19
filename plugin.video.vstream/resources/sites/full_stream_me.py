@@ -26,6 +26,7 @@ MOVIE_GENRES = (True, 'showGenre')
 SERIE_SERIES = ('http://full-stream.me/seriestv/', 'showMovies')
 SERIE_VFS = ('http://full-stream.me/seriestv/vf/', 'showMovies')
 SERIE_VOSTFRS = ('http://full-stream.me/seriestv/vostfr/', 'showMovies')
+ANIM_ANIMS = ('http://full-stream.me/mangas/','showMovies')
 ANIM_VFS = ('http://full-stream.me/mangas/mangas-vf/', 'showMovies')
 ANIM_VOSTFRS = ('http://full-stream.me/mangas/mangas-vostfr/', 'showMovies')
 
@@ -163,7 +164,9 @@ def showMovies(sSearch = ''):
     else:
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
-        sPattern = 'fullstreaming">.*?<img src="(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a><\/h3>.+?(?:.+?<a href=".quality.+?">(.+?)<\/a><.div>)(?:.+?<span style="font-family.+?>(.+?)<\/span>)'
+        #sPattern = 'fullstreaming">.*?<img src="(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a><\/h3>.+?(?:.+?<a href=".quality.+?">(.+?)<\/a><.div>)(?:.+?<span style="font-family.+?>(.+?)<\/span>)'
+        
+        sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)".+?<h3.+?><a href="(.+?)">(.+?)</a></h3>.+?(?:.+?<a href=".quality.+?">(.+?)</a><.div>|)(?:.+?<span style="font-family.+?>(.+?)</span>|)'
    
     #recuperation de la page
     oRequestHandler = cRequestHandler(sUrl)
@@ -182,11 +185,12 @@ def showMovies(sSearch = ''):
             if dialog.iscanceled():
                 break
                 
-            sThumb = str(aEntry[0])
+            sThumb = str(aEntry[0]).replace('&w=240&;h=320','')
             sTitle = aEntry[2]
             if aEntry[3] : sTitle = sTitle + ' (' + aEntry[3] + ')'
-            if not 'http' in sThumb:
-                sThumb = URL_MAIN + sThumb
+            
+            # if not 'http' in sThumb:
+                # sThumb = URL_MAIN + sThumb
             if sSearch:
                 sCom = ''
             else:
