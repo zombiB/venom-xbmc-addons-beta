@@ -281,7 +281,11 @@ def showMovies(sSearch = ''):
             if dialog.iscanceled():
                 break
 
-            sTitle=re.sub('(.*)(\[.*\])','\\1 [COLOR azure]\\2[/COLOR]', str(aEntry[2]))
+            sTitle = unicode(aEntry[2], 'utf-8')#converti en unicode
+            sTitle = unescape(str(sTitle))
+            sTitle = sTitle.encode( "utf-8")
+            
+            sTitle=re.sub('(.*)(\[.*\])','\\1 [COLOR azure]\\2[/COLOR]', sTitle)
             sMovieTitle=re.sub('(\[.*\])','', str(aEntry[2]))
             sCom = unicode(aEntry[3], 'utf-8')#converti en unicode
             #sCom = unicodedata.normalize('NFD', sCom).encode('ascii', 'ignore').decode("unicode_escape")#vire accent et '\'
