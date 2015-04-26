@@ -59,6 +59,9 @@ def showMovies(sSearch = ''):
     oGui = cGui()
     
     if sSearch:
+        #on redecode la recherhce codé il y a meme pas une seconde par l'addon
+        sSearch = urllib2.unquote(sSearch)
+        
         query_args = { 'serie': str(sSearch) }
         data = urllib.urlencode(query_args)
         headers = {'User-Agent' : 'Mozilla 5.10'}
@@ -73,7 +76,7 @@ def showMovies(sSearch = ''):
 
         html = reponse.read()
         html = html.replace('\n', '')
-      
+
         sHtmlContent = html
         
         sPattern = '<h1><a href="(.+?)">(.+?)<.a><.h1><.div><div class="infos"> <div class="image"><a href=".+?"><img src="(.+?)" title=.+?><.a><.div><div class="desc" >(.+?)<.div>'
@@ -267,3 +270,4 @@ def epHosters():
         cConfig().finishDialog(dialog)    
 
     oGui.setEndOfDirectory()
+    
