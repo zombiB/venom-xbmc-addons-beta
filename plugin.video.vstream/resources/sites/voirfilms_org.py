@@ -32,6 +32,26 @@ MOVIE_GENRES = (True, 'showGenre')
 URL_SEARCH = ('', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
  
+def unescape(text):
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":
+                    return unichr(int(text[3:-1], 16))
+                else:
+                    return unichr(int(text[2:-1]))
+            except ValueError:
+                pass
+        else:
+            # named entity
+            try:
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+            except KeyError:
+                pass
+        return text # leave as is
+    return re.sub("&#?\w+;", fixup, text)
  
 def load(): #function charger automatiquement par l'addon l'index de votre navigation.
     oGui = cGui() #ouvre l'affichage
@@ -63,7 +83,7 @@ def showSearch():
  
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-        showMovies(str(sSearchText))
+        showMovies(sSearchText)
         oGui.setEndOfDirectory()
         return  
             
@@ -157,10 +177,14 @@ def showMovies(sSearch = ''):
     oGui = cGui() #ouvre l'affichage
    
     if sSearch:
+        print 'ok'
         #on redecode la recherhce codé il y a meme pas une seconde par l'addon
         sSearch = urllib2.unquote(sSearch)
  
         query_args = { 'do' : 'search' , 'subaction' : 'search' , 'story' : str(sSearch) , 'x' : '0', 'y' : '0'}
+        
+        print query_args
+        
         data = urllib.urlencode(query_args)
         headers = {'User-Agent' : 'Mozilla 5.10'}
         url = 'http://www.voirfilms.org/rechercher'
@@ -172,43 +196,52 @@ def showMovies(sSearch = ''):
             print e.read()
             print e.reason
      
-        html = reponse.read()
+        sHtmlContent = reponse.read()
 
-        sHtmlContent = html.replace('\n','')
+        sPattern = '<div class="imagefilm">.+?<a href="(.+?)" title="(.+?)">.+?<img src="(.+?)"'
  
     else:
         oInputParameterHandler = cInputParameterHandler()
-        sUrl = oInputParameterHandler.getValue('siteUrl') # recupere l'url sortis en parametre
+        sUrl = oInputParameterHandler.getValue('siteUrl')
    
         oRequestHandler = cRequestHandler(sUrl)
-        sHtmlContent = oRequestHandler.request();
- 
-    sPattern = '"deepest mod-box".+?<img src="(.+?)" class.+?"lcol".+?a href="(.+?)" title=".+?"><b>(.+?)<.b><.a>' 
-    #oParser = cParser()
-    #aResult = oParser.parse(sHtmlContent, sPattern)
-   
-    aResult = re.findall(sPattern, sHtmlContent)
+        sHtmlContent = oRequestHandler.request()
+        
+        sPattern = '<div class="imagefilm"> *<a href="(.+?)" title="(.+?)".+?<img src="(.+?)"'
+    
+    sHtmlContent = sHtmlContent.replace('\n','')    
+    
+    #fh = open('c:\\test.txt', "w")
+    #fh.write(sHtmlContent)
+    #fh.close()
+
+    oParser = cParser()
+    aResult = oParser.parse(sHtmlContent, sPattern)
    
     #print aResult
    
-    if not (aResult == False):
-        total = len(aResult)
+    if not (aResult[0] == False):
+        total = len(aResult[1])
         dialog = cConfig().createDialog(SITE_NAME)
        
-        for aEntry in aResult:
+        for aEntry in aResult[1]:
             cConfig().updateDialog(dialog, total) #dialog
             if dialog.iscanceled():
                 break
            
-            sTitle = aEntry[2]
-            sPicture = str(URL_MAIN) + str(aEntry[0])
+            sTitle = unescape(aEntry[1])
+            sTitle = sTitle.replace('film ','')
+            sTitle = sTitle.replace(' streaming','')
+            sPicture = str(aEntry[2])
+            if not 'http' in sPicture:
+                sPicture = str(URL_MAIN) + sPicture
            
             #not found better way
             #sTitle = unicode(sTitle, errors='replace')
             #sTitle = sTitle.encode('ascii', 'ignore').decode('ascii')
            
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
+            oOutputParameterHandler.addParameter('siteUrl', str(aEntry[0]))
             oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
             oOutputParameterHandler.addParameter('sThumbnail', sPicture) #sortis du poster
  
@@ -247,10 +280,10 @@ def showHosters():
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
  
     oRequestHandler = cRequestHandler(sUrl)
-    sHtmlContent = oRequestHandler.request();
+    sHtmlContent = oRequestHandler.request()
  
     #sPattern = 'submit\(\)"><span>([^<]+)<.span><.a>.+?name="levideo" value="(.+?)" type="hidden">'
-    sPattern = '<span>([^<]+)<.span>.+?name="levideo" value="(.+?)" type="hidden">'
+    sPattern = 'uppercase;">(.+?)<\/span><span class="selected".+?name="levideo" value="(.+?)" type="hidden">'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     #print aResult
@@ -305,8 +338,12 @@ def showHostersLink():
         print e.reason
           
     sHtmlContent = reponse.read()
+    
+    fh = open('c:\\test.txt', "w")
+    fh.write(sHtmlContent)
+    fh.close()
 
-    sPattern = '<div id="playerslist">\n<div class=".+?"><iframe src="([^<]+)".+?<.iframe><.div>'
+    sPattern = '<div id="playerslist">\n<div class=".+?"><iframe src="([^<]+)".+?<\/iframe>'
     aResult = re.findall(sPattern, sHtmlContent)
     
     if len(aResult) > 0 :
@@ -330,5 +367,5 @@ def showHostersLink():
 
         cConfig().finishDialog(dialog) 
 
-    oGui.setEndOfDirectory()
+    oGui.setEndOfDirectory()   
     
