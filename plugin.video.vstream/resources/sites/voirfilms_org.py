@@ -156,23 +156,25 @@ def showAlpha(): #affiche les genres
 def showMovies(sSearch = ''):
     oGui = cGui() #ouvre l'affichage
    
-    if sSearch:#si une url et envoyer directement garce a la function showSearch
+    if sSearch:
+        #on redecode la recherhce codé il y a meme pas une seconde par l'addon
+        sSearch = urllib2.unquote(sSearch)
  
-      query_args = { 'do' : 'search' , 'subaction' : 'search' , 'story' : str(sSearch) , 'x' : '0', 'y' : '0'}
-      data = urllib.urlencode(query_args)
-      headers = {'User-Agent' : 'Mozilla 5.10'}
-      url = 'http://www.voirfilms.org/rechercher'
-      request = urllib2.Request(url,data,headers)
+        query_args = { 'do' : 'search' , 'subaction' : 'search' , 'story' : str(sSearch) , 'x' : '0', 'y' : '0'}
+        data = urllib.urlencode(query_args)
+        headers = {'User-Agent' : 'Mozilla 5.10'}
+        url = 'http://www.voirfilms.org/rechercher'
+        request = urllib2.Request(url,data,headers)
      
-      try:
-          reponse = urllib2.urlopen(request)
-      except URLError, e:
-          print e.read()
-          print e.reason
+        try:
+            reponse = urllib2.urlopen(request)
+        except URLError, e:
+            print e.read()
+            print e.reason
      
-      html = reponse.read()
-     
-      sHtmlContent = html.replace('\n','')
+        html = reponse.read()
+
+        sHtmlContent = html.replace('\n','')
  
     else:
         oInputParameterHandler = cInputParameterHandler()
