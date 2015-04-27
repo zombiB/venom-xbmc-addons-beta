@@ -32,7 +32,7 @@ def load():
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'Series Nouveautees', 'series.png',oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'Sries Nouveautés', 'series.png',oOutputParameterHandler)
    
    
     #oOutputParameterHandler = cOutputParameterHandler()
@@ -67,7 +67,7 @@ def showMovies(sSearch = ''):
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request();
     sHtmlContent = sHtmlContent.replace('Programme', '').replace('F.A.Q', '').replace('Séries', '')
-    sPattern = '<li class="cat-item cat-item-.+?"><a href="([^<]+)">([^<]+)</a>'
+    sPattern = '<li class="cat-item cat-item-.+?"><a href="(.+?)">([^<]+)</a>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
    

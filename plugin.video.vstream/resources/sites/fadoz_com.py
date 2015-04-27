@@ -63,11 +63,12 @@ def load():
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'Films', 'films.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'Films Nouveautés', 'films.png', oOutputParameterHandler)
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
     oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genres', 'genres.png', oOutputParameterHandler)
+    
            
     oGui.setEndOfDirectory() #ferme l'affichage
  
@@ -87,18 +88,18 @@ def showGenre(): #affiche les genres
  
     #juste a entrer c'est caterorie et les lien qui vont bien
     liste = []
-    liste.append( ['ACTION','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=1:action-&Itemid=13&layout=default'] )
-    liste.append( ['ANIMATION','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=2&Itemid=2'] )    
-    liste.append( ['AVENTURE','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=4:aventure-&Itemid=14&layout=default'] )
-    liste.append( ['COMEDIE','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=4:aventure-&Itemid=14&layout=default'] )
-    liste.append( ['DOCUMENTAIRES','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=26&Itemid=4'] )
-    liste.append( ['DRAME','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=7:drame-&Itemid=16&layout=default'] )
-    liste.append( ['FANTASTIQUE','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=8:fantastique-&Itemid=17&layout=default'] )    
-    liste.append( ['HORREUR','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=9:horreur-&Itemid=18&layout=default'] )
-    liste.append( ['POLICIER','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=10:policier-&Itemid=19&layout=default'] )
-    liste.append( ['SCIENCE FICTION','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=11:science-fiction-&Itemid=20&layout=default'] )
-    liste.append( ['SPECTACLE','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=3&Itemid=5'] )    
-    liste.append( ['THRILLER','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=12:thriller-&Itemid=21&layout=default'] )
+    liste.append( ['Action','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=1:action-&Itemid=13&layout=default'] )
+    liste.append( ['Animation','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=2&Itemid=2'] )    
+    liste.append( ['Aventure','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=4:aventure-&Itemid=14&layout=default'] )
+    liste.append( ['Comedie','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=4:aventure-&Itemid=14&layout=default'] )
+    liste.append( ['Documentaires','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=26&Itemid=4'] )
+    liste.append( ['Drame','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=7:drame-&Itemid=16&layout=default'] )
+    liste.append( ['Fantastique','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=8:fantastique-&Itemid=17&layout=default'] )    
+    liste.append( ['Horreur','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=9:horreur-&Itemid=18&layout=default'] )
+    liste.append( ['Policier','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=10:policier-&Itemid=19&layout=default'] )
+    liste.append( ['Science Fiction','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=11:science-fiction-&Itemid=20&layout=default'] )
+    liste.append( ['Spectacle','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=3&Itemid=5'] )    
+    liste.append( ['Thriller','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=12:thriller-&Itemid=21&layout=default'] )
                
     for sTitle,sUrl in liste:#boucle
        
@@ -164,7 +165,7 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN) + str(sUrl2))
             oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle2))
  
-            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle2, '', '', '', oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle2, 'films.png', '', '', oOutputParameterHandler)
  
         cConfig().finishDialog(dialog)
            

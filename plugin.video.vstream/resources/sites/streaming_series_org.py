@@ -12,19 +12,18 @@ from resources.lib.util import cUtil
 from resources.lib.config import cConfig
 import re, urllib
 
-SITE_IDENTIFIER = 'streamingfilms_fr'
-SITE_NAME = 'StreamingFilms.fr'
+SITE_IDENTIFIER = 'streaming_series_org'
+SITE_NAME = 'StreamingSeries.org'
 SITE_DESC = 'Film en streaming, regarder film en direct, streaming vf regarder film gratuitement sur Frenchstream.org'
 
-URL_MAIN = 'http://streamingfilms.fr/'
+URL_MAIN = 'http://streaming-series.org/'
 
-MOVIE_NEWS = ('http://streamingfilms.fr/', 'showMovies')
-MOVIE_VIEWS = ('http://streamingfilms.fr/plus-vus/', 'showMovies')
-MOVIE_COMMENTS = ('http://streamingfilms.fr/les-plus-commentes/', 'showMovies')
-MOVIE_NOTES = ('http://streamingfilms.fr/les-mieux-notes/', 'showMovies')
-MOVIE_GENRES = (True, 'showGenre')
+SERIE_NEWS = ('http://streaming-series.org/', 'showMovies')
+SERIE_VIEWS = ('http://streaming-series.org/lesplusvues/', 'showMovies')
+SERIE_COMMENTS = ('http://streaming-series.org/lespluscommentees/', 'showMovies')
+SERIE_NOTES = ('http://streaming-series.org/lesmieuxnotees/', 'showMovies')
 
-URL_SEARCH = ('http://streamingfilms.fr/?s=', 'showMovies')
+URL_SEARCH = ('http://streaming-series.org/?s=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
 def load():
@@ -32,40 +31,37 @@ def load():
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_SEARCH[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMoviesSearch', 'Recherche Films', 'search.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showSerieSearch', 'Recherche Séries', 'search.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Films Nouveautés', 'news.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Séries Nouveautés', 'series.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_VIEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Films Les plus Vues', 'films.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', SERIE_VIEWS[0])
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Séries Les plus Vues', 'films.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_COMMENTS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Films Les plus Commentés', 'films.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', SERIE_COMMENTS[0])
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Séries Les plus Commentés', 'films.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_NOTES[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Films Les mieux Notés', 'films.png', oOutputParameterHandler)
-    
-    oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genres', 'genres.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', SERIE_NOTES[0])
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Séries Les mieux Notés', 'films.png', oOutputParameterHandler)
     
             
     oGui.setEndOfDirectory()
+ 
 
-def showMoviesSearch():
+def showSerieSearch():
     oGui = cGui()
 
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-            sUrl = 'http://streamingfilms.fr/?s='+sSearchText  
+            sUrl = 'http://streaming-series.org/?s='+sSearchText  
             showMovies(sUrl)
             oGui.setEndOfDirectory()
-            return  
+            return
             
                  
 def showGenre():
@@ -90,7 +86,7 @@ def showGenre():
     liste.append( ['Historique','http://streamingfilms.fr/category/historique/'] )         
     liste.append( ['Horreur','http://streamingfilms.fr/category/horreur/'] )
     liste.append( ['Musical','http://streamingfilms.fr/category/musical/'] ) 
-    liste.append( ['Non classÃ©','http://streamingfilms.fr/category/non-classe/'] )  
+    liste.append( ['Non classé','http://streamingfilms.fr/category/non-classe/'] )  
     liste.append( ['Policier','http://streamingfilms.fr/category/policier/'] )
     liste.append( ['Romance','http://streamingfilms.fr/category/romance/'] )
     liste.append( ['Science fiction','http://streamingfilms.fr/category/science-fiction/'] )

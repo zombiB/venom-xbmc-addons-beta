@@ -11,26 +11,21 @@ from resources.lib.config import cConfig #config
 from resources.lib.parser import cParser #recherche de code
 from resources.lib.util import cUtil
 import urllib2,urllib,re
-from t0mm0.common.net import Net
-import unicodedata
-import re
  
 #Si vous créer une source et la déposer dans le dossier sites elle seras directement visible sous xbmc
  
 SITE_IDENTIFIER = 'voirfilms_org' #identifant nom de votre fichier remplacer les espaces et les . par _ aucun caractere speciale
-SITE_NAME = 'VoirFilms.org' # nom que xbmc affiche
-SITE_DESC = 'Venez decouvrir un site de streaming qui vous propose tout les derniers films en exclue et en streaming longue duree sans limitation. Vous etes à deux clics de ne plus pourvoir vous passer de notre site de films en streaming' #description courte de votre source
+SITE_NAME = 'VoirFilms.org (non fini)' # nom que xbmc affiche
+SITE_DESC = 'Films en streaming' #description courte de votre source
  
 URL_MAIN = 'http://www.voirfilms.org/' # url de votre source
- 
-#definis les url pour les catégories principale ceci et automatique si la deffition et présente elle seras afficher.
 
 MOVIE_NEWS = ('http://www.voirfilms.org/', 'showMovies')
 MOVIE_ALLMOVIES = ('http://www.voirfilms.org/lesfilms1', 'showMovies')
 MOVIE_GENRES = (True, 'showGenre')
   
-URL_SEARCH = ('', 'showMovies')
-FUNCTION_SEARCH = 'showMovies'
+#URL_SEARCH = ('', 'showMovies')
+#FUNCTION_SEARCH = 'showMovies'
  
 def unescape(text):
     def fixup(m):
@@ -62,7 +57,7 @@ def load(): #function charger automatiquement par l'addon l'index de votre navig
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'Films Nouveautees', 'news.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'Films Nouveautés', 'news.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_ALLMOVIES[0])
