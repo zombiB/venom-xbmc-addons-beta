@@ -32,7 +32,7 @@ class cDb:
             self.db = sqlite.connect(DB)
             self.dbcur = self.db.cursor()
 
-            self._create_tables()
+            #self._create_tables()
         except:
             return False
         

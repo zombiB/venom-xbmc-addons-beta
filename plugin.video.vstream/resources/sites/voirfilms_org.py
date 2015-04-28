@@ -15,7 +15,7 @@ import urllib2,urllib,re
 #Si vous créer une source et la déposer dans le dossier sites elle seras directement visible sous xbmc
  
 SITE_IDENTIFIER = 'voirfilms_org' #identifant nom de votre fichier remplacer les espaces et les . par _ aucun caractere speciale
-SITE_NAME = 'VoirFilms.org (non fini)' # nom que xbmc affiche
+SITE_NAME = 'VoirFilms.org' # nom que xbmc affiche
 SITE_DESC = 'Films en streaming' #description courte de votre source
  
 URL_MAIN = 'http://www.voirfilms.org/' # url de votre source
@@ -24,7 +24,7 @@ MOVIE_NEWS = ('http://www.voirfilms.org/', 'showMovies')
 MOVIE_ALLMOVIES = ('http://www.voirfilms.org/lesfilms1', 'showMovies')
 MOVIE_GENRES = (True, 'showGenre')
   
-#URL_SEARCH = ('', 'showMovies')
+URL_SEARCH = ('', 'showMovies')
 #FUNCTION_SEARCH = 'showMovies'
  
 def unescape(text):
@@ -172,13 +172,13 @@ def showMovies(sSearch = ''):
     oGui = cGui() #ouvre l'affichage
    
     if sSearch:
-        print 'ok'
+        #print 'ok'
         #on redecode la recherhce codé il y a meme pas une seconde par l'addon
         sSearch = urllib2.unquote(sSearch)
  
         query_args = { 'do' : 'search' , 'subaction' : 'search' , 'story' : str(sSearch) , 'x' : '0', 'y' : '0'}
         
-        print query_args
+        #print query_args
         
         data = urllib.urlencode(query_args)
         headers = {'User-Agent' : 'Mozilla 5.10'}
@@ -334,9 +334,9 @@ def showHostersLink():
           
     sHtmlContent = reponse.read()
     
-    fh = open('c:\\test.txt', "w")
-    fh.write(sHtmlContent)
-    fh.close()
+    # fh = open('c:\\test.txt', "w")
+    # fh.write(sHtmlContent)
+    # fh.close()
 
     sPattern = '<div id="playerslist">\n<div class=".+?"><iframe src="([^<]+)".+?<\/iframe>'
     aResult = re.findall(sPattern, sHtmlContent)

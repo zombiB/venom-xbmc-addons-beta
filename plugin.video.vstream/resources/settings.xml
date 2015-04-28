@@ -40,7 +40,7 @@
 		<setting id="plugin_streamzzz_com" type="bool" label="streamzzz.com" default="true"/>
 		<setting id="plugin_vanoz_com" type="bool" label="Vanoz.com" default="true"/>
 		<setting id="plugin_vk_filmz_streamiz_com" type="bool" label="Vk-Filmz-Streamiz.com" default="true"/>
-		<setting id="plugin_voirfilms_org" type="bool" label="Voirfilms.org" default="false"/> 		
+		<setting id="plugin_voirfilms_org" type="bool" label="Voirfilms.org" default="true"/> 		
     </category>
 
 <!-- 1 film 2 serie 3 anime 4 doc -->
@@ -152,6 +152,11 @@
         <setting id="search2_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false" visible="eq(-82,Recherche_2)"/>
         <setting id="search3_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false" visible="eq(-83,Recherche_3)"/>
         <setting id="search4_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false" visible="eq(-84,Recherche_4)"/>
+		
+		<setting id="search1_voirfilms_org" type="bool" label="Voirfilms.org (Films)" default="false" visible="eq(-85,Recherche_1)"/>
+        <setting id="search2_voirfilms_org" type="bool" label="Voirfilms.org (Films)" default="false" visible="eq(-86,Recherche_2)"/>
+        <setting id="search3_voirfilms_org" type="bool" label="Voirfilms.org (Films)" default="false" visible="eq(-87,Recherche_3)"/>
+        <setting id="search4_voirfilms_org" type="bool" label="Voirfilms.org (Films)" default="false" visible="eq(-88,Recherche_4)"/>
 		
 
     </category>
