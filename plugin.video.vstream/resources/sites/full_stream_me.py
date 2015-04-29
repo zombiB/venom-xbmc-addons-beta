@@ -158,14 +158,25 @@ def showGenre():
 
 def showMovies(sSearch = ''):
     oGui = cGui()
+    
+    oInputParameterHandler = cInputParameterHandler()
+    
     if sSearch:
         sUrl = sSearch
+        
+        sDisp = oInputParameterHandler.getValue('disp')
+       
+        if (sDisp == 'search3'):#anime
+            sUrl = sUrl + '&catlist[]=36'
+        elif (sDisp == 'search2'):#serie
+            sUrl = sUrl + '&catlist[]=2'
+        else:#Film et tout le reste
+            sUrl = sUrl + '&catlist[]=43'
+        
         #sPattern = 'fullstreaming">.*?<img src="(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a><\/h3>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*Regarder<\/a>'
         sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*<span style="font-family:.+?>(.+?)<\/span>'
     else:
-        oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
-        
         sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*<span style="font-family:.+?>(.+?)<\/span>'
 
     #recuperation de la page
