@@ -282,6 +282,7 @@ def showMovies(sSearch = ''):
                 break
 
             sTitle = unicode(aEntry[2], 'utf-8')#converti en unicode
+            sTitle = unicodedata.normalize('NFD', sTitle).encode('ascii', 'ignore')#vire accent
             sTitle = unescape(str(sTitle))
             sTitle = sTitle.encode( "utf-8")
             
