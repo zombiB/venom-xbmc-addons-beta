@@ -160,13 +160,13 @@ def showMovies(sSearch = ''):
     oGui = cGui()
     if sSearch:
       sUrl = sSearch
-      sPattern = 'fullstreaming">.*?<img src="(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a><\/h3>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*Regarder<\/a>'
+      sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)".+?<h3.+?><a href="(.+?)">(.+?)</a></h3>.+?<a href="/quality.+?">(.+?)</a>.+?<span style="font-family.+?>(.+?)</span>'
     else:
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
         #sPattern = 'fullstreaming">.*?<img src="(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a><\/h3>.+?(?:.+?<a href=".quality.+?">(.+?)<\/a><.div>)(?:.+?<span style="font-family.+?>(.+?)<\/span>)'
         
-        sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a><\/h3>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*Regarder<\/a>(?:.+?<span style="font-family.+?>(.+?)</span>|)'
+        sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)".+?<h3.+?><a href="(.+?)">(.+?)</a></h3>.+?<a href="/quality.+?">(.+?)</a>.+?<span style="font-family.+?>(.+?)</span>'
    
     #recuperation de la page
     oRequestHandler = cRequestHandler(sUrl)
@@ -191,7 +191,7 @@ def showMovies(sSearch = ''):
             # if not 'http' in sThumb:
                 # sThumb = URL_MAIN + sThumb
             if sSearch:
-                sCom = ''
+                sCom = aEntry[4]
             else:
                 sCom = aEntry[4]
 
