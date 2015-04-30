@@ -75,7 +75,7 @@ class cHosterGui:
         oContext.setFile('cHosterGui')
         oContext.setSiteName(self.SITE_NAME)
         oContext.setFunction('addToPlaylist')
-        oContext.setTitle(cConfig().getLocalizedString(30201))
+        oContext.setTitle(cConfig().getlanguage(30201))
         oContext.setOutputParameterHandler(oOutputParameterHandler)
         oGuiElement.addContextItem(oContext)
         
@@ -84,7 +84,7 @@ class cHosterGui:
         oContext.setFile('cHosterGui')
         oContext.setSiteName(self.SITE_NAME)
         oContext.setFunction('download')
-        oContext.setTitle(cConfig().getLocalizedString(30202))
+        oContext.setTitle(cConfig().getlanguage(30202))
         oContext.setOutputParameterHandler(oOutputParameterHandler)
         oGuiElement.addContextItem(oContext)
 
@@ -93,7 +93,7 @@ class cHosterGui:
         oContext.setFile('cFav')
         oContext.setSiteName('cFav')
         oContext.setFunction('setFavorite')
-        oContext.setTitle('[COLOR teal]'+cConfig().getLocalizedString(30203)+'[/COLOR]')
+        oContext.setTitle('[COLOR teal]'+cConfig().getlanguage(30203)+'[/COLOR]')
 
         #oOutputParameterHandler = cOutputParameterHandler()
         #oOutputParameterHandler.addParameter('sTitle', oGuiElement.getTitle())
