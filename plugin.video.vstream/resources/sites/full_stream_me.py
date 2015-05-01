@@ -14,7 +14,7 @@ import re
 
 SITE_IDENTIFIER = 'full_stream_me'
 SITE_NAME = 'Full-Stream.me'
-SITE_DESC = 'Film, Serie et Anime en Streaming HD - Vk.Com - Netu.tv - ExaShare - YouWatch'
+SITE_DESC = 'Film Série et Anime en Streaming HD - Vk.Com - Netu.tv - ExaShare - YouWatch'
 
 URL_MAIN = 'http://full-stream.me'
 
@@ -82,6 +82,11 @@ def load():
             
     oGui.setEndOfDirectory()
 
+def DecoTitle(string):
+    print 'avant ' + string
+    string = re.sub('(.*)([\[\(].{1,7}[\)\]])','\\1 [COLOR coral]\\2[/COLOR]', str(string))
+    print 'apres' + string
+    return string
  
 def showSearch():
     oGui = cGui()
@@ -170,8 +175,10 @@ def showMovies(sSearch = ''):
             sUrl = sUrl + '&catlist[]=36'
         elif (sDisp == 'search2'):#serie
             sUrl = sUrl + '&catlist[]=2'
-        else:#Film et tout le reste
-            sUrl = sUrl + '&catlist[]=43'
+        elif (sDisp == 'search1'):#film
+            sUrl = sUrl + '&catlist[]=1'    
+        else:#tout le reste
+            sUrl = sUrl
         
         #sPattern = 'fullstreaming">.*?<img src="(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a><\/h3>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*Regarder<\/a>'
         sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*<span style="font-family:.+?>(.+?)<\/span>'
@@ -197,25 +204,29 @@ def showMovies(sSearch = ''):
                 
             sThumb = str(aEntry[0]).replace('&w=240&;h=320','')
             sTitle = aEntry[2]
-            if aEntry[3] : sTitle = sTitle + ' (' + aEntry[3] + ')'
+            if aEntry[3] :
+                sTitle = sTitle + ' (' + aEntry[3] + ')'
+            sTitle = sTitle.replace('Haute-qualité','HQ')
+                
+            sDisplayTitle = DecoTitle(sTitle)
             
             # if not 'http' in sThumb:
                 # sThumb = URL_MAIN + sThumb
-            if sSearch:
-                sCom = aEntry[4]
-            else:
-                sCom = aEntry[4]
+            #if sSearch:
+            #    sCom = ''
+            #else:
+            sCom = aEntry[4]
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
-            oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
+            oOutputParameterHandler.addParameter('sMovieTitle', sDisplayTitle)
             oOutputParameterHandler.addParameter('sThumbnail', sThumb)
             if '/seriestv/' in sUrl  or 'saison' in aEntry[1]:
-                oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sTitle, '', sThumb,sCom, oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sDisplayTitle, '', sThumb,sCom, oOutputParameterHandler)
             elif '/mangas/' in sUrl:
-                oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sTitle, '', sThumb, sCom, oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sDisplayTitle, '', sThumb, sCom, oOutputParameterHandler)
             else:
-                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumb, sCom, oOutputParameterHandler)
+                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sDisplayTitle, '', sThumb, sCom, oOutputParameterHandler)
         
         cConfig().finishDialog(dialog)
 
