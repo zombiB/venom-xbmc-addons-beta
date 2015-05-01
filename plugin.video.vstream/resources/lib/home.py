@@ -37,7 +37,7 @@ class cHome:
         if (cConfig().getSetting('home_cherchev') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-            oGui.addDir('themoviedb_org', 'load', '[COLOR '+color_cherches+']'+cConfig().getlanguage(30088)+'[/COLOR]', 'search.png', oOutputParameterHandler)
+            oGui.addDir('themoviedb_org', 'load', '[COLOR '+color_cherches+']'+cConfig().getlanguage(30088)+'[/COLOR]', 'searchtmdb.png', oOutputParameterHandler)
             
         if (cConfig().getSetting('home_tvs') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
@@ -72,11 +72,11 @@ class cHome:
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-            oGui.addDir(SITE_IDENTIFIER, 'serieVfs', '[COLOR '+color_series+']'+cConfig().getlanguage(30107)+'[/COLOR]', 'series.png', oOutputParameterHandler)
+            oGui.addDir(SITE_IDENTIFIER, 'serieVfs', '[COLOR '+color_series+']'+cConfig().getlanguage(30107)+'[/COLOR]', 'seriesvf.png', oOutputParameterHandler)
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-            oGui.addDir(SITE_IDENTIFIER, 'serieVostfrs', '[COLOR '+color_series+']'+cConfig().getlanguage(30108)+'[/COLOR]', 'series.png', oOutputParameterHandler)
+            oGui.addDir(SITE_IDENTIFIER, 'serieVostfrs', '[COLOR '+color_series+']'+cConfig().getlanguage(30108)+'[/COLOR]', 'seriesvostfr.png', oOutputParameterHandler)
 
         if (cConfig().getSetting('home_anims') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
@@ -85,11 +85,11 @@ class cHome:
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-            oGui.addDir(SITE_IDENTIFIER, 'animVfs', '[COLOR '+color_anims+']'+cConfig().getlanguage(30110)+'[/COLOR]', 'animes.png', oOutputParameterHandler)
+            oGui.addDir(SITE_IDENTIFIER, 'animVfs', '[COLOR '+color_anims+']'+cConfig().getlanguage(30110)+'[/COLOR]', 'animesvf.png', oOutputParameterHandler)
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-            oGui.addDir(SITE_IDENTIFIER, 'animVostfrs', '[COLOR '+color_anims+']'+cConfig().getlanguage(30111)+'[/COLOR]', 'animes.png', oOutputParameterHandler)
+            oGui.addDir(SITE_IDENTIFIER, 'animVostfrs', '[COLOR '+color_anims+']'+cConfig().getlanguage(30111)+'[/COLOR]', 'animesvostfr.png', oOutputParameterHandler)
 
         if (cConfig().getSetting('home_docs') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
@@ -99,7 +99,7 @@ class cHome:
         if (cConfig().getSetting('home_sports') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-            oGui.addDir(SITE_IDENTIFIER, 'sportSports', '[COLOR '+color_sports+']'+cConfig().getlanguage(30103)+'[/COLOR]', 'sport.png', oOutputParameterHandler)
+            oGui.addDir(SITE_IDENTIFIER, 'sportSports', '[COLOR '+color_sports+']'+cConfig().getlanguage(30113)+'[/COLOR]', 'sport.png', oOutputParameterHandler)
 
         if (cConfig().getSetting('home_videos') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
