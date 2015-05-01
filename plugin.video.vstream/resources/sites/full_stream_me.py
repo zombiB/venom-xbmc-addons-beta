@@ -14,7 +14,7 @@ import re
 
 SITE_IDENTIFIER = 'full_stream_me'
 SITE_NAME = 'Full-Stream.me'
-SITE_DESC = 'Film Série et Anime en Streaming HD - Vk.Com - Netu.tv - ExaShare - YouWatch'
+SITE_DESC = 'Film Serie et Anime en Streaming HD - Vk.Com - Netu.tv - ExaShare - YouWatch'
 
 URL_MAIN = 'http://full-stream.me'
 
@@ -212,6 +212,7 @@ def showMovies(sSearch = ''):
             
             # if not 'http' in sThumb:
                 # sThumb = URL_MAIN + sThumb
+
             #if sSearch:
             #    sCom = ''
             #else:
