@@ -83,9 +83,7 @@ def load():
     oGui.setEndOfDirectory()
 
 def DecoTitle(string):
-    print 'avant ' + string
-    string = re.sub('(.*)([\[\(].{1,7}[\)\]])','\\1 [COLOR coral]\\2[/COLOR]', str(string))
-    print 'apres' + string
+    string = re.sub('(.*)([\[\(].{1,7}[\)\]])','\\1[COLOR coral]\\2[/COLOR]', str(string))
     return string
  
 def showSearch():
