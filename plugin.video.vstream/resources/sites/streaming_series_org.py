@@ -18,7 +18,12 @@ SITE_DESC = 'Film en streaming, regarder film en direct, streaming vf regarder f
 
 URL_MAIN = 'http://streaming-series.org/'
 
-SERIE_NEWS = ('http://streaming-series.org/', 'showMovies')
+#SERIE_SERIES = 'http://url' # serie nouveautés #30106
+#SERIE_VFS = 'http://url' # serie VF #30107
+#SERIE_VOSTFRS = 'http://url' # serie Vostfr #30108
+
+
+SERIE_SERIES = ('http://streaming-series.org/', 'showMovies')
 SERIE_VIEWS = ('http://streaming-series.org/lesplusvues/', 'showMovies')
 SERIE_COMMENTS = ('http://streaming-series.org/lespluscommentees/', 'showMovies')
 SERIE_NOTES = ('http://streaming-series.org/lesmieuxnotees/', 'showMovies')
@@ -34,7 +39,7 @@ def load():
     oGui.addDir(SITE_IDENTIFIER, 'showSerieSearch', 'Recherche Séries', 'search.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', SERIE_NEWS[0])
+    oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
     oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Séries Nouveautés', 'series.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
