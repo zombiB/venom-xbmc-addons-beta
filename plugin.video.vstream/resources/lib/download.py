@@ -41,7 +41,7 @@ class cDownload:
                 cConfig().setSetting('Download_Folder',sPath)
                 
                 sDownloadPath = xbmc.translatePath(sPath +  '%s' % (self.__sTitle, ))
-                return
+
                 try:
                     cConfig().log("Telechargement " + str(sUrl))
                     self.__createProcessDialog()
