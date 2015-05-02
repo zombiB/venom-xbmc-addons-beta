@@ -76,18 +76,22 @@ class cDownload:
             
 
     def __createTitle(self, sUrl, sTitle):
+        sTitle = re.sub('[\(\[].+?[\)\]]',' ', sTitle)
+        
+        
         aTitle = sTitle.rsplit('.')
         #Si deja extension
         if (len(aTitle) > 1):
             return sTitle
         
         #recherche d'une extension
+        print sUrl
         sUrl = sUrl.lower()
         m = re.search('(flv|avi|mp4|mpg|mpeg)', sUrl)
-        if m.group(0):
+        if m:
             sTitle = sTitle + '.' + m.group(0)
         else:
-            sTitle = sTitle + '.' + flv #Si quedale on en prend une au pif
+            sTitle = sTitle + '.flv' #Si quedale on en prend une au pif
             
         #aUrl = sUrl.rsplit('.')
         #if (len(aUrl) > 1):
@@ -111,5 +115,3 @@ class cDownload:
             return '%.*f %s' % (2, 0, 'MB')
         
         return '%.*f %s' % (2, iBytes/(1024*1024.0) , 'MB')
-
-
