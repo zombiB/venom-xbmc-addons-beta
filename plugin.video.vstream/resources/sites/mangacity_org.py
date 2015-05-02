@@ -63,16 +63,16 @@ def DecoTitle(string):
 #------------------------------------------------------------------------------------    
     
 SITE_IDENTIFIER = 'mangacity_org'
-SITE_NAME = 'MangaCity.org (en cours)'
+SITE_NAME = 'MangaCity.org'
 SITE_DESC = 'Anime en streaming'
 
 URL_MAIN = 'http://www.mangacity.org/'
 
-ANIM_ANIMS = ('http://www.mangacity.org/animes.php?liste=b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9', 'showMovies')
+ANIM_ANIMS = ('http://www.mangacity.org/animes.php?liste=SHOWALPHA', 'ShowAlpha')
+ANIM_GENRES = (True, 'showGenre')
+ANIM_NEW = ('http://www.mangacity.org/nouveautees.php', 'showMovies')
 
-ANIM_GENRES = (True, 'showGenre') 
-
-URL_SEARCH = ('http://www.mangacity.org/resultat.php?string=', 'showMovies')
+URL_SEARCH = ('', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
 
@@ -83,10 +83,9 @@ def load(): #function charger automatiquement par l'addon l'index de votre navig
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/') # sortis du parametres siteUrl oublier pas la Majuscule
     oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
     
-    
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', 'http://www.mangacity.org/series.php?liste=b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9')
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Liste Series', 'films.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', ANIM_NEW[0])
+    oGui.addDir(SITE_IDENTIFIER, ANIM_NEW[1], 'Animes Nouveaute', 'films.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
@@ -103,7 +102,7 @@ def showSearch():
 
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-        sUrl = URL_SEARCH[0]+sSearchText
+        sUrl = sSearchText
         showMovies(sUrl)
         oGui.setEndOfDirectory()
         return  
@@ -111,37 +110,83 @@ def showSearch():
     
 def showGenre(): #affiche les genres
     oGui = cGui()
- 
-    liste = []
-    liste.append( ['Action','http://www.mangacity.org/categorie.php?watch=5Wzbv3GwUT49&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Enigme','http://www.mangacity.org/categorie.php?watch=v5GZQqgu6W24&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Cyber-meca','http://www.mangacity.org/categorie.php?watch=PCbLir6D928x&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Aventure','http://www.mangacity.org/categorie.php?watch=mMnY3N5dQ7g5&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Ecchi','http://www.mangacity.org/categorie.php?watch=ja533V3GcFtT&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Comedie','http://www.mangacity.org/categorie.php?watch=htP3DWV988rq&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Sport','http://www.mangacity.org/categorie.php?watch=FB3Wqu458usA&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Drame','http://www.mangacity.org/categorie.php?watch=LGvu23zSB48u&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Epouvante Horreur','http://www.mangacity.org/categorie.php?watch=2Kb4YbrLL36z&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] ) 
-    liste.append( ['Fantastique','http://www.mangacity.org/categorie.php?watch=66qWmQj76jUG&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )  
-    liste.append( ['Romance','http://www.mangacity.org/categorie.php?watch=357DVdJqNma8&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Combat','http://www.mangacity.org/categorie.php?watch=wiDZjP8T246z&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Amour-Amitie','http://www.mangacity.org/categorie.php?watch=emX6v4J7bNU3&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Science Fiction','http://www.mangacity.org/categorie.php?watch=5kBMBbP4b34x&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-    liste.append( ['Magical girl','http://www.mangacity.org/categorie.php?watch=nibaB3M985UP&b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9'] )
-                
-    for sTitle,sUrl in liste:
-        
-        oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', sUrl)
-        oGui.addDir(SITE_IDENTIFIER, 'showMovies', sTitle, 'genres.png', oOutputParameterHandler)
-       
-    oGui.setEndOfDirectory() 
 
+    oInputParameterHandler = cInputParameterHandler()
+    sUrl = 'http://www.mangacity.org/animes.php?liste=SHOWALPHA'
+
+    oRequestHandler = cRequestHandler(sUrl)
+    sHtmlContent = oRequestHandler.request()
+    
+    sPattern = '<a href="(categorie\.php\?watch=.+?)" onmouseover=.+?decoration:none;">(.+?)<\/a>'
+    
+    oParser = cParser()
+    aResult = oParser.parse(sHtmlContent, sPattern)
+    #print aResult
+    
+    if (aResult[0] == True):
+        total = len(aResult[1])
+        dialog = cConfig().createDialog(SITE_NAME)
+        
+        for aEntry in aResult[1]:
+            cConfig().updateDialog(dialog, total)
+            if dialog.iscanceled():
+                break
+            
+            sGenre = aEntry[1]
+            Link = aEntry[0]
+            
+            sGenre = unicode(sGenre,'iso-8859-1')
+            sGenre = unicodedata.normalize('NFD', sGenre).encode('ascii', 'ignore')
+            sGenre = sGenre.encode('ascii', 'ignore').decode('ascii')
+            
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN) + Link)
+            oGui.addMovie(SITE_IDENTIFIER, 'showMovies', '[B][COLOR red]' + sGenre + '[/COLOR][/B]', '', '', '', oOutputParameterHandler)
+ 
+        cConfig().finishDialog(dialog)
+
+    oGui.setEndOfDirectory()
+
+def ShowAlpha():
+    oGui = cGui()
+
+    oInputParameterHandler = cInputParameterHandler()
+    sUrl = 'http://www.mangacity.org/animes.php?liste=SHOWALPHA'
+
+    oRequestHandler = cRequestHandler(sUrl)
+    sHtmlContent = oRequestHandler.request()
+    
+    sPattern = "<a href='(.+?)' class='button light'><headline6><font color='black'>([A-Z#])<\/font><\/headline6><\/a>"
+    
+    oParser = cParser()
+    aResult = oParser.parse(sHtmlContent, sPattern)
+    #print aResult
+    
+    if (aResult[0] == True):
+        total = len(aResult[1])
+        dialog = cConfig().createDialog(SITE_NAME)
+        
+        for aEntry in aResult[1]:
+            cConfig().updateDialog(dialog, total)
+            if dialog.iscanceled():
+                break
+            
+            sLetter = aEntry[1]
+            Link = aEntry[0]
+            
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN) + Link)
+            oGui.addMovie(SITE_IDENTIFIER, 'showMovies', '[B][COLOR red]' + sLetter + '[/COLOR][/B]', '', '', '', oOutputParameterHandler)
+ 
+        cConfig().finishDialog(dialog)
+
+    oGui.setEndOfDirectory()
+        
+    
 def showMovies(sSearch = ''):
     oGui = cGui()
     
     if sSearch:
-        sUrl = sSearch
         
         #query_args = { 's': str(sSearch) }
         #data = urllib.urlencode(query_args)
@@ -149,29 +194,28 @@ def showMovies(sSearch = ''):
         #url = 'http://www.mangacity.org/result.php'
         #request = urllib2.Request(url,data,headers)
         #reponse = urllib2.urlopen(request)
-        #non#
         
-        # sSearch = urllib2.unquote(sSearch)
-        # sSearch = urllib.quote_plus(sSearch)
+        sSearch = urllib2.unquote(sSearch)
+        sSearch = urllib.quote_plus(sSearch)
 
-        # url = 'http://www.mangacity.org/resultat.php?string=' + sSearch
-        # headers = {'User-Agent' : 'Mozilla 5.10', 'Referer' : 'http://www.mangacity.org'}
-        # request = urllib2.Request(url,None,headers)
-        # reponse = urllib2.urlopen(request)
+        url = 'http://www.mangacity.org/resultat.php?string=' + sSearch
+        headers = {'User-Agent' : 'Mozilla 5.10', 'Referer' : 'http://www.mangacity.org'}
+        request = urllib2.Request(url,None,headers)
+        reponse = urllib2.urlopen(request)
         
-        # sHtmlContent = reponse.read()
+        sHtmlContent = reponse.read()
         
-        # reponse.close()
+        reponse.close()
         
     else:
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
     
-    oRequestHandler = cRequestHandler(sUrl)
-    #oRequestHandler.addHeaderEntry('User-Agent', 'Mozilla 5.10')
-    #oRequestHandler.addHeaderEntry('Referer', 'http://www.mangacity.org')
-    sHtmlContent = oRequestHandler.request()
-     
+        oRequestHandler = cRequestHandler(sUrl)
+        sHtmlContent = oRequestHandler.request()
+    
+    #print sUrl
+    
     #En cas de bug, partie a reactiver
     #fh = open('c:\\test.txt', "w")
     #fh.write(sHtmlContent)
@@ -213,7 +257,7 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
             oOutputParameterHandler.addParameter('sThumbnail', sPicture)
 
-            oGui.addMisc(SITE_IDENTIFIER, 'showEpisode', sTitle, sPicture, sPicture, '', oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showEpisode', sTitle, sPicture, sPicture, '', oOutputParameterHandler)
  
         cConfig().finishDialog(dialog)
         
@@ -270,8 +314,6 @@ def showEpisode():
     sPattern = '<img src="(.+?).+? alt="&#101;&#112;&#105;&#115;&#111;&#100;&#101;&#115;".+?<a href="(.+?)" title="(.+?)"'
     aResult = oParser.parse(aResult[1][0], sPattern)
     
-    #print aResult
-    
     if (aResult[0] == True):
         total = len(aResult[1])
         dialog = cConfig().createDialog(SITE_NAME)
@@ -305,13 +347,16 @@ def showHosters():
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
     
     oRequestHandler = cRequestHandler(sUrl)
-    sHtmlContent = oRequestHandler.request();
+    sHtmlContent = oRequestHandler.request()
+    sHtmlContent = sHtmlContent.replace('<iframe src="http://www.promoliens.net','')
+    sHtmlContent = sHtmlContent.replace("<iframe src='cache_vote.php",'')
+    
 
-    sPattern = '<iframe src="(.+?)" FRAMEBORDER="0"|<script>eval\(unescape\((.+?)\); eval\(unescape\((.+?)\);<\/script>'
+    sPattern = '<iframe[^<>]+?src=[\'"]([^<>]+?)[\'"][^<]+?<\/iframe>|<script>eval\(unescape\((.+?)\); eval\(unescape\((.+?)\);<\/script>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
 
-    #print aResult
+    print aResult
     
     if (aResult[0] == True):
         total = len(aResult[1])
@@ -320,12 +365,43 @@ def showHosters():
             cConfig().updateDialog(dialog, total)
             if dialog.iscanceled():
                 break
-                
-            if aEntry[0]:
-                sHosterUrl = str(aEntry[0])
-            else:
+            
+            
+            if aEntry[0]:#adresse directe  
+                if re.match(".+?&#[0-9]+;", aEntry[0]):#directe mais codé html
+                    sHosterUrl = unescape(aEntry[0])
+                else:#directe en clair
+                    sHosterUrl = str(aEntry[0])
+            else:#adresse cryptee
+                print 'decryptage'
                 sHosterUrl = DecryptMangacity(aEntry[2])
+                sHosterUrl = sHosterUrl.replace('\\','')
                 
+                print sHosterUrl
+                
+                #Dans le cas ou l'adresse n'est pas directe
+                if not (sHosterUrl[:4] == 'http'):
+                    final = ''
+                    
+                    sPattern = '[src|SRC]=(?:\'|")(http:.+?)(?:\'|")'
+                    aResult = re.findall(sPattern,sHosterUrl)
+                    if aResult:
+                        final = aResult[0]
+                        
+                    sPattern = 'encodeURI\("(.+?)"\)'
+                    aResult = re.findall(sPattern,sHosterUrl)
+                    if aResult:
+                        final = aResult[0]
+                        
+                    sPattern = "'file': '(.+?)',"
+                    aResult = oParser.parse(sHosterUrl, sPattern)
+                    if aResult[0] == True:
+                        final = URL_MAIN + aResult[1][0]
+                        
+                    sHosterUrl = final
+
+            print 'Adresse :' + sHosterUrl
+
             #oHoster = __checkHoster(sHosterUrl)
             oHoster = cHosterGui().checkHoster(sHosterUrl)
             
@@ -337,3 +413,4 @@ def showHosters():
         cConfig().finishDialog(dialog) 
 
     oGui.setEndOfDirectory()
+    
