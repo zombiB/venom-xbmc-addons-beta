@@ -56,21 +56,20 @@ def DecryptMangacity(chain):
     return d
     
 def DecoTitle(string):
-    string = string.replace('(VF)','[COLOR teal][VF][/COLOR]')
-    string = string.replace('(VOSTFR)','[COLOR teal][VOSTFR][/COLOR]')
+    string = re.sub('(.*)([\[\(].{1,7}[\)\]])','\\1[COLOR coral]\\2[/COLOR]', str(string))
     return string
 
 #------------------------------------------------------------------------------------    
     
 SITE_IDENTIFIER = 'mangacity_org'
-SITE_NAME = 'MangaCity.org'
+SITE_NAME = 'MangaCity.org (en cours)'
 SITE_DESC = 'Anime en streaming'
 
 URL_MAIN = 'http://www.mangacity.org/'
 
-ANIM_ANIMS = ('http://www.mangacity.org/animes.php?liste=SHOWALPHA', 'ShowAlpha')
+ANIM_LIST = ('http://www.mangacity.org/animes.php?liste=SHOWALPHA', 'ShowAlpha')
 ANIM_GENRES = (True, 'showGenre')
-ANIM_NEW = ('http://www.mangacity.org/nouveautees.php', 'showMovies')
+ANIM_ANIMS = ('http://www.mangacity.org/nouveautees.php', 'showMovies')
 
 URL_SEARCH = ('', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
@@ -84,12 +83,12 @@ def load(): #function charger automatiquement par l'addon l'index de votre navig
     oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', ANIM_NEW[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_NEW[1], 'Animes Nouveaute', 'films.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
+    oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'Animes Nouveaute', 'films.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'Liste Animes', 'films.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', ANIM_LIST[0])
+    oGui.addDir(SITE_IDENTIFIER, ANIM_LIST[1], 'Liste Animes', 'films.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_GENRES[0])
@@ -141,7 +140,7 @@ def showGenre(): #affiche les genres
             
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN) + Link)
-            oGui.addMovie(SITE_IDENTIFIER, 'showMovies', '[B][COLOR red]' + sGenre + '[/COLOR][/B]', '', '', '', oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showMovies', '[COLOR red]' + sGenre + '[/COLOR]', '', '', '', oOutputParameterHandler)
  
         cConfig().finishDialog(dialog)
 
@@ -176,7 +175,7 @@ def ShowAlpha():
             
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN) + Link)
-            oGui.addMovie(SITE_IDENTIFIER, 'showMovies', '[B][COLOR red]' + sLetter + '[/COLOR][/B]', '', '', '', oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showMovies', 'Lettre - [B][COLOR red]' + sLetter + '[/COLOR][/B]', '', '', '', oOutputParameterHandler)
  
         cConfig().finishDialog(dialog)
 
@@ -216,11 +215,17 @@ def showMovies(sSearch = ''):
     
     #print sUrl
     
-    #En cas de bug, partie a reactiver
-    #fh = open('c:\\test.txt', "w")
-    #fh.write(sHtmlContent)
-    #fh.close()
-    #Elle va creer un fichier text.txt dans c:/ a me refaire passer merci
+    ##Partie a reactiver en cas de bug
+    #fichier = __file__
+    #m = re.search(r"(.+?)\\([^\\]+?)\.py", fichier )
+    #path =  m.group(1)
+    #try:
+    #    fh = open(path + '\\debug.txt', "w")
+    #    fh.write(sHtmlContent)
+    #    fh.close()
+    #except:
+    #    pass
+    ##Elle va creer un fichier debug.txt dans le repertoire du pluggin a me refaire passer merci
 
     sPattern = 'background: url\(\'([^\'].+?)\'\); background-size.+?alt="(.+?)" title.+?<a href=\'(.+?)\' class=\'button'
     
@@ -356,7 +361,7 @@ def showHosters():
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
 
-    print aResult
+    #print aResult
     
     if (aResult[0] == True):
         total = len(aResult[1])
@@ -373,11 +378,8 @@ def showHosters():
                 else:#directe en clair
                     sHosterUrl = str(aEntry[0])
             else:#adresse cryptee
-                print 'decryptage'
                 sHosterUrl = DecryptMangacity(aEntry[2])
                 sHosterUrl = sHosterUrl.replace('\\','')
-                
-                print sHosterUrl
                 
                 #Dans le cas ou l'adresse n'est pas directe
                 if not (sHosterUrl[:4] == 'http'):
@@ -400,7 +402,7 @@ def showHosters():
                         
                     sHosterUrl = final
 
-            print 'Adresse :' + sHosterUrl
+            #print 'Adresse :' + sHosterUrl
 
             #oHoster = __checkHoster(sHosterUrl)
             oHoster = cHosterGui().checkHoster(sHosterUrl)
@@ -413,4 +415,4 @@ def showHosters():
         cConfig().finishDialog(dialog) 
 
     oGui.setEndOfDirectory()
-    
+
