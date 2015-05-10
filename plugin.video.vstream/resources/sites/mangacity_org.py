@@ -116,11 +116,15 @@ def showGenre(): #affiche les genres
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
     
-    sPattern = '<a href="(categorie\.php\?watch=.+?)" onmouseover=.+?decoration:none;">(.+?)<\/a>'
+    fh = open('c://test.txt', "w")
+    fh.write(sHtmlContent)
+    fh.close()
+    
+    sPattern = '<a href="((?:categorie\.php\?watch=)|(?:&#99;&#97;&#116;&#101;&#103;&#111;&#114;&#105;&#101;&#46;&#112;&#104;&#112;&#63;&#119;&#97;&#116;&#99;&#104;&#61;).+?)" onmouseover=.+?decoration:none;">(.+?)<\/a>'
     
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
-    #print aResult
+    print aResult
     
     if (aResult[0] == True):
         total = len(aResult[1])
@@ -131,12 +135,14 @@ def showGenre(): #affiche les genres
             if dialog.iscanceled():
                 break
             
-            sGenre = aEntry[1]
-            Link = aEntry[0]
+            sGenre = unescape(aEntry[1])
+            Link = unescape(aEntry[0])
+            #print sGenre
             
-            sGenre = unicode(sGenre,'iso-8859-1')
+            #sGenre = unicode(sGenre,'iso-8859-1')
             sGenre = unicodedata.normalize('NFD', sGenre).encode('ascii', 'ignore')
             sGenre = sGenre.encode('ascii', 'ignore').decode('ascii')
+            print sGenre
             
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN) + Link)
@@ -380,6 +386,7 @@ def showHosters():
             else:#adresse cryptee
                 sHosterUrl = DecryptMangacity(aEntry[2])
                 sHosterUrl = sHosterUrl.replace('\\','')
+                #print 'Decrypte :' + sHosterUrl
                 
                 #Dans le cas ou l'adresse n'est pas directe
                 if not (sHosterUrl[:4] == 'http'):
