@@ -65,7 +65,7 @@ class cHoster(iHoster):
         if 'pixsil' in api_call:
             api_call = api_call + '|Referer=http://www.mangacity.org/jwplayer/player.swf'
         
-        print api_call
+        #print api_call
 
         if (api_call):
             return True, api_call
