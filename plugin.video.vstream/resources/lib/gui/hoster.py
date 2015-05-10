@@ -108,7 +108,6 @@ class cHosterGui:
 
     def checkHoster(self, sHosterUrl): 
     
-    
         if ('novamov' in sHosterUrl):
             return cHosterHandler().getHoster('novamov')
         if ('divxstage' in sHosterUrl):
@@ -195,8 +194,10 @@ class cHosterGui:
             return cHosterHandler().getHoster('vodlocker')
         if ('flashx' in sHosterUrl):
             return cHosterHandler().getHoster('flashx')
-        if ('pixsil' in sHosterUrl):
-            return cHosterHandler().getHoster('pixsil')   
+            
+        #Si aucun hebergeur connu on teste les liens directs
+        if (sHosterUrl[-4:] in '.mp4.avi.flv'):
+            return cHosterHandler().getHoster('lien_direct')   
 
         return False
         # step 2
