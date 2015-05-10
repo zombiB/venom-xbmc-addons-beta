@@ -100,7 +100,7 @@ class cGui:
         oGuiElement.setIcon(sIcon)
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setMeta(0)
-        oGuiElement.getInfoLabel()
+        #oGuiElement.getInfoLabel()
         
         oGuiElement.setDescription(sDesc)
         
