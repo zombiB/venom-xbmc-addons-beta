@@ -11,40 +11,52 @@ from resources.lib.config import cConfig #config
 from resources.lib.parser import cParser #recherche de code
 from resources.lib.util import cUtil
 import urllib2,urllib,re
-from t0mm0.common.net import Net
 import unicodedata
 
-#Si vous créer une source et la déposer dans le dossier sites elle seras directement visible sous xbmc
 
-SITE_IDENTIFIER = 'dpstream_net_serie' #identifant nom de votre fichier remplacer les espaces et les . par _ aucun caractere speciale
-SITE_NAME = 'DPStream NET (Serie)' # nom que xbmc affiche
-SITE_DESC = 'Series en streaming' #description courte de votre source
 
-URL_MAIN = 'http://www.dpstream.net/' # url de votre source
+SITE_IDENTIFIER = 'dpstream_net_Serie'
+SITE_NAME = 'DPStream.net (Series)'
+SITE_DESC = 'Series en streaming'
 
-#definis les url pour les catégories principale ceci et automatique si la deffition et présente elle seras afficher.
+URL_MAIN = 'http://www.dpstream.net/'
 
-SERIE_SERIES = ('http://www.dpstream.net/liste-series-en-streaming.html/', 'showSeries')
-ANIM_ANIMS = ('http://www.dpstream.net/liste-mangas-en-streaming.html/', 'showSeries')
-SERIE_VFS = ('ABCDEF', 'showSeriesAlpha')
+
+ANIM_ANIMS = ('ABCDEF', 'showAnimAlpha')
+SERIE_SERIES = ('ABCDEF', 'showSeriesAlpha')
 
 URL_SEARCH = ('', 'showSeries')
 FUNCTION_SEARCH = 'showSeries'
 
+def unescape(text):
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":
+                    return unichr(int(text[3:-1], 16))
+                else:
+                    return unichr(int(text[2:-1]))
+            except ValueError:
+                pass
+        else:
+            # named entity
+            try:
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+            except KeyError:
+                pass
+        return text # leave as is
+    return re.sub("&#?\w+;", fixup, text)
 
-def load(): #function charger automatiquement par l'addon l'index de votre navigation.
-    oGui = cGui() #ouvre l'affichage
 
-    oOutputParameterHandler = cOutputParameterHandler() #apelle la function pour sortir un parametre
-    oOutputParameterHandler.addParameter('siteUrl', 'http://venom/') # sortis du parametres siteUrl oublier pas la Majuscule
-    oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
-    
-    #Ajoute lien dossier (identifant, function a attendre, nom, icon, parametre de sortis)
-    #Puisque nous ne voulont pas atteindre une url on peux mettre ceux qu'on veut dans le parametre siteUrl
-    
+
+def load():
+    oGui = cGui()
+
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'films nouveautés', 'news.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
+    oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)    
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
@@ -54,9 +66,6 @@ def load(): #function charger automatiquement par l'addon l'index de votre navig
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
     oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'serie nouveautés', 'series.png', oOutputParameterHandler)
     
-    oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', SERIE_VFS[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_VFS[1], 'Séries VF', 'series.png', oOutputParameterHandler)
             
     oGui.setEndOfDirectory() #ferme l'affichage
 
@@ -65,52 +74,73 @@ def showSearch():
 
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-            showSeries(str(sSearchText))
-            oGui.setEndOfDirectory()
-            return  
+        showSeries(str(sSearchText))
+        oGui.setEndOfDirectory()
+        return  
     
-    
-def showGenre(): #affiche les genres
-    oGui = cGui()
- 
-    #juste a entrer c'est caterorie et les lien qui vont bien
-    liste = []
-    liste.append( ['Action','http://full-streaming.org/action/'] )
-    liste.append( ['Animation','http://full-streaming.org/animation/'] )
-    liste.append( ['Arts Martiaux','http://full-streaming.org/arts-martiaux/'] )
-    liste.append( ['Aventure','http://full-streaming.org/aventure/'] )
-    liste.append( ['Biopic','http://full-streaming.org/biopic/'] )
-    liste.append( ['Comedie','http://full-streaming.org/comedie/'] )
-    liste.append( ['Comedie Dramatique','http://full-streaming.org/comedie-dramatique/'] )
-    liste.append( ['Comedie Musicale','http://full-streaming.org/comedie-musicale/'] )
-    liste.append( ['Documentaire','http://full-streaming.org/documentaire/'] )
-    liste.append( ['Drame','http://full-streaming.org/drame/'] )
-    liste.append( ['Epouvante Horreur','http://full-streaming.org/epouvante-horreur/'] ) 
-    liste.append( ['Erotique','http://full-streaming.org/erotique'] )
-    liste.append( ['Espionnage','http://full-streaming.org/espionnage/'] )
-    liste.append( ['Famille','http://full-streaming.org/famille/'] )
-    liste.append( ['Fantastique','http://full-streaming.org/fantastique/'] )  
-    liste.append( ['Guerre','http://full-streaming.org/guerre/'] )
-    liste.append( ['Historique','http://full-streaming.org/historique/'] )
-    liste.append( ['Musical','http://full-streaming.org/musical/'] )
-    liste.append( ['Policier','http://full-streaming.org/policier/'] )
-    liste.append( ['Peplum','http://full-streaming.org/peplum/'] )
-    liste.append( ['Romance','http://full-streaming.org/romance/'] )
-    liste.append( ['Science Fiction','http://full-streaming.org/science-fiction/'] )
-    liste.append( ['Spectacle','http://full-streaming.org/spectacle/'] )
-    liste.append( ['Thriller','http://full-streaming.org/thriller/'] )
-    liste.append( ['Western','http://full-streaming.org/western/'] )
-    liste.append( ['Divers','http://full-streaming.org/divers/'] ) 
-                
-    for sTitle,sUrl in liste:#boucle
-        
-        oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', sUrl)#sortis de l'url en parametre
-        oGui.addDir(SITE_IDENTIFIER, 'showSeries', sTitle, 'genres.png', oOutputParameterHandler)
-        #ajouter un dossier vers la function showMovies avec le titre de chaque categorie.
-       
-    oGui.setEndOfDirectory() 
 
+def showAnimAlpha(sLettre = ''):
+    oGui = cGui()
+    oInputParameterHandler = cInputParameterHandler()
+    sUrl = oInputParameterHandler.getValue('siteUrl')
+    sTitle = oInputParameterHandler.getValue('sMovieTitle')
+    
+    dialog = cConfig().createDialog(SITE_NAME)
+    
+    if 'ABCDEF' in sUrl:
+        for i in range(0,27) :
+            cConfig().updateDialog(dialog, 27)
+            if dialog.iscanceled():
+                break
+            
+            sTitle = chr(64+i)
+            if sTitle == '@':
+                sTitle = '[0-9]'
+                
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', sTitle)
+            oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
+            oGui.addTV(SITE_IDENTIFIER, 'showSeriesAlpha','[COLOR teal] Lettre [COLOR red]'+ sTitle +'[/COLOR][/COLOR]','', '', '', oOutputParameterHandler)
+    else:
+        sLettre = sUrl
+        sUrl = 'http://www.dpstream.net/liste-mangas-en-streaming.html'
+
+        oRequestHandler = cRequestHandler(sUrl)
+        sHtmlContent = oRequestHandler.request();
+
+        sPattern = '<a class="b" href="([^<]+)">(' + str(sLettre) + '.+?)<.a>'
+
+        oParser = cParser()
+        aResult = oParser.parse(sHtmlContent, sPattern)
+        print aResult
+        
+        if (aResult[0] == True):
+            total = len(aResult[1])
+            dialog = cConfig().createDialog(SITE_NAME)
+        
+            for aEntry in aResult[1]:
+                cConfig().updateDialog(dialog, total)
+                if dialog.iscanceled():
+                    break
+                    
+                sTitle = aEntry[1]
+                
+                #Unicode convertion
+                sTitle = unicode(sTitle,'iso-8859-1')
+                sTitle = unicodedata.normalize('NFD', sTitle).encode('ascii', 'ignore')
+                sTitle = unescape(sTitle)
+
+                oOutputParameterHandler = cOutputParameterHandler()
+                oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN)+  str(aEntry[0]) )
+                oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
+                oGui.addTV(SITE_IDENTIFIER, 'seriesHosters',sTitle,'', '', '', oOutputParameterHandler)
+   
+        
+    cConfig().finishDialog(dialog)
+    
+    oGui.setEndOfDirectory()
+ 
+    
 def showSeriesAlpha(sLettre = ''):
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler()
@@ -160,6 +190,7 @@ def showSeriesAlpha(sLettre = ''):
                 #Unicode convertion
                 sTitle = unicode(sTitle,'iso-8859-1')
                 sTitle = unicodedata.normalize('NFD', sTitle).encode('ascii', 'ignore')
+                sTitle = unescape(sTitle)
 
                 oOutputParameterHandler = cOutputParameterHandler()
                 oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN)+  str(aEntry[0]) )
@@ -174,38 +205,31 @@ def showSeriesAlpha(sLettre = ''):
 def showSeries(sSearch = ''):
     oGui = cGui() #ouvre l'affichage
     
-    if sSearch:#si une url et envoyer directement garce a la function showSearch
+    if sSearch:
+        #on redecode la recherhce codé il y a meme pas une seconde par l'addon
+        sSearch = urllib2.unquote(sSearch)
 
-      #net = Net('','','',True)
-      #net.set_user_agent('Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0; yie9)')
-      #response = net.http_POST('http://www.dpstream.net/liste-series-en-streaming.html',{'recherchem2': '1999'},False)
-      #reponse  = net.http_GET('https://www.google.fr/?hl=fr&gws_rd=cr,ssl&ei=jiuyiuyiiuity')
-      #html = reponse.content
-      print 'debut'
-      print sSearch
-      query_args = { 'recherchem': str(sSearch) }
-      data = urllib.urlencode(query_args)
-      headers = {'User-Agent' : 'Mozilla 5.10'}
-      url = 'http://www.dpstream.net/liste-series-en-streaming.html'
-      request = urllib2.Request(url,data,headers)
-      fh = open('c:\\test.txt', "w")
+        print sSearch
+        query_args = { 'recherchem': str(sSearch) }
+        data = urllib.urlencode(query_args)
+        headers = {'User-Agent' : 'Mozilla 5.10'}
+        url = 'http://www.dpstream.net/liste-series-en-streaming.html'
+        request = urllib2.Request(url,data,headers)
+        #fh = open('c:\\test.txt', "w")
       
-      try: 
-          reponse = urllib2.urlopen(request)
-      except URLError, e:
-          print e.read()
-          print e.reason
+        try: 
+            reponse = urllib2.urlopen(request)
+        except URLError, e:
+            print e.read()
+            print e.reason
       
-      html = reponse.read()
+        html = reponse.read()
       
-      print '**************************************'
-      print "The Headers are: ", reponse.info()
-      print "This gets the code: ", reponse.code
-      fh.write(html)
-      fh.close()
-      print '**************************************'
+        #fh = open('c:\\test.txt', "w")
+        #fh.write(html)
+        #fh.close()
       
-      sHtmlContent = html
+        sHtmlContent = html
 
     else:
         oInputParameterHandler = cInputParameterHandler()
@@ -213,6 +237,10 @@ def showSeries(sSearch = ''):
     
         oRequestHandler = cRequestHandler(sUrl) # envoye une requete a l'url
         sHtmlContent = oRequestHandler.request(); #requete aussi    
+        
+    #fh = open('c:\\test.txt', "w")
+    #fh.write(sHtmlContent)
+    #fh.close()
  
     sPattern = '<h1 style="text-align:left;">\n*<a class="t" href="([^<]+)" id=".+?">(.+?)<.a>\n*<.h1>'
     
@@ -246,9 +274,9 @@ def showSeries(sSearch = ''):
         cConfig().finishDialog(dialog)
            
         sNextPage = __checkForNextPage(sHtmlContent)#cherche la page suivante
-        sNextPage = str(URL_MAIN)+sNextPage
         #print sNextPage
         if (sNextPage != False):
+            sNextPage = str(URL_MAIN)+sNextPage
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
             oGui.addDir(SITE_IDENTIFIER, 'showSeries', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
@@ -401,5 +429,3 @@ def seriesHosters(): #cherche les episode de series
       
                 
     oGui.setEndOfDirectory()
-    
-#Voila c'est un peux brouillon mais ça devrais aider un peux, n'esiter a poser vos question et meme a partager vos source
