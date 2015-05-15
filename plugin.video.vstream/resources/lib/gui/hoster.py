@@ -194,7 +194,8 @@ class cHosterGui:
             return cHosterHandler().getHoster('vodlocker')
         if ('flashx' in sHosterUrl):
             return cHosterHandler().getHoster('flashx')
-            
+        if ('easywatch' in sHosterUrl):
+            return cHosterHandler().getHoster('easywatch')
         #Si aucun hebergeur connu on teste les liens directs
         if (sHosterUrl[-4:] in '.mp4.avi.flv'):
             return cHosterHandler().getHoster('lien_direct')   
