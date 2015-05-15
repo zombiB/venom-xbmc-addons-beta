@@ -277,7 +277,7 @@ def showHosters():
             if dialog.iscanceled():
                 break
 
-            sHosterUrl = str(aEntry)
+            sHosterUrl = str(aEntry[0])
             oHoster = cHosterGui().checkHoster(aEntry[1].lower())                   
             oHoster = cHosterGui().checkHoster(aEntry[0].lower())                   
         
