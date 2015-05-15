@@ -200,7 +200,7 @@ def showMovies(sSearch = ''):
             if dialog.iscanceled():
                 break
                 
-            sThumb = str(aEntry[0]).replace('&w=240&;h=320','')
+            sThumb = str(aEntry[0]).replace('&w=210&h=280','')
             sTitle = aEntry[2]
             if aEntry[3] :
                 sTitle = sTitle + ' (' + aEntry[3] + ')'
@@ -265,7 +265,7 @@ def showHosters():
     sHtmlContent = oRequestHandler.request();
 
 
-    sPattern = '<iframe.+?src=[\'|"](.+?)[\'|"]'
+    sPattern = '<a href="([^<]+)" target="filmPlayer" class="ilink sinactive"><img alt="(.+?)"'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
 
@@ -278,7 +278,8 @@ def showHosters():
                 break
 
             sHosterUrl = str(aEntry)
-            oHoster = cHosterGui().checkHoster(sHosterUrl)                   
+            oHoster = cHosterGui().checkHoster(aEntry[1].lower())                   
+            oHoster = cHosterGui().checkHoster(aEntry[0].lower())                   
         
             if (oHoster != False):         
                 try:
