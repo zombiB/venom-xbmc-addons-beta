@@ -2,7 +2,7 @@ from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
 from resources.lib.config import cConfig
 from resources.hosters.hoster import iHoster
-import re
+import re,xbmcgui
 
 class cHoster(iHoster):
 
@@ -62,22 +62,37 @@ class cHoster(iHoster):
     def getMediaLink(self):
         return self.__getMediaLinkForGuest()
 
-    def __getMediaLinkForGuest(self):        
+    def __getMediaLinkForGuest(self):
+
         oRequest = cRequestHandler(self.__sUrl)
         sHtmlContent = oRequest.request()
         
-        
-        sPattern = 'file:"([^"]+)"';
-        
+        sPattern = 'file:"([^"]+)"(?:,label:"([^"]+)")*';
         oParser = cParser()
-        sHtmlContent=sHtmlContent.replace('|','/')
         aResult = oParser.parse(sHtmlContent, sPattern)
-
+        
+        api_call = False
 
         if (aResult[0] == True):
-            api_call = aResult[1][0]
+            #initialisation des tableaux
+            url=[]
+            qua=[]
+            
+            #Replissage des tableaux
+            for i in aResult[1]:
+                url.append(str(i[0]))
+                qua.append(str(i[1]))
+                
+            #Si au moins 1 url
+            if (url):
+            #Afichage du tableau
+                dialog2 = xbmcgui.Dialog()
+                ret = dialog2.select('Select Quality',qua)
+                if (ret > -1):
+                    api_call = url[ret]
+ 
+        if (api_call):
             return True, api_call
             
         return False, False
-        
-        
+
