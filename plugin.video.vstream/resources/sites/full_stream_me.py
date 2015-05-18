@@ -83,7 +83,10 @@ def load():
     oGui.setEndOfDirectory()
 
 def DecoTitle(string):
+    #pr les tag
     string = re.sub('(.*)([\[\(].{1,7}[\)\]])','\\1[COLOR coral]\\2[/COLOR]', str(string))
+    #pr les saisons
+    string = re.sub('(?i)(.*)(saison [0-9]+)','\\1[COLOR coral]\\2[/COLOR]', str(string))
     return string
  
 def showSearch():
@@ -220,9 +223,10 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
             oOutputParameterHandler.addParameter('sMovieTitle', sDisplayTitle)
             oOutputParameterHandler.addParameter('sThumbnail', sThumb)
-            if '/seriestv/' in sUrl  or 'saison' in aEntry[1]:
+
+            if '/seriestv/' in aEntry[1]  or 'saison' in aEntry[1]:
                 oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sDisplayTitle, '', sThumb,sCom, oOutputParameterHandler)
-            elif '/mangas/' in sUrl:
+            elif '/mangas/' in aEntry[1]:
                 oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sDisplayTitle, '', sThumb, sCom, oOutputParameterHandler)
             else:
                 oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sDisplayTitle, '', sThumb, sCom, oOutputParameterHandler)
@@ -256,6 +260,9 @@ def showHosters():
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
 
+    print 'ok'
+    print sUrl
+    
     oRequestHandler = cRequestHandler(sUrl)
     oRequestHandler.setRequestType(cRequestHandler.REQUEST_TYPE_POST)
     oRequestHandler.addParameters('login_name', 'vstream')
@@ -329,4 +336,5 @@ def serieHosters():
         cConfig().finishDialog(dialog)    
 
     oGui.setEndOfDirectory()
+    
     
