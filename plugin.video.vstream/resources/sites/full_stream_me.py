@@ -259,9 +259,6 @@ def showHosters():
     sUrl = oInputParameterHandler.getValue('siteUrl')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
-
-    print 'ok'
-    print sUrl
     
     oRequestHandler = cRequestHandler(sUrl)
     oRequestHandler.setRequestType(cRequestHandler.REQUEST_TYPE_POST)
