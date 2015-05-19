@@ -138,8 +138,8 @@ class cHosterGui:
             return cHosterHandler().getHoster('vk')
         if ('vkcom' in sHosterUrl):
             return cHosterHandler().getHoster('vk')   
-        #if ('videomega' in sHosterUrl):
-        #    return cHosterHandler().getHoster('videomega')
+        if ('videomega' in sHosterUrl):
+            return cHosterHandler().getHoster('videomega')
         if ('vidto' in sHosterUrl):
             return cHosterHandler().getHoster('vidto')
         if ('vidzi' in sHosterUrl):
@@ -196,6 +196,7 @@ class cHosterGui:
             return cHosterHandler().getHoster('flashx')
         if ('easywatch' in sHosterUrl):
             return cHosterHandler().getHoster('easywatch')
+
         #Si aucun hebergeur connu on teste les liens directs
         if (sHosterUrl[-4:] in '.mp4.avi.flv'):
             return cHosterHandler().getHoster('lien_direct')   
