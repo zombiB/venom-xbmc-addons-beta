@@ -3,7 +3,8 @@ from resources.lib.parser import cParser
 from resources.lib.gui.gui import cGui
 from resources.lib.util import cUtil
 from resources.hosters.hoster import iHoster
-import xbmcgui
+import xbmcgui,xbmc
+import urllib2
 
 class cHoster(iHoster):
 
@@ -57,12 +58,42 @@ class cHoster(iHoster):
         return self.__getMediaLinkForGuest()
 
     def __getMediaLinkForGuest(self):
-
-        oRequest = cRequestHandler(self.__sUrl)
-        sHtmlContent = oRequest.request()
         
+        headers = {'Host' : 'videomega.tv',
+                   'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0',
+                   #'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                   #'Accept-Language' : 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
+                   #'Accept-Encoding' : 'gzip, deflate',
+                   'Referer' : self.__sUrl
+                   }
+        
+        url = self.__sUrl
+        request = urllib2.Request(url,None,headers)
+      
+        try: 
+            reponse = urllib2.urlopen(request)
+        except URLError, e:
+            print e.read()
+            print e.reason
+      
+        sHtmlContent = reponse.read()
+        
+        #fh = open('c:\\vm.txt', "w")
+        #fh.write(sHtmlContent)
+        #fh.close()
+        
+        api_call = False
+        
+        #Premier test
+        sPattern =  '<source src="([^"]+)" type="video[^"]*"\/>'
+        oParser = cParser()
+        aResult = oParser.parse(sHtmlContent, sPattern)
+        
+        if (aResult[0] == True):
+            api_call = aResult[1][0]
+        
+        #Deuxieme test
         sPattern =  'unescape.+?"(.+?)"'
-              
         oParser = cParser()
         aResult = oParser.parse(sHtmlContent, sPattern)
 
@@ -72,15 +103,15 @@ class cHoster(iHoster):
             sPattern =  'file: "(.+?)"'
             oParser = cParser()
             aResult = oParser.parse(decoder, sPattern)
+            
             if (aResult[0] == True):
-                cGui().showInfo(self.__sDisplayName, 'Streaming', 5)
-                return True, aResult[1][0]
-            else:
-                cGui().showInfo(self.__sDisplayName, 'Fichier introuvable' , 5)
-                return False, False
+                api_call = aResult[1][0]
 
-        else:
-            cGui().showInfo(self.__sDisplayName, 'Fichier introuvable' , 5)
-            return False, False
+        #print 'url : ' + api_call
+
+        xbmc.sleep(6000)
         
+        if (api_call):
+            return True, api_call
+            
         return False, False
