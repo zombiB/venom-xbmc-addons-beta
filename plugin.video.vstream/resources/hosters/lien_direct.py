@@ -3,7 +3,6 @@ from resources.lib.parser import cParser
 from resources.lib.config import cConfig
 from resources.hosters.hoster import iHoster
 import re,urllib2
-import xbmcgui
 
 class cHoster(iHoster):
 
@@ -47,6 +46,15 @@ class cHoster(iHoster):
 
     def setUrl(self, sUrl):
         self.__sUrl = str(sUrl)
+        
+    def gethost(self, sUrl):
+        sPattern = 'https*:\/\/(.+?)\/.+?'
+        oParser = cParser()
+        aResult = oParser.parse(sUrl, sPattern)
+        if (aResult[0] == True):
+            return aResult[1][0][1]
+
+        return ''   
 
     def checkUrl(self, sUrl):
         return True
@@ -71,5 +79,4 @@ class cHoster(iHoster):
             return True, api_call
             
         return False, False
-        
-        
+ 
