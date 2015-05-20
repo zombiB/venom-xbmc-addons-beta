@@ -146,7 +146,7 @@ class cHosterGui:
             return cHosterHandler().getHoster('vidzi')
         if ('cloudy' in sHosterUrl):
             return cHosterHandler().getHoster('cloudy')
-        if ('filetrip' in sHosterUrl):
+        if ('http://filetrip' in sHosterUrl):
             return cHosterHandler().getHoster('filetrip')
         if ('uptostream' in sHosterUrl):
             return cHosterHandler().getHoster('uptostream')
@@ -160,9 +160,9 @@ class cHosterGui:
             return cHosterHandler().getHoster('mystream')
         if ('streamingentiercom/videophp?type=speed' in sHosterUrl):
             return cHosterHandler().getHoster('speedvideo')
-        if ('http://speedvideo.net/embed' in sHosterUrl):
+        if ('speedvideo' in sHosterUrl):
             return cHosterHandler().getHoster('speedvideo')
-        if ('http://www.speedvid.net/embed' in sHosterUrl):
+        if ('speedvid' in sHosterUrl):
             return cHosterHandler().getHoster('speedvid')
         if ('axavid' in sHosterUrl):
             return cHosterHandler().getHoster('axavid') 
