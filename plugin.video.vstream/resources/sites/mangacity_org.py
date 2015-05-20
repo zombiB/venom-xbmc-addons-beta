@@ -408,9 +408,19 @@ def showHosters():
                         final = URL_MAIN + aResult[1][0]
                         
                     sHosterUrl = final
-
+            
+            #test pr liens raccourcis
+            if 'http://goo.gl' in sHosterUrl:
+                try:
+                    headers = {'User-Agent' : 'Mozilla 5.10','Host' : 'goo.gl', 'Connection' : 'keep-alive'}
+                    request = urllib2.Request(sHosterUrl,None,headers)
+                    reponse = urllib2.urlopen(request)
+                    sHosterUrl = reponse.geturl()
+                except:
+                    pass
+                    
             #print 'Adresse :' + sHosterUrl
-
+            
             #oHoster = __checkHoster(sHosterUrl)
             oHoster = cHosterGui().checkHoster(sHosterUrl)
             
@@ -422,4 +432,3 @@ def showHosters():
         cConfig().finishDialog(dialog) 
 
     oGui.setEndOfDirectory()
-
