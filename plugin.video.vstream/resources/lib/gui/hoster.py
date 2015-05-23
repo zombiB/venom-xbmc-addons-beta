@@ -196,6 +196,10 @@ class cHosterGui:
             return cHosterHandler().getHoster('flashx')
         if ('easywatch' in sHosterUrl):
             return cHosterHandler().getHoster('easywatch')
+        if ('ok.ru' in sHosterUrl):
+            return cHosterHandler().getHoster('ok_ru')
+        if ('odnoklassniki' in sHosterUrl):
+            return cHosterHandler().getHoster('ok_ru')  
 
         #Si aucun hebergeur connu on teste les liens directs
         if (sHosterUrl[-4:] in '.mp4.avi.flv'):
