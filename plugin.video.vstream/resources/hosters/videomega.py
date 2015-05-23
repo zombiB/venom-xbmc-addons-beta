@@ -5,6 +5,7 @@ from resources.lib.util import cUtil
 from resources.hosters.hoster import iHoster
 import xbmcgui,xbmc
 import urllib2
+import re
 
 class cHoster(iHoster):
 
@@ -69,49 +70,65 @@ class cHoster(iHoster):
         
         url = self.__sUrl
         request = urllib2.Request(url,None,headers)
+        
+        #print url
       
         try: 
             reponse = urllib2.urlopen(request)
         except URLError, e:
             print e.read()
             print e.reason
-      
-        sHtmlContent = reponse.read()
         
-        #fh = open('c:\\vm.txt', "w")
-        #fh.write(sHtmlContent)
-        #fh.close()
+        sHtmlContent = reponse.read()
         
         api_call = False
         
-        #Premier test
+        #si on passe pr le hash code
+        if 'validatehash.php?hashkey=' in url:
+            if 'ref=' in sHtmlContent:
+                a = re.compile('.*?ref="(.+?)".*').findall(sHtmlContent)[0]
+                url = 'http://videomega.tv/cdn.php?ref=' + a
+                
+                request = urllib2.Request(url,None,headers)
+             
+                try: 
+                    reponse = urllib2.urlopen(request)
+                except URLError, e:
+                    print e.read()
+                    print e.reason
+             
+                sHtmlContent = reponse.read()
+                
+        #Premier test, lien ok
         sPattern =  '<source src="([^"]+)" type="video[^"]*"\/>'
         oParser = cParser()
         aResult = oParser.parse(sHtmlContent, sPattern)
         
         if (aResult[0] == True):
             api_call = aResult[1][0]
-        
-        #Deuxieme test
-        sPattern =  'unescape.+?"(.+?)"'
-        oParser = cParser()
-        aResult = oParser.parse(sHtmlContent, sPattern)
-
-        if (aResult[0] == True):
-            decoder = cUtil().urlDecode(aResult[1][0])
             
-            sPattern =  'file: "(.+?)"'
+        #Deuxieme test, lien code
+        if not api_call:
+            #troisieme test
+            sPattern =  'unescape.+?"(.+?)"'
             oParser = cParser()
-            aResult = oParser.parse(decoder, sPattern)
-            
+            aResult = oParser.parse(sHtmlContent, sPattern)
+
             if (aResult[0] == True):
-                api_call = aResult[1][0]
+                decoder = cUtil().urlDecode(aResult[1][0])
+                
+                sPattern =  'file: "(.+?)"'
+                oParser = cParser()
+                aResult = oParser.parse(decoder, sPattern)
+                
+                if (aResult[0] == True):
+                    api_call = aResult[1][0]
+                 
 
         #print 'url : ' + api_call
 
-        xbmc.sleep(6000)
-        
         if (api_call):
+            xbmc.sleep(6000)
             return True, api_call
             
         return False, False
