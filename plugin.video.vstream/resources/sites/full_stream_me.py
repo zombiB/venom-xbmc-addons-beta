@@ -260,14 +260,16 @@ def showHosters():
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
     
+    # oRequestHandler = cRequestHandler(sUrl)
+    # oRequestHandler.setRequestType(cRequestHandler.REQUEST_TYPE_POST)
+    # oRequestHandler.addParameters('login_name', 'vstream')
+    # oRequestHandler.addParameters('login_password', 'vstream')
+    # oRequestHandler.addParameters('Submit', '')
+    # oRequestHandler.addParameters('login', 'submit')
+    # sHtmlContent = oRequestHandler.request();
+    
     oRequestHandler = cRequestHandler(sUrl)
-    oRequestHandler.setRequestType(cRequestHandler.REQUEST_TYPE_POST)
-    oRequestHandler.addParameters('login_name', 'vstream')
-    oRequestHandler.addParameters('login_password', 'vstream')
-    oRequestHandler.addParameters('Submit', '')
-    oRequestHandler.addParameters('login', 'submit')
-    sHtmlContent = oRequestHandler.request();
-
+    sHtmlContent = oRequestHandler.request()
 
     sPattern = '<a href="([^<]+)" target="filmPlayer" class="ilink sinactive"><img alt="(.+?)"'
     oParser = cParser()
