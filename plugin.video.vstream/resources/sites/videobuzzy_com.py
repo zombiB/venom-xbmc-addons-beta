@@ -9,9 +9,6 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.config import cConfig
 from resources.lib.parser import cParser
-from resources.lib.util import cUtil
-
-import re
     
 SITE_IDENTIFIER = 'videobuzzy_com'
 SITE_NAME = 'Videobuzzy.com'
@@ -23,7 +20,7 @@ MOVIE_NETS = ('http://www.videobuzzy.com/top-video.php', 'showMovies')
 
 #URL_SEARCH = ('http://www.notre-ecole.net/?s=', 'showMovies')
 #FUNCTION_SEARCH = 'showMovies'
-
+    
 def load():
    
     oGui = cGui()
@@ -78,7 +75,7 @@ def showMovies(sSearch = ''):
     
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
-    print aResult
+    #print aResult
     if (aResult[0] == True):
         total = len(aResult[1])
         dialog = cConfig().createDialog(SITE_NAME)
@@ -87,12 +84,12 @@ def showMovies(sSearch = ''):
             if dialog.iscanceled():
                 break
             
-            
+            sTitle = aEntry[1].decode('latin-1').encode("utf-8")
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[0]))
-            oOutputParameterHandler.addParameter('sMovieTitle', str(aEntry[1]))
+            oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
             oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[2]))
-            oGui.addMisc(SITE_IDENTIFIER, 'showHosters', aEntry[1], '', aEntry[2], aEntry[3], oOutputParameterHandler)
+            oGui.addMisc(SITE_IDENTIFIER, 'showHosters', sTitle, '', aEntry[2], aEntry[3], oOutputParameterHandler)
         
         cConfig().finishDialog(dialog)
            
@@ -107,11 +104,13 @@ def showMovies(sSearch = ''):
 
 
 def __checkForNextPage(sHtmlContent):
-    sPattern = '<a class="page larger" href="(.+?)">.+?</a>'
+    sPattern = '<span class="current">.+?</span><a href="(.+?)" title=\'.+?\'>.+?</a>'
+    
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     if (aResult[0] == True):
-        return aResult[1][0]
+        print aResult[1][0]
+        return URL_MAIN+aResult[1][0]
 
     return False
     
@@ -125,12 +124,13 @@ def showHosters():
     
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request();
-    #sHtmlContent = sHtmlContent.replace('<iframe src="//www.facebook.com/plugins/like.php','').replace('<iframe src="http://www.facebook.com/plugins/likebox.php','')
                
         
-    sPattern = '<iframe.+?src="(.+?)"'
+    sPattern = 'file: "(.+?)", label: "(.+?)"'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
+    
+    #print aResult
     if (aResult[0] == True):
         total = len(aResult[1])
         dialog = cConfig().createDialog(SITE_NAME)
@@ -139,10 +139,11 @@ def showHosters():
             if dialog.iscanceled():
                 break
             
-            sHosterUrl = str(aEntry)
+            sHosterUrl = str(aEntry[0])
+            sTitle = sMovieTitle+' | '+aEntry[1]
             oHoster = cHosterGui().checkHoster(sHosterUrl)
             if (oHoster != False):
-                oHoster.setDisplayName(sMovieTitle)
+                oHoster.setDisplayName(sTitle)
                 oHoster.setFileName(sMovieTitle)
                 cHosterGui().showHoster(oGui, oHoster, sHosterUrl, sThumbnail)
 
