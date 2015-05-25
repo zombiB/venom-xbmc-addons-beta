@@ -560,7 +560,7 @@ def showHosters():
     sHtmlContent = sHtmlContent.replace('http://videomega.tv/validateemb.php','')
     sHtmlContent = sHtmlContent.replace('src="http://frenchstream.org/','')
         
-    sPattern = '(?:(?:<script type="text\/javascript")|(?:<iframe[^<>]+?)) src=[\'"](http:[^\'"]+?)[\'"]'
+    sPattern = '(?:(?:<script type="text\/javascript")|(?:<ifram[^<>]+?)) src=[\'"](http:[^\'"]+?)[\'"]'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     
