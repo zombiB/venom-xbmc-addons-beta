@@ -38,15 +38,19 @@ class track():
 def load():
     linktv = cConfig().getSetting('pvr-view')
     oGui = cGui()
-        
-    oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', URL_FILMS)
-    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR gold]Films NouveautÃ©s[/COLOR]', 'film.jpg', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_HD1080)
-    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR white]Cinema Mouvies[/COLOR]', 'film.jpg', oOutputParameterHandler)
-
+    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR gold]Vouz pouvez ajoutez vos films favoris dans la section Cinema plus d infos sur le ghithub vstream[/COLOR]', 'film.jpg', oOutputParameterHandler)
+            
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', URL_FILMS)
+    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR white]Films NouveautÃ©s[/COLOR]', 'film.jpg', oOutputParameterHandler)
+    
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', URL_HD1080)
+    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR white]Cinema Mouvies  [/COLOR]', 'film.jpg', oOutputParameterHandler) 
+    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
     oGui.addDir(SITE_IDENTIFIER, 'showGenre', '[COLOR white]Films Genre[/COLOR]', 'genres.jpg', oOutputParameterHandler)
