@@ -14,16 +14,15 @@ from resources.lib.config import cConfig
 import re, urllib2, urllib, os
 import xbmc, xbmcgui
 
-
  
 SITE_IDENTIFIER = 'archive_org'
-SITE_NAME = 'Archive.org'
+SITE_NAME = '[COLOR orange]Archive.org[/COLOR]'
 SITE_DESC = 'Film en streaming'
  
 
 URL_MAIN = 'http://www.archive.org' # url de votre source
 URL_FILMS = 'https://ia601408.us.archive.org/30/items/urllist_201412/fadoz.txt'
-URL_HD1080 = 'https://ia601408.us.archive.org/30/items/urllist_201412/hd1080.txt' 
+URL_HD1080 = 'https://ia601408.us.archive.org/30/items/urllist_201412/cinema.txt' 
 MOVIE_GENRES = (True, 'showGenre')
 
 cover = 'film.jpg'       
@@ -39,18 +38,22 @@ class track():
 def load():
     linktv = cConfig().getSetting('pvr-view')
     oGui = cGui()
-        
+    
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', URL_HD1080)
+    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR gold]Vouz pouvez ajoutez vos films favoris dans la section Cinema plus d infos sur le ghithub vstream[/COLOR]', 'film.jpg', oOutputParameterHandler)
+            
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_FILMS)
-    oGui.addDir(SITE_IDENTIFIER, 'showWeb', 'Films', 'film.jpg', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR white]Films NouveautÃ©s[/COLOR]', 'film.jpg', oOutputParameterHandler)
     
-    # oOutputParameterHandler = cOutputParameterHandler()
-    # oOutputParameterHandler.addParameter('siteUrl', URL_HD1080)
-    # oGui.addDir(SITE_IDENTIFIER, 'showWeb', 'HD1080', 'film.jpg', oOutputParameterHandler)
-
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', URL_HD1080)
+    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR white]Cinema Mouvies  [/COLOR]', 'film.jpg', oOutputParameterHandler) 
+    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-    oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genres', 'genres.jpg', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showGenre', '[COLOR white]Films Genre[/COLOR]', 'genres.jpg', oOutputParameterHandler)
     
     oGui.setEndOfDirectory()
 
