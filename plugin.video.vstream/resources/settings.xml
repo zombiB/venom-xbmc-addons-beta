@@ -38,7 +38,10 @@
 		<setting id="plugin_streamzzz_com" type="bool" label="streamzzz.com" default="true"/>
 		<setting id="plugin_vanoz_com" type="bool" label="Vanoz.com" default="true"/>
 		<setting id="plugin_vk_filmz_streamiz_com" type="bool" label="Vk-Filmz-Streamiz.com" default="true"/>
-		<setting id="plugin_voirfilms_org" type="bool" label="Voirfilms.org" default="true"/> 		
+		<setting id="plugin_voirfilms_org" type="bool" label="Voirfilms.org" default="true"/>
+		<setting id="plugin_mangacity_org" type="bool" label="Mangacity.org" default="true"/>
+		<setting id="plugin_archive_org" type="bool" label="Archive.org" default="true"/>
+		<setting id="plugin_videobuzzy_com" type="bool" label="Videobuzzy.com" default="true"/> 
     </category>
 
 <!-- Recherche_1 | search1_-->
@@ -67,6 +70,7 @@
 		<setting id="search1_streaming_series_org" type="bool" label="StreamingSeries.org (Séries)" default="false"/>
 		<setting id="search1_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false"/>
 		<setting id="search1_voirfilms_org" type="bool" label="Voirfilms.org (Films)" default="false"/>
+		<setting id="search1_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="false"/>
 		
     </category>
 	
@@ -96,6 +100,7 @@
 		<setting id="search2_streaming_series_org" type="bool" label="StreamingSeries.org (Séries)" default="true"/>
 		<setting id="search2_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false"/>
 		<setting id="search2_voirfilms_org" type="bool" label="Voirfilms.org (Films)" default="false"/>
+		<setting id="search2_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="false"/>
 		
     </category>
 	
@@ -125,6 +130,7 @@
 		<setting id="search3_streaming_series_org" type="bool" label="StreamingSeries.org (Séries)" default="false"/>
 		<setting id="search3_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false"/>
 		<setting id="search3_voirfilms_org" type="bool" label="Voirfilms.org (Films)" default="false"/>
+		<setting id="search3_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="true"/>
 		
     </category>
 	
@@ -154,6 +160,7 @@
 		<setting id="search4_streaming_series_org" type="bool" label="StreamingSeries.org (Séries)" default="false"/>
 		<setting id="search4_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false"/>
 		<setting id="search4_voirfilms_org" type="bool" label="Voirfilms.org (Films)" default="false"/>
+		<setting id="search4_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="false"/>
 		
     </category>
 	

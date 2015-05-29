@@ -62,7 +62,7 @@ def DecoTitle(string):
 #------------------------------------------------------------------------------------    
     
 SITE_IDENTIFIER = 'mangacity_org'
-SITE_NAME = 'MangaCity.org (en cours)'
+SITE_NAME = 'MangaCity.org'
 SITE_DESC = 'Anime en streaming'
 
 URL_MAIN = 'http://www.mangacity.org/'
@@ -116,15 +116,17 @@ def showGenre(): #affiche les genres
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
     
-    fh = open('c://test.txt', "w")
-    fh.write(sHtmlContent)
-    fh.close()
+    # fh = open('c://test.txt', "w")
+    # fh.write(sHtmlContent)
+    # fh.close()
     
-    sPattern = '<a href="((?:categorie\.php\?watch=)|(?:&#99;&#97;&#116;&#101;&#103;&#111;&#114;&#105;&#101;&#46;&#112;&#104;&#112;&#63;&#119;&#97;&#116;&#99;&#104;&#61;).+?)" onmouseover=.+?decoration:none;">(.+?)<\/a>'
+    #sPattern = '<a href="((?:categorie\.php\?watch=)|(?:&#99;&#97;&#116;&#101;&#103;&#111;&#114;&#105;&#101;&#46;&#112;&#104;&#112;&#63;&#119;&#97;&#116;&#99;&#104;&#61;).+?)" onmouseover=.+?decoration:none;">(.+?)<\/a>'
+    
+    sPattern = '<a href="(.+?)" onmouseover="this.style.color.+?>(.+?)</a>'
     
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
-    print aResult
+    #print aResult
     
     if (aResult[0] == True):
         total = len(aResult[1])
@@ -140,13 +142,13 @@ def showGenre(): #affiche les genres
             #print sGenre
             
             #sGenre = unicode(sGenre,'iso-8859-1')
-            sGenre = unicodedata.normalize('NFD', sGenre).encode('ascii', 'ignore')
-            sGenre = sGenre.encode('ascii', 'ignore').decode('ascii')
-            print sGenre
+            #sGenre = sGenre.encode('ascii', 'ignore').decode('ascii')
+            
+            sTitle = aEntry[1].decode("latin-1").encode("utf-8")
             
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN) + Link)
-            oGui.addMovie(SITE_IDENTIFIER, 'showMovies', '[COLOR red]' + sGenre + '[/COLOR]', '', '', '', oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showMovies', sGenre, '', '', '', oOutputParameterHandler)
  
         cConfig().finishDialog(dialog)
 

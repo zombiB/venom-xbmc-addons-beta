@@ -24,6 +24,7 @@ URL_MAIN = 'http://www.archive.org' # url de votre source
 URL_FILMS = 'https://ia601408.us.archive.org/30/items/urllist_201412/fadoz.txt'
 URL_HD1080 = 'https://ia601408.us.archive.org/30/items/urllist_201412/cinema.txt' 
 MOVIE_GENRES = (True, 'showGenre')
+MOVIE_NEWS = ('https://ia601408.us.archive.org/30/items/urllist_201412/fadoz.txt', 'showWeb')
 
 cover = 'film.jpg'       
 #sRootfilm = cConfig().getRootfilm()
@@ -45,11 +46,11 @@ def load():
             
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_FILMS)
-    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR white]Films NouveautÃ©s[/COLOR]', 'film.jpg', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR white]Films Nouveautés[/COLOR]', 'film.jpg', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_HD1080)
-    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR white]Cinema Mouvies  [/COLOR]', 'film.jpg', oOutputParameterHandler) 
+    oGui.addDir(SITE_IDENTIFIER, 'showWeb', '[COLOR white]Films Cinéma[/COLOR]', 'film.jpg', oOutputParameterHandler) 
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
@@ -120,8 +121,8 @@ def showWeb():
   
     oGui.setEndOfDirectory()
 
-### import code https://github.com/dvndrsn/MP4Parser ###
-### David Anderson code thanck's for good job ###
+# import code https://github.com/dvndrsn/MP4Parser ###
+# David Anderson code thanck's for good job ###
 
 def parseWebM3U(infile):
     inf = urllib.urlopen(infile)
