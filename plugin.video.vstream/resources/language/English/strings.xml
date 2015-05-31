@@ -16,7 +16,7 @@
         <string id="30026">IPTV and TV Guid</string>
         <string id="30027">Waiting time for player (ms)</string>
         <string id="30028">PVR addon setting</string>
-		<string id="30029">Enable error popup</string>
+	<string id="30029">Enable error popup</string>
 
          <!-- premium begin by 30031 - 30075 -->
         <string id="30031">Megavideo Premium Account</string>
@@ -39,10 +39,10 @@
         <string id="30079">Custom search 2</string>
         <string id="30080">Custom search 3</string>
         <string id="30081">Custom search 4</string>
-		<string id="30088">Visual Search</string>
-		<string id="30089">Search 2</string>
-		<string id="30090">Search 3</string>
-		<string id="30091">Search 4</string>
+	<string id="30088">Visual Search</string>
+	<string id="30089">Search 2</string>
+	<string id="30090">Search 3</string>
+	<string id="30091">Search 4</string>
 
 
         <!-- Pluginnames begin by 30201 - 30299 -->
@@ -50,12 +50,12 @@
         <string id="30202">Download</string>
         <string id="30203">Mark source</string>
         <string id="30204">No informations</string>
-		<string id="30205">Connection Failed</string>
-		<string id="30206">Mark movie</string>
-		<string id="30207">Mark Serie</string>
-		<string id="30208">Mark diverses</string>
-		<string id="30209">Delete Bookmark</string>
-		<string id="30210">Display Bookmark</string>
+	<string id="30205">Connection Failed</string>
+	<string id="30206">Mark movie</string>
+	<string id="30207">Mark Serie</string>
+	<string id="30208">Mark diverses</string>
+	<string id="30209">Delete Bookmark</string>
+	<string id="30210">Display Bookmark</string>
 		
         <!-- catégorie -->
         <string id="30101">Movies - News</string>
@@ -70,10 +70,9 @@
         <string id="30110">Animes - VF</string>
         <string id="30111">Animes - VOSTFR</string>
         <string id="30112">documentary</string>
-		<string id="30113">Sport</string>
-		<string id="30114">Web Video</string>
-		<string id="30115">Television</string>
-		<string id="30116">All the sources</string>
+	<string id="30113">Sport</string>
+	<string id="30114">Web Video</string>
+	<string id="30115">Television</string>
+	<string id="30116">All the sources</string>
 		
-
 </strings>
