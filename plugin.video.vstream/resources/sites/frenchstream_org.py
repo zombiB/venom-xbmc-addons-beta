@@ -520,11 +520,25 @@ def showLinks():
     #sHtmlContent = sHtmlContent.replace('<iframe src="//www.facebook.com/plugins/like.php','').replace('<iframe src="http://www.facebook.com/plugins/likebox.php','')
     
     a = sUrl.replace('/','\/')
-    sPattern = '<a href="(' + a + '.*?)"><span>(.+?)<\/span><\/a>'
     oParser = cParser()
+    
+    #quelques infos en plus
+    annee = ""
+    qualite = ""
+    sPattern = '<span>Ann..es<\/span>: <a href="[^<>]+?">([0-9]{4})<\/a>'
+    aResult = oParser.parse(sHtmlContent, sPattern)
+    if aResult[0]:
+        annee = aResult[1][0]
+    sPattern = '<span>Qualit..s<\/span>: <a href="[^<>]+?">([^<>]+?)<\/a>'
+    aResult = oParser.parse(sHtmlContent, sPattern)
+    if aResult[0]:
+        qualite = aResult[1][0]
+    
+    #Recuperation des liens
+    sPattern = '<a href="(' + a + '.*?)"><span>(.+?)<\/span><\/a>'
     aResult = oParser.parse(sHtmlContent, sPattern)
     
-    #print aResult
+    #print aResult    
     
     if (aResult[0] == True):
         total = len(aResult[1])
@@ -536,7 +550,7 @@ def showLinks():
             
             sHoster = cHosterGui().checkHoster(aEntry[1].lower())
             if (sHoster != False):
-                sTitle = sMovieTitle+' - [COLOR azure]'+aEntry[1]+'[/COLOR]'
+                sTitle = sMovieTitle + ' (' + annee + ') [COLOR coral]['+ qualite + '][/COLOR] - [COLOR azure]'+aEntry[1]+'[/COLOR]'
                 oOutputParameterHandler = cOutputParameterHandler()
                 oOutputParameterHandler.addParameter('siteUrl', str(aEntry[0]))
                 oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
