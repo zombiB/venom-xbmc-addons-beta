@@ -525,14 +525,13 @@ def showLinks():
     #quelques infos en plus
     annee = ""
     qualite = ""
-    sPattern = '<span>Ann..es<\/span>: <a href="[^<>]+?">([0-9]{4})<\/a>'
+    comm = ""
+    sPattern = '<div class="konuozet">(.+?)<\/div>.+?<span>Ann..es<\/span>: <a href="[^<>]+?">([0-9]{4})<\/a>.+?<span>Qualit..s<\/span>: <a href="[^<>]+?">(.+?)<\/a>'
     aResult = oParser.parse(sHtmlContent, sPattern)
     if aResult[0]:
-        annee = aResult[1][0]
-    sPattern = '<span>Qualit..s<\/span>: <a href="[^<>]+?">([^<>]+?)<\/a>'
-    aResult = oParser.parse(sHtmlContent, sPattern)
-    if aResult[0]:
-        qualite = aResult[1][0]
+        annee = aResult[1][0][1]
+        qualite = aResult[1][0][2]
+        comm = aResult[1][0][0].replace('<p>','')
     
     #Recuperation des liens
     sPattern = '<a href="(' + a + '.*?)"><span>(.+?)<\/span><\/a>'
@@ -555,7 +554,7 @@ def showLinks():
                 oOutputParameterHandler.addParameter('siteUrl', str(aEntry[0]))
                 oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
                 oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
-                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, '', oOutputParameterHandler)             
+                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, comm, oOutputParameterHandler)             
     
         cConfig().finishDialog(dialog)
 
