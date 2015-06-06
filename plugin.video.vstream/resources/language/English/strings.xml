@@ -74,5 +74,9 @@
 	<string id="30114">Web Video</string>
 	<string id="30115">Television</string>
 	<string id="30116">All the sources</string>
+			<!--version 3.0.2 -->
+		<string id="30120">Movies</string>
+		<string id="30121">Tvshow</string>
+		<string id="30122">Animes</string>
 		
 </strings>

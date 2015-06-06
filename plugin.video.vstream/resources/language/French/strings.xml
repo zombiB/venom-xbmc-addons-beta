@@ -74,6 +74,10 @@
 		<string id="30114">Vidéo du net</string>
 		<string id="30115">Télévision</string>
 		<string id="30116">Toutes les sources</string>
+		<!--version 3.0.2 -->
+		<string id="30120">Films</string>
+		<string id="30121">Séries</string>
+		<string id="30122">Animés</string>
 		
 
 </strings>

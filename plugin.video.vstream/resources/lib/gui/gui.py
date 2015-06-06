@@ -141,12 +141,18 @@ class cGui:
     
     
     def addDir(self, sId, sFunction, sLabel, sIcon, oOutputParameterHandler = ''):
+        
         oGuiElement = cGuiElement()
         oGuiElement.setSiteName(sId)
         oGuiElement.setFunction(sFunction)
         oGuiElement.setTitle(sLabel)
         oGuiElement.setIcon(sIcon)
         oGuiElement.setMeta(0)
+        
+        if oOutputParameterHandler.getValue('sFanart'):
+            sFanart = oOutputParameterHandler.getValue('sFanart')
+            oGuiElement.setFanart(sFanart)
+            print sFanart
         
         oOutputParameterHandler.addParameter('sFav', sFunction)
         
