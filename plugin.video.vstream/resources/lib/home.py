@@ -23,6 +23,17 @@ color_sports = cConfig().getSetting('color_sports')
 color_docs = cConfig().getSetting('color_docs')
 color_videos = cConfig().getSetting('color_videos')
 
+oPath = cConfig().getAddonPath()
+movie_fanart = os.path.join(oPath,'resources','art','movie_fanart.jpg')
+serie_fanart = os.path.join(oPath,'resources','art','serie_fanart.jpg')
+movie_fanart = os.path.join(oPath,'resources','art','movie_fanart.jpg')
+anim_fanart = os.path.join(oPath,'resources','art','anim_fanart.jpg')
+search_fanart = os.path.join(oPath,'resources','art','search_fanart.jpg')
+tv_fanart = os.path.join(oPath,'resources','art','tv_fanart.jpg')
+doc_fanart = os.path.join(oPath,'resources','art','doc_fanart.jpg')
+sport_fanart = os.path.join(oPath,'resources','art','sport_fanart.jpg')
+buzz_fanart = os.path.join(oPath,'resources','art','buzz_fanart.jpg')
+
 class cHome:
       
 
@@ -32,49 +43,57 @@ class cHome:
         if (cConfig().getSetting('home_cherches') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('sFanart', search_fanart)
             oGui.addDir(SITE_IDENTIFIER, 'showSearch', '[COLOR '+color_cherches+']'+cConfig().getlanguage(30076)+'[/COLOR]', 'search.png', oOutputParameterHandler)
         
         if (cConfig().getSetting('home_cherchev') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('sFanart', search_fanart)
             oGui.addDir('themoviedb_org', 'load', '[COLOR '+color_cherches+']'+cConfig().getlanguage(30088)+'[/COLOR]', 'searchtmdb.png', oOutputParameterHandler)
             
         if (cConfig().getSetting('home_tvs') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-            #oOutputParameterHandler.addParameter('sFanart', 'http://venom')
+            oOutputParameterHandler.addParameter('sFanart', tv_fanart)
             oGui.addDir('freebox', 'load', '[COLOR '+color_tvs+']'+cConfig().getlanguage(30115)+'[/COLOR]', 'tv.png', oOutputParameterHandler)
 
         if (cConfig().getSetting('home_films') == 'true'):
             
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('sFanart', movie_fanart)
             oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR '+color_films+']'+cConfig().getlanguage(30120)+'[/COLOR]', 'films.png', oOutputParameterHandler)
             
 
         if (cConfig().getSetting('home_series') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('sFanart', serie_fanart)
             oGui.addDir(SITE_IDENTIFIER, 'showSeries', '[COLOR '+color_series+']'+cConfig().getlanguage(30121)+'[/COLOR]', 'series.png', oOutputParameterHandler)
 
         if (cConfig().getSetting('home_anims') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('sFanart', anim_fanart)
             oGui.addDir(SITE_IDENTIFIER, 'showAnimes', '[COLOR '+color_anims+']'+cConfig().getlanguage(30122)+'[/COLOR]', 'animes.png', oOutputParameterHandler)
 
         if (cConfig().getSetting('home_docs') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('sFanart', doc_fanart)
             oGui.addDir(SITE_IDENTIFIER, 'docDocs', '[COLOR '+color_docs+']'+cConfig().getlanguage(30112)+'[/COLOR]', 'doc.png', oOutputParameterHandler)
         
         if (cConfig().getSetting('home_sports') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('sFanart', sport_fanart)
             oGui.addDir(SITE_IDENTIFIER, 'sportSports', '[COLOR '+color_sports+']'+cConfig().getlanguage(30113)+'[/COLOR]', 'sport.png', oOutputParameterHandler)
 
         if (cConfig().getSetting('home_videos') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('sFanart', buzz_fanart)
             oGui.addDir(SITE_IDENTIFIER, 'movieNets', '[COLOR '+color_videos+']'+cConfig().getlanguage(30114)+'[/COLOR]', 'buzz.png', oOutputParameterHandler)
         
         oOutputParameterHandler = cOutputParameterHandler()
