@@ -26,6 +26,18 @@ class cGuiElement:
         self.__sThumbnail = ''
         self.__sIcon = self.DEFAULT_FOLDER_ICON
         self.__sFanart = self.__sRootArt+'fanart.jpg'
+        
+        self.__sFanart_search = self.__sRootArt+'search_fanart.jpg'
+        self.__sFanart_tv = self.__sRootArt+'tv_fanart.jpg'
+        self.__sFanart_films = self.__sRootArt+'films_fanart.jpg'
+        self.__sFanart_series = self.__sRootArt+'series_fanart.jpg'
+        self.__sFanart_animes = self.__sRootArt+'animes_fanart.jpg'
+        self.__sFanart_doc = self.__sRootArt+'doc_fanart.jpg'
+        self.__sFanart_sport = self.__sRootArt+'sport_fanart.jpg'
+        self.__sFanart_buzz = self.__sRootArt+'buzz_fanart.jpg'
+        self.__sFanart_mark = self.__sRootArt+'mark_fanart.jpg'
+        self.__sFanart_host = self.__sRootArt+'host_fanart.jpg'
+        
         self.__aItemValues = {}
         self.__aProperties = {}
         self.__aContextElements = []
@@ -117,6 +129,30 @@ class cGuiElement:
     
     def setFanart(self, sFanart):
         self.__sFanart = sFanart
+        
+    def setDirFanart(self, sIcon):
+        if (sIcon == 'search.png') | (sIcon == 'searchtmdb.png'):
+            self.__sFanart = self.__sFanart_search
+        elif sIcon == 'tv.png':
+            self.__sFanart = self.__sFanart_tv
+        elif sIcon == 'films.png':
+            self.__sFanart = self.__sFanart_films
+        elif sIcon == 'series.png':
+            self.__sFanart = self.__sFanart_series
+        elif sIcon == 'animes.png':
+            self.__sFanart = self.__sFanart_animes
+        elif sIcon == 'doc.png':
+            self.__sFanart = self.__sFanart_doc
+        elif sIcon == 'sport.png':
+            self.__sFanart = self.__sFanart_sport
+        elif sIcon == 'buzz.png':
+            self.__sFanart = self.__sFanart_buzz
+        elif sIcon == 'mark.png':
+            self.__sFanart = self.__sFanart_mark
+        elif sIcon == 'host.png':
+            self.__sFanart = self.__sFanart_host
+        else :
+            self.__sFanart = self.__sFanart
 
     def getFanart(self):
         return self.__sFanart

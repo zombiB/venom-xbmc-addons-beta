@@ -149,9 +149,11 @@ class cGui:
         oGuiElement.setIcon(sIcon)
         oGuiElement.setMeta(0)
 
-        if oOutputParameterHandler.getValue('sFanart'):
-            sFanart = oOutputParameterHandler.getValue('sFanart')
-            oGuiElement.setFanart(sFanart)
+        oGuiElement.setDirFanart(sIcon)
+            
+        # if oOutputParameterHandler.getValue('sFanart'):
+            # sFanart = oOutputParameterHandler.getValue('sFanart')
+            # oGuiElement.setFanart(sFanart)
         
         oOutputParameterHandler.addParameter('sFav', sFunction)
         
