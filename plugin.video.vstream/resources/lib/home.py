@@ -33,6 +33,8 @@ tv_fanart = os.path.join(oPath,'resources','art','tv_fanart.jpg')
 doc_fanart = os.path.join(oPath,'resources','art','doc_fanart.jpg')
 sport_fanart = os.path.join(oPath,'resources','art','sport_fanart.jpg')
 buzz_fanart = os.path.join(oPath,'resources','art','buzz_fanart.jpg')
+mark_fanart = os.path.join(oPath,'resources','art','mark_fanart.jpg')
+host_fanart = os.path.join(oPath,'resources','art','host_fanart.jpg')
 
 class cHome:
       
@@ -98,10 +100,12 @@ class cHome:
         
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', mark_fanart)
         oGui.addDir('cFav', 'getFavourites', '[COLOR teal]'+cConfig().getlanguage(30210)+'[/COLOR]', 'mark.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', host_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'showSources', cConfig().getlanguage(30116), 'host.png', oOutputParameterHandler)
 
 
@@ -113,10 +117,12 @@ class cHome:
         
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', tv_fanart)
         oGui.addDir('freebox', 'load', '[COLOR '+color_tvs+']Télévision Box[/COLOR]', 'tv.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', tv_fanart)
         oGui.addDir('chaine_tv', 'load', '[COLOR '+color_tvs+']Tv du net[/COLOR]', 'tv.png', oOutputParameterHandler)
         
         oGui.setEndOfDirectory()
@@ -126,22 +132,27 @@ class cHome:
         
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', movie_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'movieNews', '[COLOR '+color_films+']'+cConfig().getlanguage(30101)+'[/COLOR]', 'news.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', movie_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'movieViews', '[COLOR '+color_films+']'+cConfig().getlanguage(30102)+'[/COLOR]', 'views.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', movie_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'movieComments', '[COLOR '+color_films+']'+cConfig().getlanguage(30103)+'[/COLOR]', 'comments.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', movie_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'movieNotes', '[COLOR '+color_films+']'+cConfig().getlanguage(30104)+'[/COLOR]', 'notes.png', oOutputParameterHandler)
        
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', movie_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'movieGenres', '[COLOR '+color_films+']'+cConfig().getlanguage(30105)+'[/COLOR]', 'genres.png', oOutputParameterHandler)
         
         oGui.setEndOfDirectory()
@@ -151,14 +162,17 @@ class cHome:
         
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', serie_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'serieSeries', '[COLOR '+color_series+']'+cConfig().getlanguage(30106)+'[/COLOR]', 'series.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', serie_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'serieVfs', '[COLOR '+color_series+']'+cConfig().getlanguage(30107)+'[/COLOR]', 'seriesvf.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', serie_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'serieVostfrs', '[COLOR '+color_series+']'+cConfig().getlanguage(30108)+'[/COLOR]', 'seriesvostfr.png', oOutputParameterHandler)
         
         oGui.setEndOfDirectory()
@@ -168,14 +182,17 @@ class cHome:
         
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', anim_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'animAnims', '[COLOR '+color_anims+']'+cConfig().getlanguage(30109)+'[/COLOR]', 'animes.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', anim_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'animVfs', '[COLOR '+color_anims+']'+cConfig().getlanguage(30110)+'[/COLOR]', 'animesvf.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('sFanart', anim_fanart)
         oGui.addDir(SITE_IDENTIFIER, 'animVostfrs', '[COLOR '+color_anims+']'+cConfig().getlanguage(30111)+'[/COLOR]', 'animesvostfr.png', oOutputParameterHandler)
         
         oGui.setEndOfDirectory()
@@ -188,7 +205,8 @@ class cHome:
         for aPlugin in aPlugins:
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-            oGui.addDir(aPlugin[1], 'load', aPlugin[0], 'tv.png', oOutputParameterHandler)
+            oOutputParameterHandler.addParameter('sFanart', host_fanart)
+            oGui.addDir(aPlugin[1], 'load', aPlugin[0], 'host.png', oOutputParameterHandler)
 
         oGui.setEndOfDirectory()
 
