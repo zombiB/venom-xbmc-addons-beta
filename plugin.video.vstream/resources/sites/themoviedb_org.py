@@ -44,7 +44,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/movie/popular')
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Films Populaires', 'films.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Films Populaires', 'comments.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/movie/now_playing')
@@ -52,7 +52,7 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/movie/top_rated')
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Films les mieux notés', 'films.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Films les mieux notés', 'notes.png', oOutputParameterHandler)
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/genre/movie/list')
@@ -60,15 +60,15 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/tv/popular')
-    oGui.addDir(SITE_IDENTIFIER, 'showSeries', 'Séries Populaires', 'films.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showSeries', 'Séries Populaires', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/tv/on_the_air')
-    oGui.addDir(SITE_IDENTIFIER, 'showSeries', 'Séries a la tv', 'films.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showSeries', 'Séries a la tv', 'series.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/tv/top_rated')
-    oGui.addDir(SITE_IDENTIFIER, 'showSeries', 'Séries les mieux notés', 'films.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showSeries', 'Séries les mieux notés', 'series.png', oOutputParameterHandler)
 
     # oOutputParameterHandler = cOutputParameterHandler()
     # oOutputParameterHandler.addParameter('siteUrl', API_URL+'/genre/tv/list')
@@ -211,7 +211,7 @@ def showSeries():
 
 def showActors():
     oGui = cGui()
- 
+    
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
 
@@ -231,7 +231,7 @@ def showActors():
 
     if (total > 0):
         for i in result['results']:
-            print i['name']
+            #print i['name']
             sName, sThumbnail = i['name'], i['profile_path']
             
             if sThumbnail:
@@ -240,26 +240,35 @@ def showActors():
                     
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(sUrl))
-            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))    
-            oGui.addMisc(SITE_IDENTIFIER, 'showActors', '[COLOR red]'+str(sName)+'[/COLOR]', '', sThumbnail, '', oOutputParameterHandler)
+            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail)) 
             
-            for i in i['known_for']:
+            addMoviedb(oGui, SITE_IDENTIFIER, 'showActors', '[COLOR red]'+str(sName)+'[/COLOR]', '', sThumbnail, '', oOutputParameterHandler)
 
-                sId, sTitle, sOtitle, sThumbnail, sFanart = i['id'], i['title'], i['original_title'], i['poster_path'], i['backdrop_path']
-                
+            for e in i['known_for']:
+                try:                     
+                    sTitle = unicodedata.normalize('NFKD', e['title']).encode('ascii','ignore')
+                    
+                except: sTitle = "Aucune information"
+                sId = e['id']
+                #sTitle = e['title']
+                sThumbnail = e['poster_path']
+                sFanart = POSTER_URL+e['backdrop_path']
+                                                                
                 if sThumbnail:
                     sThumbnail = POSTER_URL+sThumbnail
                 else: sThumbnail = ''
 
-                sTitle = sTitle.encode("utf-8")
+                #sTitle = sTitle.encode("utf-8")
 
                 oOutputParameterHandler = cOutputParameterHandler()
-                oOutputParameterHandler.addParameter('siteUrl', str('none'))
+                oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
                 oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
-                oOutputParameterHandler.addParameter('disp', '')
+                oOutputParameterHandler.addParameter('disp', 'none')
                 oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))          
                 
-                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, '', oOutputParameterHandler)
+                
+                addMoviedb(oGui, SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, sFanart, oOutputParameterHandler)
+                
             
         if (iPage > 0):
             iNextPage = int(iPage) + 1
@@ -295,7 +304,7 @@ def showHosters():
     
     disp = ['search1','search2','search3','search4']
     
-    if (sDisp == ''):
+    if (sDisp == 'none'):
         ret = dialog2.select('Select Recherche',dialog_select)
     else:
         ret = disp.index(sDisp)
@@ -329,4 +338,22 @@ def showHosters():
                 pass
                 
     oGui.setEndOfDirectory()
+    
+def addMoviedb(oGui, sId, sFunction, sLabel, sIcon, sThumbnail, fanart, oOutputParameterHandler = ''):
+    #oGui = cGui()
+    oGuiElement = cGuiElement()
+    
+    cGui.CONTENT = "files"
+    oGuiElement = cGuiElement()
+    oGuiElement.setSiteName(sId)
+    oGuiElement.setFunction(sFunction)
+    oGuiElement.setTitle(sLabel)
+    oGuiElement.setIcon(sIcon)
+    oGuiElement.setMeta(0)
+    oGuiElement.setThumbnail(sThumbnail)
+    oGuiElement.setFanart(fanart)
+    
+    
+    #cGui.addFolder(oGuiElement, oOutputParameterHandler)
+    oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
 

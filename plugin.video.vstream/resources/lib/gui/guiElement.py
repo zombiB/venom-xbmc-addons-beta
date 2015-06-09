@@ -128,7 +128,8 @@ class cGuiElement:
         return self.__sThumbnail
     
     def setFanart(self, sFanart):
-        self.__sFanart = sFanart
+        if sFanart != '':
+            self.__sFanart = sFanart
         
     def setDirFanart(self, sIcon):
         if (sIcon == 'search.png') | (sIcon == 'searchtmdb.png'):
