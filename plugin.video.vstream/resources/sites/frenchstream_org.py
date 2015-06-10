@@ -316,6 +316,7 @@ def showQlt():
     sUrl = oInputParameterHandler.getValue('siteUrl')
  
     liste = []
+    liste.append( ['1080p','http://frenchstream.org/qualites/1080p/'] )   
     liste.append( ['720p','http://frenchstream.org/qualites/720p/'] )
     liste.append( ['BDRip','http://frenchstream.org/qualites/BDRip/'] )
     liste.append( ['BRRip','http://frenchstream.org/qualites/BRRip/'] )
@@ -497,7 +498,7 @@ def showSeries():
 
 
 def __checkForNextPage(sHtmlContent):
-    sPattern = '<aclass="page larger" href="(.+?)">'
+    sPattern = '<a class="page larger" href="(.+?)">'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     if (aResult[0] == True):
