@@ -29,7 +29,9 @@ API_VERS = '3'
 API_URL = URL_MAIN+API_VERS
 
 POSTER_URL = 'https://image.tmdb.org/t/p/w396/'
+#FANART_URL = 'https://image.tmdb.org/t/p/w780/'
 FANART_URL = 'https://image.tmdb.org/t/p/w1280/'
+#FANART_URL = 'https://image.tmdb.org/t/p/original/'
 
 
 #https://api.themoviedb.org/3/movie/popular?api_key=92ab39516970ab9d86396866456ec9b6
@@ -137,6 +139,7 @@ def showMovies():
             else: sThumbnail = ''
 
             sTitle = sTitle.encode("utf-8")
+            sFanart = FANART_URL+sFanart
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str('none'))
@@ -144,7 +147,7 @@ def showMovies():
             oOutputParameterHandler.addParameter('disp', 'search1')
             oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))          
             
-            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, '', oOutputParameterHandler)
+            addMoviedb(oGui, SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, sFanart, oOutputParameterHandler)
             
         if (iPage > 0):
             iNextPage = int(iPage) + 1
@@ -185,7 +188,8 @@ def showSeries():
             sId, sTitle, sOtitle, sThumbnail, sFanart = i['id'], i['name'], i['original_name'], i['poster_path'], i['backdrop_path']
             if sThumbnail:
                 sThumbnail = POSTER_URL+sThumbnail
-            else: sThumbnail = ''
+            else: sThumbnail = ''            
+            sFanart = FANART_URL+sFanart
 
             sTitle = sTitle.encode("utf-8")
 
@@ -195,7 +199,7 @@ def showSeries():
             oOutputParameterHandler.addParameter('disp', 'search2')
             oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))          
             
-            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, '', oOutputParameterHandler)
+            addMoviedb(oGui, SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, sFanart, oOutputParameterHandler)
             
         if (iPage > 0):
             iNextPage = int(iPage) + 1
@@ -250,12 +254,10 @@ def showActors():
                     
                 except: sTitle = "Aucune information"
                 sId = e['id']
-                #sTitle = e['title']
-                sThumbnail = e['poster_path']
-                sFanart = POSTER_URL+e['backdrop_path']
+                sFanart = FANART_URL+e['backdrop_path']
                                                                 
                 if sThumbnail:
-                    sThumbnail = POSTER_URL+sThumbnail
+                    sThumbnail = POSTER_URL+e['poster_path']
                 else: sThumbnail = ''
 
                 #sTitle = sTitle.encode("utf-8")
