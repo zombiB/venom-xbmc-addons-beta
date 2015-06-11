@@ -4,9 +4,9 @@ from resources.lib.parser import cParser
 from resources.lib.gui.gui import cGui
 import urllib, urllib2
 import cookielib
-import json
 #import urlresolver
-import simplejson
+try:    import json
+except: import simplejson as json
 import re
 import base64
 import time

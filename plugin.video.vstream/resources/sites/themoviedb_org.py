@@ -12,9 +12,12 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
 from resources.lib.util import cUtil
-import json, urllib, unicodedata, re
+import urllib, unicodedata, re
 import xbmcgui
 import xbmc
+
+try:    import json
+except: import simplejson as json
 
 SITE_IDENTIFIER = 'themoviedb_org'
 SITE_NAME = 'TheMovieDB (beta)'
@@ -139,7 +142,9 @@ def showMovies():
             else: sThumbnail = ''
 
             sTitle = sTitle.encode("utf-8")
-            sFanart = FANART_URL+sFanart
+            if sFanart:
+                sFanart = FANART_URL+sFanart
+            else : sFanart = ''
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str('none'))

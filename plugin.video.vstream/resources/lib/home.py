@@ -174,49 +174,49 @@ class cHome:
 
 
     def movieNews(self):
-        self.__callpluging('MOVIE_NEWS', '[COLOR '+color_films+']Films Nouveautés[/COLOR]', 'news.png')
+        self.__callpluging('MOVIE_NEWS', '[COLOR '+color_films+']'+cConfig().getlanguage(30101)+'[/COLOR]', 'news.png')
 
     def movieViews(self):
-        self.__callpluging('MOVIE_VIEWS', '[COLOR '+color_films+']Films Les Plus Vus[/COLOR]', 'views.png')
+        self.__callpluging('MOVIE_VIEWS', '[COLOR '+color_films+']'+cConfig().getlanguage(30102)+'[/COLOR]', 'views.png')
 
     def movieComments(self):
-        self.__callpluging('MOVIE_COMMENTS', '[COLOR '+color_films+']Films Les Plus Commentés[/COLOR]', 'comments.png')
+        self.__callpluging('MOVIE_COMMENTS', '[COLOR '+color_films+']'+cConfig().getlanguage(30103)+'[/COLOR]', 'comments.png')
 
     def movieNotes(self):
-        self.__callpluging('MOVIE_NOTES', '[COLOR '+color_films+']Films Les Mieux Notés[/COLOR]', 'notes.png')
+        self.__callpluging('MOVIE_NOTES', '[COLOR '+color_films+']'+cConfig().getlanguage(30104)+'[/COLOR]', 'notes.png')
 
     def movieGenres(self):
-        self.__callpluging('MOVIE_GENRES', '[COLOR '+color_films+']Films Par Genres[/COLOR]', 'genres.png')
+        self.__callpluging('MOVIE_GENRES', '[COLOR '+color_films+']'+cConfig().getlanguage(30105)+'[/COLOR]', 'genres.png')
 
     def serieSeries(self):
-        self.__callpluging('SERIE_SERIES', '[COLOR '+color_series+']Séries Nouveautés[/COLOR]', 'series.png')
+        self.__callpluging('SERIE_SERIES', '[COLOR '+color_series+']'+cConfig().getlanguage(30106)+'[/COLOR]', 'series.png')
 
     def serieVfs(self):
-        self.__callpluging('SERIE_VFS', '[COLOR '+color_series+']Séries VF[/COLOR]', 'series.png')
+        self.__callpluging('SERIE_VFS', '[COLOR '+color_series+']'+cConfig().getlanguage(30107)+'[/COLOR]', 'series.png')
 
     def serieVostfrs(self):
-        self.__callpluging('SERIE_VOSTFRS', '[COLOR '+color_series+']Séries VOSTFR[/COLOR]', 'series.png')
+        self.__callpluging('SERIE_VOSTFRS', '[COLOR '+color_series+']'+cConfig().getlanguage(30108)+'[/COLOR]', 'series.png')
 
     def animAnims(self):
-        self.__callpluging('ANIM_ANIMS', '[COLOR '+color_anims+']Animes Nouveautés[/COLOR]', 'animes.png')
+        self.__callpluging('ANIM_ANIMS', '[COLOR '+color_anims+']'+cConfig().getlanguage(30109)+'[/COLOR]', 'animes.png')
 
     def animVfs(self):
-        self.__callpluging('ANIM_VFS', '[COLOR '+color_anims+']Animes VF[/COLOR]', 'animes.png')
+        self.__callpluging('ANIM_VFS', '[COLOR '+color_anims+']'+cConfig().getlanguage(30110)+'[/COLOR]', 'animes.png')
 
     def animVostfrs(self):
-        self.__callpluging('ANIM_VOSTFRS', '[COLOR '+color_anims+']Animes VOSTFR[/COLOR]', 'animes.png')
+        self.__callpluging('ANIM_VOSTFRS', '[COLOR '+color_anims+']'+cConfig().getlanguage(30111)+'[/COLOR]', 'animes.png')
 
     def animMovies(self):
         self.__callpluging('ANIM_MOVIES', '[COLOR '+color_anims+']Animes OAVS/Films[/COLOR]', 'animes.png')
 
     def docDocs(self):
-        self.__callpluging('DOC_DOCS', '[COLOR '+color_docs+']Documentaires[/COLOR]', 'doc.png')
+        self.__callpluging('DOC_DOCS', '[COLOR '+color_docs+']'+cConfig().getlanguage(30112)+'[/COLOR]', 'doc.png')
 
     def sportSports(self):
-        self.__callpluging('SPORT_SPORTS', '[COLOR '+color_sports+']Sport[/COLOR]', 'sport.png')
+        self.__callpluging('SPORT_SPORTS', '[COLOR '+color_sports+']'+cConfig().getlanguage(30113)+'[/COLOR]', 'sport.png')
 
     def movieNets(self):
-        self.__callpluging('MOVIE_NETS', '[COLOR '+color_videos+']Vidéo du Net[/COLOR]', 'buzz.png')
+        self.__callpluging('MOVIE_NETS', '[COLOR '+color_videos+']'+cConfig().getlanguage(30114)+'[/COLOR]', 'buzz.png')
         
     def showSearch(self):
 
