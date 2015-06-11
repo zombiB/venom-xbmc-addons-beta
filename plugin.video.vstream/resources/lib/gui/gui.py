@@ -27,6 +27,7 @@ class cGui:
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setMeta(1)
         oGuiElement.setDescription(sDesc)
+        oGuiElement.setDirFanart(sIcon)
         
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
@@ -64,6 +65,7 @@ class cGui:
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setMeta(2)
         oGuiElement.setDescription(sDesc)
+        oGuiElement.setDirFanart(sIcon)
         
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
@@ -100,6 +102,7 @@ class cGui:
         oGuiElement.setIcon(sIcon)
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setMeta(0)
+        oGuiElement.setDirFanart(sIcon)
         #oGuiElement.getInfoLabel()
         
         oGuiElement.setDescription(sDesc)
