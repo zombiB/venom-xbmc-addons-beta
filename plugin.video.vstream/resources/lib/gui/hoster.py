@@ -170,6 +170,8 @@ class cHosterGui:
             return cHosterHandler().getHoster('netu')
         if ('hqq' in sHosterUrl):
             return cHosterHandler().getHoster('netu')
+        if ('waaw' in sHosterUrl):
+            return cHosterHandler().getHoster('netu')
         if ('mail.ru' in sHosterUrl):
             return cHosterHandler().getHoster('mailru')
         if ('videoraj' in sHosterUrl):
