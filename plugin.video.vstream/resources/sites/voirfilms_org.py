@@ -216,7 +216,7 @@ def showMovies(sSearch = ''):
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
    
-    print aResult
+    #print aResult
    
     if not (aResult[0] == False):
         total = len(aResult[1])
@@ -388,9 +388,6 @@ def showHostersLink():
         url = sUrl + '#plateformes'
     else:
         url = sUrl
-        
-    print url
-    print data
     
     request = urllib2.Request(url,data,headers)
           
