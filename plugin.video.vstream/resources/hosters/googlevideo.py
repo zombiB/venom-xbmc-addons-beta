@@ -3,7 +3,7 @@ from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
 from resources.lib.gui.gui import cGui
 import urllib, urllib2,re
-import cookielib
+#import cookielib
 #import json
 #import simplejson
 import xbmcgui
@@ -78,25 +78,30 @@ class cHoster(iHoster):
         
         try:
             if 'picasaweb.' in r[0]:
+
+                request = urllib2.Request(web_url,None,headers)
+                    
+                try: 
+                    reponse = urllib2.urlopen(request)
+                except URLError, e:
+                    print e.read()
+                    print e.reason
+      
+                resp = reponse.read()
+                    
+                #fh = open('c:\\test.txt', "w")
+                #fh.write(resp)
+                #fh.close()
+                
                 vid_sel = ''
                 vid_id = re.search('.*?#(.+?)$', web_url)
+                
                 if vid_id:
                     vid_id = vid_id.group(1)
-                    
-                    request = urllib2.Request(web_url,None,headers)
-                    try: 
-                        reponse = urllib2.urlopen(request)
-                    except URLError, e:
-                        print e.read()
-                        print e.reason
-      
-                    resp = reponse.read()
-                    
-                    #fh = open('c:\\test.txt', "w")
-                    #fh.write(resp)
-                    #fh.close()
-                    
                     html = re.search('\["shared_group_' + re.escape(vid_id) + '"\](.+?),"ccOverride":"false"}', resp, re.DOTALL)
+                else:
+                    #Methode brute en test
+                    html = re.search('\["shared_group_[0-9]+"\](.+?),"ccOverride":"false"}', resp, re.DOTALL)
                     
                     if html:
                         vid_list = []
@@ -129,11 +134,11 @@ class cHoster(iHoster):
                     
 
         except urllib2.URLError, e:
-            stream_url = False
+            stream_url = ''
             
         api_call = stream_url
 
-        if not (api_call == False):
+        if (api_call):
             return True, api_call          
             
         return False, False
