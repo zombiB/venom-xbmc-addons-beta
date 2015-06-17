@@ -10,7 +10,6 @@ import xbmcgui
 
 
 
-
 class cHoster(iHoster):
 
     def __init__(self):
@@ -68,13 +67,11 @@ class cHoster(iHoster):
         r = self.get_host_and_id(self.__sUrl)
         web_url = self.getUrl(r[0],r[1])
         
-        #web_url = self.__sUrl
-        #r = ('x','x')
-        
         headers = {'Referer': web_url}
         
         stream_url = ''
         vid_sel = web_url
+        
         
         try:
             if 'picasaweb.' in r[0]:
@@ -103,29 +100,29 @@ class cHoster(iHoster):
                     #Methode brute en test
                     html = re.search('\["shared_group_[0-9]+"\](.+?),"ccOverride":"false"}', resp, re.DOTALL)
                     
-                    if html:
-                        vid_list = []
-                        url_list = []
-                        best = 0
-                        quality = 0
-                        
-                        videos = re.compile(',{"url":"(https://redirector\.googlevideo\.com/.+?)","height":([0-9]+?),"width":([0-9]+?),"type":"video/.+?"}').findall(html.group(1))
-                        
-                        if not videos:
-                            videos = re.compile(',{"url":"(https://lh3\.googleusercontent\.com/.+?)","height":([0-9]+?),"width":([0-9]+?),"type":"video/.+?"}').findall(html.group(1))
-                        
-                        if videos:
-                            if len(videos) > 1:
-                                for index, video in enumerate(videos):
-                                    if int(video[1]) > quality: best = index
-                                    quality = int(video[1])
-                                    vid_list.extend(['GoogleVideo - %sp' % quality])
-                                    url_list.extend([video[0]])
-                            if len(videos) == 1: vid_sel = videos[0][0]
-                            else:
-                                result = xbmcgui.Dialog().select('Choose a link', vid_list)
-                                if result != -1: vid_sel = url_list[result]
-                                else: return self.unresolvable(0, 'No link selected')
+                if html:
+                    vid_list = []
+                    url_list = []
+                    best = 0
+                    quality = 0
+                    
+                    videos = re.compile(',{"url":"(https://redirector\.googlevideo\.com/.+?)","height":([0-9]+?),"width":([0-9]+?),"type":"video/.+?"}').findall(html.group(1))
+                    
+                    if not videos:
+                        videos = re.compile(',{"url":"(https://lh3\.googleusercontent\.com/.+?)","height":([0-9]+?),"width":([0-9]+?),"type":"video/.+?"}').findall(html.group(1))
+                    
+                    if videos:
+                        if len(videos) > 1:
+                            for index, video in enumerate(videos):
+                                if int(video[1]) > quality: best = index
+                                quality = int(video[1])
+                                vid_list.extend(['GoogleVideo - %sp' % quality])
+                                url_list.extend([video[0]])
+                        if len(videos) == 1: vid_sel = videos[0][0]
+                        else:
+                            result = xbmcgui.Dialog().select('Choose a link', vid_list)
+                            if result != -1: vid_sel = url_list[result]
+                            else: return self.unresolvable(0, 'No link selected')
             
             if vid_sel:
                 if 'googleusercontent' in vid_sel: stream_url = urllib2.urlopen(vid_sel).geturl()
