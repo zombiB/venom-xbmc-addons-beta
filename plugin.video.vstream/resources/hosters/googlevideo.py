@@ -32,7 +32,7 @@ class cHoster(iHoster):
         self.__sUrl = sUrl
     
     def get_host_and_id(self, url):
-        sPattern = 'http[s]*://(.*?(?:\.googlevideo|picasaweb\.google)\.com)/(.*?(?:videoplayback\?|\?authkey).+)'
+        sPattern = 'http[s]*:\/\/(.*?(?:\.googlevideo|picasaweb\.google)\.com)\/(.*?(?:videoplayback\?|\?authkey|#).+)'
         r = re.search(sPattern, url)
         if r: return r.groups()
         else: return False
