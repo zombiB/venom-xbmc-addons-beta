@@ -27,7 +27,7 @@ class cGui:
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setMeta(1)
         oGuiElement.setDescription(sDesc)
-        oGuiElement.setDirFanart(sIcon)
+        oGuiElement.setMovieFanart()
         
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
@@ -65,7 +65,7 @@ class cGui:
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setMeta(2)
         oGuiElement.setDescription(sDesc)
-        oGuiElement.setDirFanart(sIcon)
+        oGuiElement.setTvFanart()
         
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
@@ -170,7 +170,20 @@ class cGui:
         oGuiElement.setIcon('none.png')
         oGuiElement.setMeta(0)
         
-        self.addFolder(oGuiElement, '') 
+        self.addFolder(oGuiElement, '')
+
+    def addMovieDB(self, sId, sFunction, sLabel, sIcon, sThumbnail, sFanart, oOutputParameterHandler = ''):
+        
+        oGuiElement = cGuiElement()
+        oGuiElement.setSiteName(sId)
+        oGuiElement.setFunction(sFunction)
+        oGuiElement.setTitle(sLabel)
+        oGuiElement.setIcon(sIcon)
+        oGuiElement.setMeta(0)
+        oGuiElement.setThumbnail(sThumbnail)
+        oGuiElement.setFanart(sFanart)
+        
+        self.addFolder(oGuiElement, oOutputParameterHandler)         
 
     
     def addFolder(self, oGuiElement, oOutputParameterHandler='', isFolder=True):

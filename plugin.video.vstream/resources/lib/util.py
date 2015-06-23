@@ -42,7 +42,7 @@ class cUtil:
         
     def DecoTitle(self, string):
         #pr les tag
-        string = re.sub('([\[\(](?![0-9]{4}).{1,7}[\)\]])','[COLOR coral]\\1[/COLOR]', str(string))
+        string = re.sub('([\[\(](?![0-9]{4}).{1,7}[\)\]])',' [COLOR coral]\\1[/COLOR] ', str(string))
         #pr les episodes
         SXEX = ''
         m = re.search('(?i)(.pisode ([0-9]+))', string)
@@ -57,9 +57,9 @@ class cUtil:
                 SXEX = 'S' + "%02d" % int(m.group(2)) + SXEX
             
             string = re.sub(' +',' ',string)
-            string = string + '[COLOR coral] ' + SXEX + '[/COLOR]'
+            string = string + ' [COLOR coral] ' + SXEX + '[/COLOR] '
         
         else:
-            string = re.sub('(?i)(.*)(saison [0-9]+)','\\1[COLOR coral]\\2[/COLOR]', str(string))
+            string = re.sub('(?i)(.*)(saison [0-9]+)','\\1 [COLOR coral]\\2[/COLOR] ', str(string))
             
         return string

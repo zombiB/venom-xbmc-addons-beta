@@ -14,7 +14,7 @@ import re,urllib2,urllib
  
 SITE_IDENTIFIER = 'vkstreamingfilm_biz'
 SITE_NAME = 'Vkstreamingfilm.biz'
-SITE_DESC = 'Film Serie et Anime en Streaming HD - Vk.Com - Netu.tv - ExaShare - YouWatch'
+SITE_DESC = 'Film Serie et Anime en Streaming HD'
  
 URL_MAIN = 'http://vkstreamingfilm.biz'
  
@@ -44,7 +44,7 @@ def load():
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-    oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genre', 'icon.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genre', 'genres.png', oOutputParameterHandler)
            
     oGui.setEndOfDirectory()
  
@@ -147,7 +147,7 @@ def showMovies(sSearch=''):
             sThumbnail = str(aEntry[0])
             if not 'http://www.vkstreamingfilm' in sThumbnail:
                   sThumbnail = 'http://www.vkstreamingfilm.fr' + sThumbnail
-            print sThumbnail
+            #print sThumbnail
  
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[2]))
@@ -229,7 +229,7 @@ def showHosters():
             sHosterUrl = str(aEntry[1])
             oHoster = cHosterGui().checkHoster(sHosterUrl)
            
-            sMovieTitle2 = DecoTitle(sMovieTitle2)
+            sMovieTitle2 = cUtil().DecoTitle(sMovieTitle2)
        
             if (oHoster != False):
                 oHoster.setDisplayName(sMovieTitle2)

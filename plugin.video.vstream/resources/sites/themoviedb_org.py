@@ -150,9 +150,9 @@ def showMovies():
             oOutputParameterHandler.addParameter('siteUrl', str('none'))
             oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
             oOutputParameterHandler.addParameter('disp', 'search1')
-            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))          
+            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
             
-            addMoviedb(oGui, SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, sFanart, oOutputParameterHandler)
+            oGui.addMovieDB(SITE_IDENTIFIER, 'showHosters', sTitle, 'films.png', sThumbnail, sFanart, oOutputParameterHandler)
             
         if (iPage > 0):
             iNextPage = int(iPage) + 1
@@ -187,14 +187,17 @@ def showSeries():
     result = json.loads(sHtmlContent)
     
     total = len(sHtmlContent)
-
+    print result['results']
     if (total > 0):
         for i in result['results']:
             sId, sTitle, sOtitle, sThumbnail, sFanart = i['id'], i['name'], i['original_name'], i['poster_path'], i['backdrop_path']
             if sThumbnail:
                 sThumbnail = POSTER_URL+sThumbnail
-            else: sThumbnail = ''            
-            sFanart = FANART_URL+sFanart
+            else: sThumbnail = '' 
+                
+            if sFanart:
+                sFanart = FANART_URL+sFanart
+            else : sFanart = ''
 
             sTitle = sTitle.encode("utf-8")
 
@@ -204,7 +207,7 @@ def showSeries():
             oOutputParameterHandler.addParameter('disp', 'search2')
             oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))          
             
-            addMoviedb(oGui, SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, sFanart, oOutputParameterHandler)
+            oGui.addMovieDB(SITE_IDENTIFIER, 'showHosters', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
             
         if (iPage > 0):
             iNextPage = int(iPage) + 1
@@ -251,7 +254,8 @@ def showActors():
             oOutputParameterHandler.addParameter('siteUrl', str(sUrl))
             oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail)) 
             
-            addMoviedb(oGui, SITE_IDENTIFIER, 'showActors', '[COLOR red]'+str(sName)+'[/COLOR]', '', sThumbnail, '', oOutputParameterHandler)
+            
+            oGui.addMovieDB(SITE_IDENTIFIER, 'showActors', '[COLOR red]'+str(sName)+'[/COLOR]', '', sThumbnail, '', oOutputParameterHandler)
 
             for e in i['known_for']:
                 try:                     
@@ -271,10 +275,9 @@ def showActors():
                 oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
                 oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
                 oOutputParameterHandler.addParameter('disp', 'none')
-                oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))          
+                oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
                 
-                
-                addMoviedb(oGui, SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, sFanart, oOutputParameterHandler)
+                oGui.addMovieDB(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, sFanart, oOutputParameterHandler)
                 
             
         if (iPage > 0):
@@ -334,8 +337,8 @@ def showHosters():
         for aPlugin in aPlugins:
             try:                   
                 oOutputParameterHandler = cOutputParameterHandler()
-                oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-                oGui.addDir(SITE_IDENTIFIER, 'showSearch', '[COLOR olive]'+ aPlugin[1] +'[/COLOR]', 'search.png', oOutputParameterHandler)
+                oOutputParameterHandler.addParameter('siteUrl', sUrl)
+                oGui.addDir(aPlugin[1], 'load', '[COLOR olive]'+ aPlugin[1] +'[/COLOR]', 'search.png', oOutputParameterHandler)
             
                 exec "from resources.sites import "+aPlugin[1]+" as search"
                 sUrl = aPlugin[0]+sMovieTitle
@@ -346,20 +349,18 @@ def showHosters():
                 
     oGui.setEndOfDirectory()
     
-def addMoviedb(oGui, sId, sFunction, sLabel, sIcon, sThumbnail, fanart, oOutputParameterHandler = ''):
-    #oGui = cGui()
-    oGuiElement = cGuiElement()
+def addMoviedb(sId, sFunction, sLabel, sIcon, sThumbnail, fanart, oOutputParameterHandler = ''):
     
-    cGui.CONTENT = "files"
+    #addMoviedb(oGui, SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, sFanart, oOutputParameterHandler)
+    oGui = cGui()
     oGuiElement = cGuiElement()
     oGuiElement.setSiteName(sId)
     oGuiElement.setFunction(sFunction)
     oGuiElement.setTitle(sLabel)
-    oGuiElement.setIcon(sIcon)
+    #oGuiElement.setIcon(sIcon)
     oGuiElement.setMeta(0)
-    oGuiElement.setThumbnail(sThumbnail)
-    oGuiElement.setFanart(fanart)
-    
+    #oGuiElement.setThumbnail(sThumbnail)
+    #oGuiElement.setFanart(fanart)
     
     #cGui.addFolder(oGuiElement, oOutputParameterHandler)
     oGui.addFolder(oGuiElement, oOutputParameterHandler, False)

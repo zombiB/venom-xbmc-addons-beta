@@ -130,6 +130,12 @@ class cGuiElement:
     def setFanart(self, sFanart):
         if sFanart != '':
             self.__sFanart = sFanart
+            
+    def setMovieFanart(self):
+            self.__sFanart = self.__sFanart_films
+            
+    def setTvFanart(self):
+            self.__sFanart = self.__sFanart_series
         
     def setDirFanart(self, sIcon):
         if (sIcon == 'search.png') | (sIcon == 'searchtmdb.png'):
