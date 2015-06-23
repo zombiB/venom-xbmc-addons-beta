@@ -10,7 +10,7 @@ from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.config import cConfig
 from resources.lib.parser import cParser
 from resources.lib.util import cUtil
-import re
+import re,urllib2,urllib
  
 SITE_IDENTIFIER = 'vkstreamingfilm_biz'
 SITE_NAME = 'Vkstreamingfilm.biz'
@@ -21,8 +21,8 @@ URL_MAIN = 'http://vkstreamingfilm.biz'
 MOVIE_NEWS = ('http://www.vkstreamingfilm.biz/films/', 'showMovies')
 MOVIE_GENRES = (True, 'showGenre')
  
-URL_SEARCH = ('http://www.vkstreamingfilm.biz/index.php?do=search=', 'resultSearch')
-FUNCTION_SEARCH = 'resultSearch'
+URL_SEARCH = ('', 'showMovies')
+FUNCTION_SEARCH = 'showMovies'
  
 def DecoTitle(string):
     #pr les tag
@@ -53,79 +53,9 @@ def showSearch():
  
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-        sSearchText = cUtil().urlEncode(sSearchText)    
-        sUrl = 'http://www.vkstreamingfilm.biz/index.php?do=search='+sSearchText  
-        showMovies(sUrl)
+        showMovies(sSearchText)
         oGui.setEndOfDirectory()
         return  
- 
-def resultSearch(sSearch = ''):
-    oGui = cGui()  
-    if sSearch:
-      sUrl = sSearch
-    else:
-        oInputParameterHandler = cInputParameterHandler()
-        sUrl = oInputParameterHandler.getValue('siteUrl')
-   
-    oRequestHandler = cRequestHandler(sUrl)
-    sHtmlContent = oRequestHandler.request();
-    sPattern = '<div class="img-block border-2">.*?<img src="(.*?)" alt="(.*?)\sstreaming".*?<a href="(http://www.vkstreamingfilm.*?)" title'
-   
-    oParser = cParser()
-    aResult = oParser.parse(sHtmlContent, sPattern)
- 
-    #print aResult
- 
-    if (aResult[0] == True):
-        total = len(aResult[1])
-        dialog = cConfig().createDialog(SITE_NAME)
-        for aEntry in aResult[1]:
-            cConfig().updateDialog(dialog, total)
-            if dialog.iscanceled():
-                break
-           
-            #sTitle = aEntry[2].decode('latin-1').encode("utf-8")
-            #sThumbnail = 'http:'+str(aEntry[2])
-            #sUrl = URL_MAIN+str(aEntry[1])
-           
-            sThumbnail = str(aEntry[0])
-            if not 'http://www.vkstreamingfilm' in sThumbnail:
-                  sThumbnail = 'http://www.vkstreamingfilm.fr' + sThumbnail
-            print sThumbnail
- 
-            oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', str(aEntry[2]))
-            oOutputParameterHandler.addParameter('sMovieTitle',str(aEntry[1]))
-            oOutputParameterHandler.addParameter('sThumbnail', sThumbnail)            
-            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', aEntry[1], '', sThumbnail, '', oOutputParameterHandler)
-           
-        cConfig().finishDialog(dialog)
-        cConfig().finishDialog(dialog)
- 
-        sNextPage = __checkForNextPage(sHtmlContent)
-        if (sNextPage != False):
-            oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
- 
-    if not sSearch:
-        oGui.setEndOfDirectory()
-   
-def getPremiumUser():
-    sUrl = 'http://vkstreamingfilm.biz/'
-    oRequestHandler = cRequestHandler(sUrl)
-    oRequestHandler.setRequestType(cRequestHandler.REQUEST_TYPE_POST)
-    oRequestHandler.addParameters('login_name', 'vstream')
-    oRequestHandler.addParameters('login_password', 'vstream')
-    oRequestHandler.addParameters('Submit', '')
-    oRequestHandler.addParameters('login', 'submit')
-    oRequestHandler.request()
- 
-    aHeader = oRequestHandler.getResponseHeader()
-    sReponseCookie = aHeader.getheader("Set-Cookie")
- 
-    return sReponseCookie
- 
  
 def showGenre():
     oGui = cGui()
@@ -170,17 +100,33 @@ def showGenre():
 def showMovies(sSearch=''):
     oGui = cGui()
     if sSearch:
-      sUrl = sSearch
+        #on redecode la recherhce codé il y a meme pas une seconde par l'addon
+        sSearch = urllib2.unquote(sSearch)
+       
+        query_args = { 'do' : 'search' , 'subaction' : 'search' , 'story' : str(sSearch) , 'x' : '0', 'y' : '0'}
+       
+        data = urllib.urlencode(query_args)
+        headers = {'User-Agent' : 'Mozilla 5.10'}
+        url = 'http://www.vkstreamingfilm.biz/index.php?do=search=' + sSearch
+        request = urllib2.Request(url,data,headers)
+     
+        try:
+            reponse = urllib2.urlopen(request)
+        except URLError, e:
+            print e.read()
+            print e.reason
+     
+        sHtmlContent = reponse.read()
+        sPattern = '<div class="img-block border-2">.*?<img src="(.*?)" alt="(.*?)" class="img-poster border-2 shadow-dark7" width="151" height="215".*?<a href="(http://www.vkstreamingfilm.*?)" title'
     else:
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
+        oRequestHandler = cRequestHandler(sUrl)
+        sHtmlContent = oRequestHandler.request()
+        sPattern = '<div class="img-block border-2">.*?<img src="(.*?)" alt="(.*?)\sstreaming".*?<a href="(http://www.vkstreamingfilm.*?)" title'
+       
+    sHtmlContent = sHtmlContent.replace('<span class="likeThis">', '')
    
-    oRequestHandler = cRequestHandler(sUrl)
-    sHtmlContent = oRequestHandler.request();
-    sHtmlContent = sHtmlContent.replace('<span class="likeThis">', '')#.replace('</span>','')
-    sPattern = '<div class="img-block border-2">.*?<img src="(.*?)" alt="(.*?)\sstreaming".*?<a href="(http://www.vkstreamingfilm.*?)" title'
-    #sPattern = '<div class="img-block border-2">.*?<img src="(.+?)" alt="(.+?)".+?<a href="(.+?)" title'
-    #sPattern = '<h5><a href="(.+?)".+?>(.+?)<.+? src="(.+?)".+?'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
  
@@ -222,10 +168,6 @@ def showMovies(sSearch=''):
          
  
 def __checkForNextPage(sHtmlContent):
-    #sPattern = '<a href="http://www.vkstreamingfilm.biz/films/.*?page/.*?">[0-9]+</a>'
-    #sPattern = '<a href="http://www.vkstreamingfilm.biz/films/.*?page/.*?/">.+?<span class="pnext">Suivant<.span><.a>'
-    #sPattern = '<a href="http://www.vkstreamingfilm.biz/films/.*?page/.*?/">(\d*?)</a>'
-    #sPattern = <a href="(.+?)">'
    
     sPattern = '<div class="navigation">(?:<a href="http:[^<>]+?">[0-9]+<\/a> )*<span>[0-9]+<\/span> <a href="(.+?)">'
     oParser = cParser()
@@ -250,7 +192,7 @@ def showHosters():
    
     #Recuperation qualitee
     qualite = ''
-    sPattern = '<b>Qualité :<\/b><\/span> +?<p class="text">([^<>()|]+)(?:\(.+?\))*[ |]*.+?<\/p>'
+    sPattern = '<b>QualitÃ© :<\/b><\/span> +?<p class="text">([^<>()|]+)(?:\(.+?\))*[ |]*.+?<\/p>'
     aResult = oParser.parse(sHtmlContent, sPattern)
     if aResult[0]:
         qualite = ' [' + aResult[1][0] + ']'
@@ -296,5 +238,4 @@ def showHosters():
  
         cConfig().finishDialog(dialog)
  
-
         oGui.setEndOfDirectory()
