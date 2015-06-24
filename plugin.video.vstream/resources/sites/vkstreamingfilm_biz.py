@@ -14,7 +14,7 @@ import re,urllib2,urllib
  
 SITE_IDENTIFIER = 'vkstreamingfilm_biz'
 SITE_NAME = 'Vkstreamingfilm.biz'
-SITE_DESC = 'Film Serie et Anime en Streaming HD'
+SITE_DESC = 'Film en Streaming HD'
  
 URL_MAIN = 'http://vkstreamingfilm.biz'
  
