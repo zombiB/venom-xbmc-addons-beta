@@ -204,7 +204,7 @@ class cHosterGui:
             return cHosterHandler().getHoster('ok_ru')  
 
         #Si aucun hebergeur connu on teste les liens directs
-        if (sHosterUrl[-4:] in '.mp4.avi.flv'):
+        if (sHosterUrl[-4:] in '.mp4.avi.flv.m3u8'):
             return cHosterHandler().getHoster('lien_direct')   
 
         return False

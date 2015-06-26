@@ -70,6 +70,10 @@ def load():
     oGui.addDir(SITE_IDENTIFIER, 'showWeb', 'Tv du web', 'tv.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+    oGui.addDir(SITE_IDENTIFIER, 'load', '[COLOR khaki]Tu veux voir ta chaîne sur Libretv.me alors partage ta chaîne![/COLOR]', 'tv.png', oOutputParameterHandler)
+    
+    oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', URL_LIBRETV)
     oGui.addDir(SITE_IDENTIFIER, 'showLibretv', 'Libretv.me', 'tv.png', oOutputParameterHandler)
 
@@ -114,7 +118,7 @@ def showWeb():
         oOutputParameterHandler.addParameter('siteUrl', str(track.path))
         oOutputParameterHandler.addParameter('siteTitle', str(track.title))
         oOutputParameterHandler.addParameter('sThumbnail', str(sRootArt+'/tv/'+track.icon))
-        oGui.addMisc(SITE_IDENTIFIER, 'play', track.title, 'tv.png' , sRootArt+'/tv/'+track.icon, '', oOutputParameterHandler)    
+        oGui.addDirectTV(SITE_IDENTIFIER, 'play', track.title, 'tv.png' , sRootArt+'/tv/'+track.icon, oOutputParameterHandler)    
   
     oGui.setEndOfDirectory()
     
@@ -137,10 +141,10 @@ def showLibretv():
         oOutputParameterHandler.addParameter('siteTitle', str(track.title))
         oOutputParameterHandler.addParameter('sThumbnail', 'none')
         if 'rtmp' in track.path or 'm3u8' in track.path:
-            oGui.addMisc(SITE_IDENTIFIER, 'play', sTitle, 'tv.png' , '', '', oOutputParameterHandler)   
+            oGui.addDirectTV(SITE_IDENTIFIER, 'play', sTitle, 'tv.png', '', oOutputParameterHandler)   
             
         else : 
-            oGui.addMisc(SITE_IDENTIFIER, 'showLibretv', sTitle, 'tv.png' , '', '', oOutputParameterHandler)    
+            oGui.addDirectTV(SITE_IDENTIFIER, 'showLibretv', sTitle, 'tv.png', '', oOutputParameterHandler)    
   
     oGui.setEndOfDirectory()
 

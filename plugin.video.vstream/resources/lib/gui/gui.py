@@ -183,7 +183,20 @@ class cGui:
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setFanart(sFanart)
         
-        self.addFolder(oGuiElement, oOutputParameterHandler)         
+        self.addFolder(oGuiElement, oOutputParameterHandler)
+
+    def addDirectTV(self, sId, sFunction, sLabel, sIcon, sThumbnail, oOutputParameterHandler = ''):
+        
+        oGuiElement = cGuiElement()
+        oGuiElement.setSiteName(sId)
+        oGuiElement.setFunction(sFunction)
+        oGuiElement.setTitle(sLabel)
+        oGuiElement.setIcon(sIcon)
+        oGuiElement.setMeta(0)
+        oGuiElement.setThumbnail(sThumbnail)
+        oGuiElement.setDirectTvFanart()
+        
+        self.addFolder(oGuiElement, oOutputParameterHandler)          
 
     
     def addFolder(self, oGuiElement, oOutputParameterHandler='', isFolder=True):
