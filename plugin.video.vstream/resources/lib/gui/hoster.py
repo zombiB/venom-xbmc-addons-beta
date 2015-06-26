@@ -201,7 +201,9 @@ class cHosterGui:
         if ('ok.ru' in sHosterUrl):
             return cHosterHandler().getHoster('ok_ru')
         if ('odnoklassniki' in sHosterUrl):
-            return cHosterHandler().getHoster('ok_ru')  
+            return cHosterHandler().getHoster('ok_ru')
+        if ('vimeo.com' in sHosterUrl):
+            return cHosterHandler().getHoster('vimeo')
 
         #Si aucun hebergeur connu on teste les liens directs
         if (sHosterUrl[-4:] in '.mp4.avi.flv.m3u8'):
