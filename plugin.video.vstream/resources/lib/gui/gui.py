@@ -170,7 +170,10 @@ class cGui:
         oGuiElement.setIcon('none.png')
         oGuiElement.setMeta(0)
         
-        self.addFolder(oGuiElement, '')
+        oOutputParameterHandler = cOutputParameterHandler()
+        #oOutputParameterHandler.addParameter('siteUrl', 'none')
+        
+        self.addFolder(oGuiElement, oOutputParameterHandler)
 
     def addMovieDB(self, sId, sFunction, sLabel, sIcon, sThumbnail, sFanart, oOutputParameterHandler = ''):
         
