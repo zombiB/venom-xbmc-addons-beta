@@ -162,7 +162,8 @@ def showLibretv():
             oGui.addText(SITE_IDENTIFIER, sTitle, oOutputParameterHandler)
         #real stream
         elif 'rtmp' in track.path or 'm3u8' in track.path:
-            oGui.addDirectTV(SITE_IDENTIFIER, 'play', sTitle, sthumb, sthumb, oOutputParameterHandler)   
+            oGui.addDirectTV(SITE_IDENTIFIER, 'play', sTitle, sthumb, sthumb, oOutputParameterHandler)
+        #folder
         else : 
             oGui.addDirectTV(SITE_IDENTIFIER, 'showLibretv', sTitle, sthumb, sthumb, oOutputParameterHandler)    
   
@@ -231,7 +232,7 @@ def parseM3U(infile):
 #http://libretv.me/Liste-m3u/Liste-anonymes/(PB)Marchannel.m3u 
 def parseLibretvM3U(infile):
     
-    print infile
+    #print infile
     
     #version normale
     inf = urllib.urlopen(infile)
@@ -311,9 +312,6 @@ def play():
 def openwindows():
     xbmc.executebuiltin( "ActivateWindow(%d, return)" % ( 10601, ) )
     return
-    
-def Donothing():
-    pass
     
 def GetLibreTVFile(Webfile):
     
