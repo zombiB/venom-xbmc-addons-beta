@@ -162,18 +162,31 @@ class cGui:
         
         self.addFolder(oGuiElement, oOutputParameterHandler)    
 
-    def addNone(self, sId): 
+    def addNone(self, sId):
         oGuiElement = cGuiElement()
         oGuiElement.setSiteName(sId)
         oGuiElement.setFunction('load')
         oGuiElement.setTitle('[COLOR= red]'+cConfig().getlanguage(30204)+'[/COLOR]')
         oGuiElement.setIcon('none.png')
         oGuiElement.setMeta(0)
-        
+
         oOutputParameterHandler = cOutputParameterHandler()
         #oOutputParameterHandler.addParameter('siteUrl', 'none')
-        
+
         self.addFolder(oGuiElement, oOutputParameterHandler)
+        
+    def addText(self, sId, sLabel,oOutputParameterHandler = ''):
+        oGuiElement = cGuiElement()
+        oGuiElement.setSiteName(sId)
+        oGuiElement.setFunction('DoNothing')
+        oGuiElement.setTitle(sLabel)
+        oGuiElement.setIcon('none.png')
+        oGuiElement.setMeta(0)
+
+        oOutputParameterHandler = cOutputParameterHandler()
+        #oOutputParameterHandler.addParameter('siteUrl', 'none')
+
+        self.addFolder(oGuiElement, oOutputParameterHandler)    
 
     def addMovieDB(self, sId, sFunction, sLabel, sIcon, sThumbnail, sFanart, oOutputParameterHandler = ''):
         
