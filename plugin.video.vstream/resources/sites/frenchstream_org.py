@@ -472,7 +472,7 @@ def showSeries():
     sHtmlContent = oRequestHandler.request();
     sHtmlContent = sHtmlContent.replace('<strong>Téléchargement VOSTFR','').replace('<strong>Téléchargement VF','').replace('<strong>Téléchargement','')
  
-    sPattern = '<ahref="([^<]+)"><span>(.+?)</span></a>'
+    sPattern = '<a *href="([^<]+)"><span>(.+?)</span></a>'
 
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
