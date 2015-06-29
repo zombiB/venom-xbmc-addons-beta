@@ -19,16 +19,16 @@ SITE_DESC = 'Replay TV'
 URL_MAIN = 'http://tntv-rattrapage.overblog.com'
 
 SERIE_SERIES = ('http://tntv-rattrapage.overblog.com/', 'showMovies')
-URL_SEARCH = 'http://www.seriefr.com/xfsearch/'
+URL_SEARCH = 'http://tntv-rattrapage.overblog.com/search/'
 
 #FUNCTION_SEARCH = 'showMovies'
 
 def load():
     oGui = cGui()
     
-    #oOutputParameterHandler = cOutputParameterHandler()
-    #oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
-    #oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
+    oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
@@ -47,7 +47,8 @@ def showSearch():
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
         #sSearchText = cUtil().urlEncode(sSearchText)
-        sUrl = ''+sSearchText+'/'  
+        sUrl = URL_SEARCH + sSearchText+'/'
+ 
         showMovies(sUrl)
         oGui.setEndOfDirectory()
         return  
