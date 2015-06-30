@@ -22,6 +22,7 @@ color_tvs = cConfig().getSetting('color_tvs')
 color_sports = cConfig().getSetting('color_sports')
 color_docs = cConfig().getSetting('color_docs')
 color_videos = cConfig().getSetting('color_videos')
+color_replaytvs = cConfig().getSetting('color_replaytvs')
 
 class cHome:
       
@@ -43,6 +44,11 @@ class cHome:
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
             oGui.addDir('freebox', 'load', '[COLOR '+color_tvs+']'+cConfig().getlanguage(30115)+'[/COLOR]', 'tv.png', oOutputParameterHandler)
+            
+        if (cConfig().getSetting('home_replaytvs') == 'true'):
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oGui.addDir('tntv_rattrapage', 'load', '[COLOR '+color_replaytvs+']'+cConfig().getlanguage(30117)+'[/COLOR]', 'tv.png', oOutputParameterHandler)
 
         if (cConfig().getSetting('home_films') == 'true'):
             

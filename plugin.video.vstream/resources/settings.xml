@@ -178,6 +178,9 @@
         
         <setting id="home_tvs" type="bool" label="Télévision" default="true"/>
         <setting id="color_tvs" type="select" label="Couleur Télévision" values="ivory|beige|wheat|tan|khaki|silver|gray|dimgray|navy|royalblue|mediumblue|azure|cyan|aquamarine|forestgreen|olive|chartreuse|lime|gold|yellow|coral|salmon|hotpink|fuchsia|violet|lavender|plum|maroon|crimson|red" default="gray" visible="eq(-1,true)"/>
+		
+		<setting id="home_replaytvs" type="bool" label="Télévision Replay" default="true"/>
+        <setting id="color_replaytvs" type="select" label="Couleur Télévision Replay" values="ivory|beige|wheat|tan|khaki|silver|gray|dimgray|navy|royalblue|mediumblue|azure|cyan|aquamarine|forestgreen|olive|chartreuse|lime|gold|yellow|coral|salmon|hotpink|fuchsia|violet|lavender|plum|maroon|crimson|red" default="gray" visible="eq(-1,true)"/>
 
         <setting id="home_films" type="bool" label="Films" default="true"/>
         <setting id="color_films" type="select" label="Couleur Films" values="ivory|beige|wheat|tan|khaki|silver|gray|dimgray|navy|royalblue|mediumblue|azure|cyan|aquamarine|forestgreen|olive|chartreuse|lime|gold|yellow|coral|salmon|hotpink|fuchsia|violet|lavender|plum|maroon|crimson|red" default="gray" visible="eq(-1,true)"/>
