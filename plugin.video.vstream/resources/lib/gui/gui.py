@@ -12,7 +12,7 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 import urllib
-class cGui:
+class cGui():
 
     SITE_NAME = 'cGui'
     CONTENT = 'files'
@@ -28,29 +28,16 @@ class cGui:
         oGuiElement.setMeta(1)
         oGuiElement.setDescription(sDesc)
         oGuiElement.setMovieFanart()
+        oGuiElement.setCat(1)
         
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
             
-        self.__createContexMenuWatch(oGuiElement, oOutputParameterHandler)
-        self.__createContexMenuinfo(oGuiElement, oOutputParameterHandler)
+        self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
+        self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
+        self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
 
-        #context fav
-        oContext = cContextElement()
-        #sAction = 'setFavorite("%s", "%s", "%s")' % (1, sFunction, sId)                
-        oContext.setFile('cFav')
-        oContext.setSiteName('cFav')
-        oContext.setFunction('setFavorite')
-        #oContext.setTitle('[COLOR teal]Marque-film[/COLOR]')
-        oContext.setTitle('[COLOR teal]'+cConfig().getlanguage(30206)+'[/COLOR]')
-
-        #oOutputParameterHandler.addParameter('sTitle', sLabel)
-        oOutputParameterHandler.addParameter('sId', sId)
-        oOutputParameterHandler.addParameter('sFav', sFunction)
-        oOutputParameterHandler.addParameter('sCat', 1)
-        oContext.setOutputParameterHandler(oOutputParameterHandler)
-        oGuiElement.addContextItem(oContext)
 
         self.addFolder(oGuiElement, oOutputParameterHandler)
         
@@ -66,30 +53,16 @@ class cGui:
         oGuiElement.setMeta(2)
         oGuiElement.setDescription(sDesc)
         oGuiElement.setTvFanart()
+        oGuiElement.setCat(2)
         
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
         
         
-        self.__createContexMenuWatch(oGuiElement, oOutputParameterHandler)
-        self.__createContexMenuinfo(oGuiElement, oOutputParameterHandler)
-
-        #context
-        oContext = cContextElement()
-        oContext.setFile('cFav')
-        oContext.setSiteName('cFav')
-        oContext.setFunction('setFavorite')
-        #oContext.setTitle('[COLOR teal]Marque-série[/COLOR]')
-        oContext.setTitle('[COLOR teal]'+cConfig().getlanguage(30207)+'[/COLOR]')
-
-        #oOutputParameterHandler.addParameter('sTitle', sLabel)
-        oOutputParameterHandler.addParameter('sId', sId)
-        oOutputParameterHandler.addParameter('sFav', sFunction)
-        oOutputParameterHandler.addParameter('sCat', 2)
-      
-        oContext.setOutputParameterHandler(oOutputParameterHandler)
-        oGuiElement.addContextItem(oContext)
+        self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
+        self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
+        self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
         
         self.addFolder(oGuiElement, oOutputParameterHandler)
         
@@ -103,27 +76,12 @@ class cGui:
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setMeta(0)
         oGuiElement.setDirFanart(sIcon)
-        #oGuiElement.getInfoLabel()
+        oGuiElement.setCat(5)
         
         oGuiElement.setDescription(sDesc)
         
-        self.__createContexMenuWatch(oGuiElement, oOutputParameterHandler)
-
-        #context
-        oContext = cContextElement()
-        oContext.setFile('cFav')
-        oContext.setSiteName('cFav')
-        oContext.setFunction('setFavorite')
-        #oContext.setTitle('[COLOR teal]Marque-diver[/COLOR]')
-        oContext.setTitle('[COLOR teal]'+cConfig().getlanguage(30208)+'[/COLOR]')
-
-        #oOutputParameterHandler.addParameter('sTitle', sLabel)
-        oOutputParameterHandler.addParameter('sId', sId)
-        oOutputParameterHandler.addParameter('sFav', sFunction)
-        oOutputParameterHandler.addParameter('sCat', 5)
-      
-        oContext.setOutputParameterHandler(oOutputParameterHandler)
-        oGuiElement.addContextItem(oContext)
+        self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
+        self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
         
         self.addFolder(oGuiElement, oOutputParameterHandler)
         
@@ -138,7 +96,7 @@ class cGui:
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setFanart(fanart)
         
-        self.__createContexMenuDelFav(oGuiElement, oOutputParameterHandler)
+        self.createContexMenuDelFav(oGuiElement, oOutputParameterHandler)
         
         self.addFolder(oGuiElement, oOutputParameterHandler)     
     
@@ -211,6 +169,9 @@ class cGui:
         oGuiElement.setMeta(0)
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setDirectTvFanart()
+        oGuiElement.setCat(6)
+        
+        self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
         
         self.addFolder(oGuiElement, oOutputParameterHandler)          
 
@@ -236,8 +197,8 @@ class cGui:
         xbmcplugin.addDirectoryItem(sPluginHandle, sItemUrl, oListItem, isFolder=isFolder)        
         
 
-    def createListItem(self, oGuiElement):
-        #oPath = cPluginHandler().getRootArt()
+    def createListItem(self, oGuiElement):        
+
         oListItem = xbmcgui.ListItem(oGuiElement.getTitle(), oGuiElement.getTitleSecond(), oGuiElement.getIcon())
         oListItem.setInfo(oGuiElement.getType(), oGuiElement.getItemValues())
         oListItem.setThumbnailImage(oGuiElement.getThumbnail())
@@ -252,7 +213,7 @@ class cGui:
         
         return oListItem
 
-    def __createContexMenuWatch(self, oGuiElement, oOutputParameterHandler= ''):
+    def createContexMenuWatch(self, oGuiElement, oOutputParameterHandler= ''):
         oContext = cContextElement()
         oContext.setFile('cGui')
         oContext.setSiteName(oGuiElement.getSiteName())
@@ -267,8 +228,22 @@ class cGui:
 
         oGuiElement.addContextItem(oContext)
         
+    def createContexMenuFav(self, oGuiElement, oOutputParameterHandler= ''):
+        oContext = cContextElement()     
+        oContext.setFile('cFav')
+        oContext.setSiteName('cFav')
+        oContext.setFunction('setFavorite')
+        oContext.setTitle('[COLOR teal]Marque-Page[/COLOR]')
         
-    def __createContexMenuinfo(self, oGuiElement, oOutputParameterHandler= ''):
+        oOutputParameterHandler.addParameter('sId', oGuiElement.getSiteName())
+        oOutputParameterHandler.addParameter('sFav', oGuiElement.getFunction())
+        oOutputParameterHandler.addParameter('sCat', oGuiElement.getCat())
+        oContext.setOutputParameterHandler(oOutputParameterHandler)
+
+        oGuiElement.addContextItem(oContext)
+        
+        
+    def createContexMenuinfo(self, oGuiElement, oOutputParameterHandler= ''):
         oContext = cContextElement()
         oContext.setFile('cGui')
         oContext.setSiteName(oGuiElement.getSiteName())
@@ -284,7 +259,7 @@ class cGui:
         oGuiElement.addContextItem(oContext)
 
 
-    def __createContexMenuDelFav(self, oGuiElement, oOutputParameterHandler= ''):
+    def createContexMenuDelFav(self, oGuiElement, oOutputParameterHandler= ''):
 
         oContext = cContextElement()
         oContext.setFile('cFav')

@@ -100,7 +100,7 @@ def showBox():
            
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', str(track.path))
-        oOutputParameterHandler.addParameter('siteTitle', str(track.title))
+        oOutputParameterHandler.addParameter('sMovieTitle', str(track.title))
         oGui.addDir(SITE_IDENTIFIER, 'play', track.title, 'tv.png', oOutputParameterHandler)
     
   
@@ -117,7 +117,7 @@ def showWeb():
     for track in playlist:
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', str(track.path))
-        oOutputParameterHandler.addParameter('siteTitle', str(track.title))
+        oOutputParameterHandler.addParameter('sMovieTitle', str(track.title))
         oOutputParameterHandler.addParameter('sThumbnail', str(sRootArt+'/tv/'+track.icon))
         oGui.addDirectTV(SITE_IDENTIFIER, 'play', track.title, 'tv.png' , sRootArt+'/tv/'+track.icon, oOutputParameterHandler)    
   
@@ -154,7 +154,7 @@ def showLibretv():
         
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', str(track.path))
-        oOutputParameterHandler.addParameter('siteTitle', str(track.title))
+        oOutputParameterHandler.addParameter('sMovieTitle', str(track.title))
         oOutputParameterHandler.addParameter('sThumbnail', 'none')
         
         #garbage
@@ -292,7 +292,7 @@ def play():
 
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
-    sTitle = oInputParameterHandler.getValue('siteTitle')
+    sTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
     
     oGuiElement = cGuiElement()
@@ -301,6 +301,7 @@ def play():
     oGuiElement.setMediaUrl(sUrl)
     oGuiElement.setThumbnail(sThumbnail)
 
+    #cConfig().log("Hoster - play " + str(sTitle))
     oPlayer = cPlayer()
     oPlayer.clearPlayList()
     oPlayer.addItemToPlaylist(oGuiElement)

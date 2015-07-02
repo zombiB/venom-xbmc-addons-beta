@@ -36,6 +36,7 @@ class cHosterGui:
             
         oGuiElement.setFileName(oHoster.getFileName())
         oGuiElement.getInfoLabel()
+        oGuiElement.setCat(4)
         #oGuiElement.setThumbnail(xbmc.getInfoLabel('ListItem.Art(thumb)'))
                 
             
@@ -54,21 +55,10 @@ class cHosterGui:
         oOutputParameterHandler.addParameter('sTitle', oHoster.getDisplayName())
         oOutputParameterHandler.addParameter('sId', 'cHosterGui')
         oOutputParameterHandler.addParameter('siteUrl', sMediaUrl)
-        oOutputParameterHandler.addParameter('sFav', 'play')
-        oOutputParameterHandler.addParameter('sCat', '4')
+        #oOutputParameterHandler.addParameter('sFav', 'play')
+        #oOutputParameterHandler.addParameter('sCat', '4')
         
-        #context read and noread
-        oContext = cContextElement()
-        oContext.setFile('cGui')
-        oContext.setSiteName('cGui')
-        oContext.setFunction('setWatched')
-        oContext.setTitle('[COLOR azure]Marquer vu/Non vu[/COLOR]')
-
-        #oOutputParameterHandler.addParameter('sTitle', oGuiElement.getTitle())
-        #oOutputParameterHandler.addParameter('sId', oGuiElement.getSiteName())
-      
-        oContext.setOutputParameterHandler(oOutputParameterHandler)
-        oGuiElement.addContextItem(oContext)
+        oGui.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
         
         #context playlit menu
         oContext = cContextElement()
@@ -87,22 +77,11 @@ class cHosterGui:
         oContext.setTitle(cConfig().getlanguage(30202))
         oContext.setOutputParameterHandler(oOutputParameterHandler)
         oGuiElement.addContextItem(oContext)
-
+        
         #context FAV menu
-        oContext = cContextElement()
-        oContext.setFile('cFav')
-        oContext.setSiteName('cFav')
-        oContext.setFunction('setFavorite')
-        oContext.setTitle('[COLOR teal]'+cConfig().getlanguage(30203)+'[/COLOR]')
+        oGui.createContexMenuFav(oGuiElement, oOutputParameterHandler)
+        
 
-        #oOutputParameterHandler = cOutputParameterHandler()
-        #oOutputParameterHandler.addParameter('sTitle', oGuiElement.getTitle())
-        #oOutputParameterHandler.addParameter('siteUrl', sMediaUrl)
-        #oOutputParameterHandler.addParameter('sFav', 'play')
-        #oOutputParameterHandler.addParameter('sId', 'cHosterGui')
-      
-        oContext.setOutputParameterHandler(oOutputParameterHandler)
-        oGuiElement.addContextItem(oContext)
         
         oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
 

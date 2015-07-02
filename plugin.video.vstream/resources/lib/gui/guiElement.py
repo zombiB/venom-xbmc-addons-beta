@@ -42,6 +42,7 @@ class cGuiElement:
         self.__aProperties = {}
         self.__aContextElements = []
         self.__sSiteName = ''
+        self.__sCat = ''
         cGuiElement.COUNT += 1
         
     #def __len__(self): return self.__sCount
@@ -54,6 +55,12 @@ class cGuiElement:
 
     def getType(self):
         return self.__sType
+        
+    def setCat(self, sCat):
+        self.__sCat = sCat
+
+    def getCat(self):
+        return self.__sCat
      
     def setMetaAddon(self, sMetaAddon):
         self.__sMetaAddon = sMetaAddon
