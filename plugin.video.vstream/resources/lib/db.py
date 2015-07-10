@@ -238,7 +238,7 @@ class cDb:
         try:    
             self.dbcur.execute(sql_delete)
             self.db.commit()
-            cConfig().showInfo('vStream', 'Historique supprimer')
+            cConfig().showInfo('vStream', 'Historique supprime')
             cConfig().update()
             return False, False       
         except Exception, e:
