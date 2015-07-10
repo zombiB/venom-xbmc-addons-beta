@@ -30,7 +30,7 @@ ANIM_VOSTFRS = ('http://tv-streaming.ch/category/manga-vf/manga-vostfr/', 'showM
 
 DOC_DOCS = ('http://tv-streaming.ch/category/television/documentaire/', 'showMovies')
 
-SPORT_SPORTS = ('http://tv-streaming.ch/category/sport/', 'showReplay')
+SPORT_SPORTS = ('http://tv-streaming.ch/category/sport/', 'showMovies')
 
 URL_SEARCH = ('http://tv-streaming.ch/?s=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
