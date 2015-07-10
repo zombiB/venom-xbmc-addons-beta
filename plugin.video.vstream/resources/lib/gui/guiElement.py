@@ -12,7 +12,7 @@ class cGuiElement:
 
     def __init__(self):
         self.__sRootArt = cConfig().getRootArt()
-        self.__sType = 'video'
+        self.__sType = 'Video'
         self.__sMeta = 0
         self.__sPlaycount = 0
         self.__sTrailerUrl = ''

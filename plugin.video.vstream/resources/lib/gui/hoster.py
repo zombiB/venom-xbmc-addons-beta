@@ -85,8 +85,8 @@ class cHosterGui:
         
         oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
 
-    def checkHoster(self, sHosterUrl): 
-    
+    def checkHoster(self, sHosterUrl):
+
         if ('novamov' in sHosterUrl):
             return cHosterHandler().getHoster('novamov')
         if ('divxstage' in sHosterUrl):
@@ -184,6 +184,16 @@ class cHosterGui:
         if ('vimeo.com' in sHosterUrl):
             return cHosterHandler().getHoster('vimeo')
 
+        #module resolver HS
+        # try: 
+            # import urlresolver
+            # host = urlresolver.HostedMediaFile(sHosterUrl)
+            # if host:
+                # return cHosterHandler().getHoster('resolver')
+            # else :
+                # pass
+        # except:
+            # pass
         #Si aucun hebergeur connu on teste les liens directs
         if (sHosterUrl[-4:] in '.mp4.avi.flv.m3u8'):
             return cHosterHandler().getHoster('lien_direct')   
