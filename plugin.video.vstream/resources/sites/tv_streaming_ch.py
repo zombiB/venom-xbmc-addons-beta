@@ -30,6 +30,8 @@ ANIM_VOSTFRS = ('http://tv-streaming.ch/category/manga-vf/manga-vostfr/', 'showM
 
 DOC_DOCS = ('http://tv-streaming.ch/category/television/documentaire/', 'showMovies')
 
+SPORT_SPORTS = ('http://tv-streaming.ch/category/sport/', 'showReplay')
+
 URL_SEARCH = ('http://tv-streaming.ch/?s=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
@@ -157,7 +159,7 @@ def showMovies(sSearch = ''):
             if '/films/' in sUrl:
                 oGui.addMovie(SITE_IDENTIFIER, 'showHosters', aEntry[2], '', aEntry[1], '', oOutputParameterHandler) 
             else:
-                oGui.addTV(SITE_IDENTIFIER, 'showSeries', aEntry[2],'', aEntry[1], '', oOutputParameterHandler)         
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', cUtil().DecoTitle(aEntry[2]),'', aEntry[1], '', oOutputParameterHandler)         
     
         cConfig().finishDialog(dialog)
 
