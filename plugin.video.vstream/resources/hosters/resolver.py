@@ -1,5 +1,6 @@
 from resources.lib.config import cConfig
 from resources.hosters.hoster import iHoster
+import urlresolver
 
 class cHoster(iHoster):
 
@@ -56,8 +57,8 @@ class cHoster(iHoster):
     def __getMediaLinkForGuest(self):
         sUrl = self.__sUrl
         
-        import urlresolver
         host = urlresolver.HostedMediaFile(sUrl)
+        
         if host:
             api_call = urlresolver.resolve(sUrl)
             return True, api_call
