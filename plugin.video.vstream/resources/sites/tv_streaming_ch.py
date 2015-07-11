@@ -30,7 +30,9 @@ ANIM_VOSTFRS = ('http://tv-streaming.ch/category/manga-vf/manga-vostfr/', 'showM
 
 DOC_DOCS = ('http://tv-streaming.ch/category/television/documentaire/', 'showMovies')
 
-SPORT_SPORTS = ('http://tv-streaming.ch/category/sport/', 'showMovies')
+SPORT_SPORTS = ('http://tv-streaming.ch/category/sport/', 'showReplay')
+
+REPLAYTV_REPLAYTV = ('http://', 'ReplayTV')
 
 URL_SEARCH = ('http://tv-streaming.ch/?s=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
@@ -79,8 +81,8 @@ def load():
     oGui.addDir(SITE_IDENTIFIER, DOC_DOCS[1], 'Documentaires', 'animesvostfr.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', 'http://tv-streaming.ch/category/television/emission-tv/')
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies' ,'Emissions TV', 'animesvf.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', 'http://')
+    oGui.addDir(SITE_IDENTIFIER, 'ReplayTV' ,'Replay TV', 'animesvf.png', oOutputParameterHandler)
             
     oGui.setEndOfDirectory()
 
@@ -93,7 +95,27 @@ def showSearch():
         showMovies(sUrl)
         oGui.setEndOfDirectory()
         return  
+
+def ReplayTV():
+    oGui = cGui()
     
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', 'http://tv-streaming.ch/category/television/tv-realite/')
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'TV realite', 'search.png', oOutputParameterHandler)
+    
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', 'http://tv-streaming.ch/category/television/spectacles/')
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Spectacle', 'tv.png', oOutputParameterHandler)
+    
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', 'http://tv-streaming.ch/category/television/emission-tv/')
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Emission TV', 'tv.png', oOutputParameterHandler)
+    
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', 'http://tv-streaming.ch/category/television/documentaire/')
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Documentaire', 'tv.png', oOutputParameterHandler)
+            
+    oGui.setEndOfDirectory()        
     
 def showGenre():
     oGui = cGui()
