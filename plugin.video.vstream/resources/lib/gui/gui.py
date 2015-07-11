@@ -186,7 +186,9 @@ class cGui():
         oGuiElement.setDirectTvFanart()
         oGuiElement.setCat(6)
         
+        self.createContexMenuEpg(oGuiElement, oOutputParameterHandler)
         self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
+        
         
         self.addFolder(oGuiElement, oOutputParameterHandler)          
 
@@ -282,6 +284,20 @@ class cGui():
         oContext.setFunction('delFavourites')
         #oContext.setTitle('[COLOR red]Supprimer Marque-page[/COLOR]')
         oContext.setTitle('[COLOR red]'+cConfig().getlanguage(30209)+'[/COLOR]')
+      
+        oContext.setOutputParameterHandler(oOutputParameterHandler)
+
+        oGuiElement.addContextItem(oContext)
+        
+        
+    def createContexMenuEpg(self, oGuiElement, oOutputParameterHandler= ''):
+
+        oContext = cContextElement()
+        oContext.setFile('cGui')
+        oContext.setSiteName('cGui')
+        oContext.setFunction('viewepg')
+        #oContext.setTitle('[COLOR red]Supprimer Marque-page[/COLOR]')
+        oContext.setTitle('[COLOR red]epg[/COLOR]')
       
         oContext.setOutputParameterHandler(oOutputParameterHandler)
 
@@ -405,6 +421,16 @@ class cGui():
         sId = oInputParameterHandler.getValue('sId')
 
         xbmc.executebuiltin( "Action(Info)")
+        
+    def viewepg(self):
+        oGuiElement = cGuiElement()
+        oInputParameterHandler = cInputParameterHandler()
+        #aParams = oInputParameterHandler.getAllParameter()
+        #print aParams
+
+        sTitle = oInputParameterHandler.getValue('sMovieTitle')
+        # sId = oInputParameterHandler.getValue('sId')
+        cConfig().TextBoxes(sTitle,'Fonction indisponible')
 
     def __createItemUrl(self, oGuiElement, oOutputParameterHandler=''):
         if (oOutputParameterHandler == ''):
