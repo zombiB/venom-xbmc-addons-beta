@@ -67,11 +67,11 @@ class cHoster(iHoster):
         return self.__getMediaLinkForGuest()
 
     def __getMediaLinkForGuest(self):
-        print 'debut'
+
         sId = self.__getIdFromUrl(self.__sUrl)
         web_url = self.__getUrl(sId)
         
-        print web_url
+        #print web_url
         
         headers = {'Referer': web_url}
         smil = ''
@@ -89,11 +89,13 @@ class cHoster(iHoster):
         
         swfurl = 'http://static.flashx.tv/player6/jwplayer.flash.swf'
         r = re.search('"(http://.+?\.smil)"', html)
+        
         if r:
             smil = r.group(1)
         else:
-            r = re.search('\|smil\|(.+?)\|sources\|', html)
-            if r: smil = 'http://flashx.tv/' + r.group(1) + '.smil'
+            r = re.search('\|smil\|+(.+?)\|sources\|', html)
+            if r:
+                smil = 'http://flashx.tv/' + r.group(1) + '.smil'
                 
         if smil:
 
