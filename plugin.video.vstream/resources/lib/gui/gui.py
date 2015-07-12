@@ -8,6 +8,7 @@ from resources.lib.db import cDb
 from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.pluginHandler import cPluginHandler
+from resources.lib.epg import cePg
 import xbmc
 import xbmcgui
 import xbmcplugin
@@ -427,10 +428,10 @@ class cGui():
         oInputParameterHandler = cInputParameterHandler()
         #aParams = oInputParameterHandler.getAllParameter()
         #print aParams
-
+        sCom = cePg().get_epg()
         sTitle = oInputParameterHandler.getValue('sMovieTitle')
         # sId = oInputParameterHandler.getValue('sId')
-        cConfig().TextBoxes(sTitle,'Fonction indisponible')
+        cConfig().TextBoxes(sTitle,sCom)
 
     def __createItemUrl(self, oGuiElement, oOutputParameterHandler=''):
         if (oOutputParameterHandler == ''):
