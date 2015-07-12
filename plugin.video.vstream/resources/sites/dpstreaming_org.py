@@ -27,6 +27,9 @@ MOVIE_VIEWS = ('http://dpstreaming.org/category/films-en-exclus/', 'showMovies')
 SERIE_SERIES = ('http://dpstreaming.org/category/series-tv/', 'showMovies')
 ANIM_ANIMS = ('http://dpstreaming.org/category/mangas/', 'showMovies')
 MOVIE_GENRES = (True, 'showGenre')
+REPLAYTV_REPLAYTV = ('http://dpstreaming.org/category/emissions-tv/', 'showMovies')
+SPORT_SPORTS = ('http://dpstreaming.org/category/sport/', 'showMovies')
+DOC_DOCS = ('http://dpstreaming.org/category/films/documentaire/', 'showMovies')
 
 URL_SEARCH = ('http://dpstreaming.org/?s=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
