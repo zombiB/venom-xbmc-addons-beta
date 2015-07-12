@@ -48,7 +48,10 @@ FRAMEPATTERN = '<object tabindex="0" name="mediaplayer".+?proxy\.link=(.+?)&auto
  
 #pour l'addon
 MOVIE_NEWS = (URL_MAIN, 'showMovies')
-MOVIE_GENRES = (True, 'showGenre') 
+MOVIE_GENRES = (True, 'showGenre')
+
+DOC_DOCS = (URL_MAIN + 'index.php?option=com_content&view=category&id=26', 'showMovies')
+
 URL_SEARCH = (URL_MAIN + 'index.php?ordering=&searchphrase=all&Itemid=1&option=com_search&searchword=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
  
