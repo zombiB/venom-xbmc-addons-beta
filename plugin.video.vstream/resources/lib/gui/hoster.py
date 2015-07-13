@@ -183,6 +183,10 @@ class cHosterGui:
             return cHosterHandler().getHoster('ok_ru')
         if ('vimeo.com' in sHosterUrl):
             return cHosterHandler().getHoster('vimeo')
+        if ('openload' in sHosterUrl):
+            return cHosterHandler().getHoster('openload')
+        if ('vid.me' in sHosterUrl):
+            return cHosterHandler().getHoster('vidme')
 
         #Si aucun hebergeur connu on teste les liens directs
         if (sHosterUrl[-4:] in '.mp4.avi.flv.m3u8'):
