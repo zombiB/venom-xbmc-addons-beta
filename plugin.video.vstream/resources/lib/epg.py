@@ -14,9 +14,7 @@ SITE_IDENTIFIER = 'ePg'
 SITE_NAME = 'epg'
 
 
-url_index = 'http://television.telerama.fr/tele/chaine-tv/tf1,192.php'
-channel = '<span class="logo-chaine">|alt=".+?" />|</li>'
-id = '<span class="logo-chaine">|epgid=|".+?</li>'
+url_index = 'http://www.programme-tv.net/programme/chaine/programme-tf1-19.html'
 
 
 class cePg:
@@ -27,13 +25,23 @@ class cePg:
         sHtmlContent = oRequestHandler.request();
         sHtmlContent = sHtmlContent.replace('<br>', '')
         text = ''
-        sPattern = '<div class="tv10-chaine-item">.+?<div class="tv10-chaine-vignette">(.+?)<a.+?<h2 class="tv10-chaine-descri-tit">.*?<a href=".+?">(.+?)</a>'
+        sPattern = '<div .*?class="broadcast">.+?<span class="hour">(.+?)</span>.+?<div class="programme">.+?<a .+?class="title" title=".+?">(.+?)</a>.+?(?:<span class="subtitle">(.+?)</span>.+?|)<span class="type">(.+?)</span>'
         
         oParser = cParser()
         aResult = oParser.parse(sHtmlContent, sPattern)
         if (aResult[0] == True):
             for aEntry in aResult[1]:
-                text += aEntry[0]+" -/- "+aEntry[1]+'\r\n'
+                #hour
+                text += "[B]"+aEntry[0]+"[/B] : "
+                #type
+                text += "[I]"+aEntry[3]+"[/I] - "
+                #title
+                text += "[COLOR khaki][UPPERCASE]"+aEntry[1]+"[/UPPERCASE][/COLOR] "
+                #subtitle
+                text += aEntry[2]
+                
+                #retour line
+                text += "\r\n"
                 
             return text
         else:
