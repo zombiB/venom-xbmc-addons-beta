@@ -40,7 +40,7 @@ class cHoster(iHoster):
         return True
 
     def getPattern(self):
-        return '';
+        return ''
         
     def __getIdFromUrl(self, sUrl):
         sPattern = "http://((?:www.|play.)?flashx.tv)/(?:embed-)?([0-9a-zA-Z/-]+)(?:.html)?"
@@ -71,9 +71,8 @@ class cHoster(iHoster):
         sId = self.__getIdFromUrl(self.__sUrl)
         web_url = self.__getUrl(sId)
         
-        #print web_url
-        
-        headers = {'Referer': web_url}
+        #headers = {'Referer': web_url}
+        headers = {'Host' : 'flashx.tv'}
         smil = ''
         api_call = ''
         
@@ -96,7 +95,7 @@ class cHoster(iHoster):
             r = re.search('\|smil\|+(.+?)\|sources\|', html)
             if r:
                 smil = 'http://flashx.tv/' + r.group(1) + '.smil'
-                
+
         if smil:
 
             request = urllib2.Request(smil,None,headers)
