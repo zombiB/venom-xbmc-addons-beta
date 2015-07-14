@@ -19,9 +19,36 @@ url_index = 'http://www.programme-tv.net/programme/chaine/programme-tf1-19.html'
 
 class cePg:
     
-    def get_epg(self):
+    def get_url(self, sTitle):
         
         oRequestHandler = cRequestHandler(url_index)
+        sHtmlContent = oRequestHandler.request();
+        
+        sPattern = '<li.*?><a href="([^<]+)"><img.+?</a></li>'
+        sTitle = sTitle.replace(' ', '-').replace('HD', '').replace('SD', '')
+        
+        oParser = cParser()
+        aResult = oParser.parse(sHtmlContent, sPattern)
+        if (aResult[0] == True):
+            for aEntry in aResult[1]:
+                print sTitle
+                if sTitle.lower() in aEntry.lower():
+                    print "lalalalal"+aEntry
+                    return "http://www.programme-tv.net"+aEntry
+        else: 
+            return False
+    
+        
+    
+    def get_epg(self, sTitle):
+        
+        sUrl = self.get_url(sTitle)
+        print sUrl
+        if not sUrl:
+            cConfig().showInfo('EPG', 'EPG introuvable')
+            return
+        
+        oRequestHandler = cRequestHandler(sUrl)
         sHtmlContent = oRequestHandler.request();
         sHtmlContent = sHtmlContent.replace('<br>', '')
         text = ''
