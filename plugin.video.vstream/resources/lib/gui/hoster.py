@@ -82,8 +82,10 @@ class cHosterGui:
         oGui.createContexMenuFav(oGuiElement, oOutputParameterHandler)
         
 
-        
-        oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
+        #bug
+        #oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
+         
+        oGui.addFolder(oGuiElement, oOutputParameterHandler)
 
     def checkHoster(self, sHosterUrl):
 

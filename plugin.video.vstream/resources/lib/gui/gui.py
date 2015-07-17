@@ -296,9 +296,18 @@ class cGui():
         oContext = cContextElement()
         oContext.setFile('cGui')
         oContext.setSiteName('cGui')
-        oContext.setFunction('viewepg')
-        #oContext.setTitle('[COLOR red]Supprimer Marque-page[/COLOR]')
-        oContext.setTitle('[COLOR red]epg[/COLOR]')
+        oContext.setFunction('direct_epg')
+        oContext.setTitle('Guide tv direct')
+      
+        oContext.setOutputParameterHandler(oOutputParameterHandler)
+
+        oGuiElement.addContextItem(oContext)
+        
+        oContext = cContextElement()
+        oContext.setFile('cGui')
+        oContext.setSiteName('cGui')
+        oContext.setFunction('soir_epg')
+        oContext.setTitle('Guide tv soir')
       
         oContext.setOutputParameterHandler(oOutputParameterHandler)
 
@@ -423,15 +432,22 @@ class cGui():
 
         xbmc.executebuiltin( "Action(Info)")
         
-    def viewepg(self):
+    def direct_epg(self):
         oGuiElement = cGuiElement()
         oInputParameterHandler = cInputParameterHandler()
         #aParams = oInputParameterHandler.getAllParameter()
         #print aParams
-        sCom = cePg().get_epg()
         sTitle = oInputParameterHandler.getValue('sMovieTitle')
-        # sId = oInputParameterHandler.getValue('sId')
-        cConfig().TextBoxes(sTitle,sCom)
+        sCom = cePg().get_epg(sTitle,'direct')
+        
+        
+    def soir_epg(self):
+        oGuiElement = cGuiElement()
+        oInputParameterHandler = cInputParameterHandler()
+
+        sTitle = oInputParameterHandler.getValue('sMovieTitle')
+        sCom = cePg().get_epg(sTitle,'soir')
+
 
     def __createItemUrl(self, oGuiElement, oOutputParameterHandler=''):
         if (oOutputParameterHandler == ''):
