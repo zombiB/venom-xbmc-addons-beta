@@ -11,7 +11,7 @@ from resources.lib.config import cConfig
 from resources.lib.parser import cParser
 from resources.lib.util import cUtil
 import re,urllib2,urllib
-import urlresolver
+
  
 SITE_IDENTIFIER = 'full_streamvk_com'
 SITE_NAME = 'Full-streamvk.com'
@@ -163,8 +163,8 @@ def showMovies(sSearch=''):
         oGui.setEndOfDirectory() 
                 
 def __checkForNextPage(sHtmlContent):
-   
-    sPattern = '<div class="nextprev">.+?<a href="([^<>]+?)"><span class="pnext">Suivant<\/span><\/a>'
+    sPattern = 'href="([^<>]+?)">([Suivant >>])<\/a>'
+    sPattern = '<a class="btn btn-default" href="(.+?)">[Suivant >>]<\/a>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
  
@@ -186,7 +186,7 @@ def showHosters():
     sHtmlContent = sHtmlContent.replace('src="http://full-streamvk.com/','')
  
  
-    sPattern = '<div class="fstory-video-block" id="(.+?)">.+?<iframe.+?src=[\'|"](.+?)[\'|"]'
+    sPattern = '<div class="fstory-video-block" id=".+?">.+?<iframe.+?src=[\'|"](.+?)[\'|"]'
     oParser = cParser()
     #print aResult
     aResult = oParser.parse(sHtmlContent, sPattern)
