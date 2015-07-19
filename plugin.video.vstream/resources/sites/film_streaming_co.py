@@ -21,15 +21,14 @@ URL_MAIN = 'http://www.film-streaming.co/'
  
 MOVIE_NEWS = ('http://www.film-streaming.co/index.php', 'showMovies')
 MOVIE_FILMS = ('http://www.film-streaming.co/films.php', 'showMovies')
-MOVIE_VIEWS = ('http://www.film-streaming.co/top.php', 'showMovies')
+MOVIE_TOP = ('http://www.film-streaming.co/top.php', 'showMovies')
  
  
 MOVIE_GENRES = (True, 'showGenre')
  
  
-URL_SEARCH = ('http://www.film-streaming.co/search.php?movie=', 'showMovies')
-FUNCTION_SEARCH = 'showMovies'
-
+URL_SEARCH = ('http://www.film-streaming.co/search.php?movie=', 'resultSearch')
+FUNCTION_SEARCH = 'resultSearch'
    
 def load():
     oGui = cGui()
@@ -43,8 +42,8 @@ def load():
     oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Films Nouveautés', 'news.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_VIEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Films Les plus vus', 'top.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', MOVIE_TOP[0])
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Top Films', 'top.png', oOutputParameterHandler)
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_FILMS[0])
@@ -64,9 +63,9 @@ def showSearch():
     if (sSearchText != False):
         sSearchText = cUtil().urlEncode(sSearchText)
         sUrl = 'http://www.film-streaming.co/search.php?movie='+sSearchText 
-        showMovies(sUrl)
+        resultSearch(sUrl)
         oGui.setEndOfDirectory()
-        return  
+        return       
  
 
     
@@ -106,15 +105,48 @@ def showGenre():
        
     oGui.setEndOfDirectory()
     
-    
-def showMovies(sSearch=''):
-    oGui = cGui()
+def resultSearch(sSearch = ''):
+    oGui = cGui()  
     if sSearch:
       sUrl = sSearch
     else:
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
    
+    oRequestHandler = cRequestHandler(sUrl)
+    sHtmlContent = oRequestHandler.request();
+    sPattern = '<td class="wrapper_pic_td"><img src="(.+?)" border="0" alt="(.+?)\sStreaming".+?></td>.+?<span class="std">(.+?)</span>'
+    
+    oParser = cParser()
+    aResult = oParser.parse(sHtmlContent, sPattern)
+    
+    if (aResult[0] == True):
+        total = len(aResult[1])
+        dialog = cConfig().createDialog(SITE_NAME)
+        for aEntry in aResult[1]:
+            cConfig().updateDialog(dialog, total)
+            if dialog.iscanceled():
+                break
+
+            sThumbnail = URL_MAIN+str(aEntry[0])
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', str(sUrl))
+            oOutputParameterHandler.addParameter('sMovieTitle', str(aEntry[1]))
+            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
+            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', aEntry[1], 'films.png', sThumbnail, aEntry[2], oOutputParameterHandler)
+        
+        cConfig().finishDialog(dialog)
+        
+    if not sSearch:       
+        oGui.setEndOfDirectory() 
+        
+        
+        
+def showMovies():
+    oGui = cGui()
+    
+    oInputParameterHandler = cInputParameterHandler()
+    sUrl = oInputParameterHandler.getValue('siteUrl')
     
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
@@ -150,8 +182,7 @@ def showMovies(sSearch=''):
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
             oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
  
-    if not sSearch:
-        oGui.setEndOfDirectory()
+    oGui.setEndOfDirectory()
          
 def __checkForNextPage(sHtmlContent):
     sPattern = '(?:<span class="btn btn-default active">|<strong class="current">.+?</strong>).+?<a class="btn btn-default" href="(.+?)">.+?</a>'
