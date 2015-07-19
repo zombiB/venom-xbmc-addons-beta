@@ -14,7 +14,7 @@ import urllib2,urllib,re
 import unicodedata
  
 SITE_IDENTIFIER = 'enquetedereportages_com'
-SITE_NAME = 'enquetedereportages.com'
+SITE_NAME = 'Enquetedereportages.com'
 SITE_DESC = 'replay tv'
  
 URL_MAIN = 'http://enquetedereportages.com/'
@@ -22,7 +22,7 @@ URL_MAIN = 'http://enquetedereportages.com/'
 
 REPLAYTV_REPLAYTV = ('http://enquetedereportages.com/', 'showMovies')
  
-REPLAYTV_REPLAYTV = ('xyz', 'showGenre')
+#REPLAYTV_REPLAYTV = ('xyz', 'showGenre')
 
 URL_SEARCH = ('http://enquetedereportages.com/?s=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
@@ -35,12 +35,12 @@ def load():
     oGui.addDir(SITE_IDENTIFIER, 'showMoviesSearch', 'Films Recherche', 'search.png', oOutputParameterHandler)
  
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'Films Nouveautes', 'films.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', REPLAYTV_REPLAYTV[0])
+    oGui.addDir(SITE_IDENTIFIER, REPLAYTV_REPLAYTV[1], 'Replay TV', 'films.png', oOutputParameterHandler)
  
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-    oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genres', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Emissions', 'genres.png', oOutputParameterHandler)
  
     oGui.setEndOfDirectory()
  
@@ -63,13 +63,13 @@ def showGenre():
  
     liste = []
 	
-    liste.append( ['nouveau','http://enquetedereportages.com/'] )
-    liste.append( ['envoye special','http://enquetedereportages.com/category/envoye-special/'] )
+    liste.append( ['Nouveau','http://enquetedereportages.com/'] )
+    liste.append( ['Envoye special','http://enquetedereportages.com/category/envoye-special/'] )
     liste.append( ['66 minutes','http://enquetedereportages.com/category/66-minutes/'] )
     liste.append( ['Sept a Huit','http://enquetedereportages.com/category/sept-a-huit/'] )
-    liste.append( ['arte','http://enquetedereportages.com/category/arte/'] )
-    liste.append( ['france5','http://enquetedereportages.com/category/france-5/'] )
-    liste.append( ['capital','http://enquetedereportages.com/category/capital/'] )
+    liste.append( ['Arte','http://enquetedereportages.com/category/arte/'] )
+    liste.append( ['France5','http://enquetedereportages.com/category/france-5/'] )
+    liste.append( ['Capital','http://enquetedereportages.com/category/capital/'] )
    
  
     for sTitle,sUrl in liste:
