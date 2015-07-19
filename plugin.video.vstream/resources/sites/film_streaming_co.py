@@ -201,6 +201,7 @@ def showHosters():
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
+    sThumbnail  = oInputParameterHandler.getValue('sThumbnail')
    
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
@@ -229,6 +230,7 @@ def showHosters():
             oGuiElement.setSiteName(SITE_IDENTIFIER)
             oGuiElement.setTitle(sMovieTitle)
             oGuiElement.setMediaUrl(sHosterUrl)
+            oGuiElement.setThumbnail(sThumbnail)
 
             oPlayer = cPlayer()
             oPlayer.clearPlayList()
