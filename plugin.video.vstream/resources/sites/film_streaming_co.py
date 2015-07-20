@@ -75,7 +75,7 @@ def showPage():
     sUrl = oInputParameterHandler.getValue('siteUrl')
     if (sSearchNum != False):
         sSearchNum = str(sSearchNum)
-        sUrl = sUrl+'?page='+sSearchNum 
+        sUrl = sUrl + sSearchNum 
         showMovies(sUrl)
         oGui.setEndOfDirectory()
         return          
@@ -198,11 +198,11 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
             oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
         
-            sNumPage = __checkForNumPage(sUrl)
+            sNumPage = __checkForNumPage(sHtmlContent)
             if (sNumPage != False):
                 oOutputParameterHandler = cOutputParameterHandler()
                 oOutputParameterHandler.addParameter('siteUrl', sNumPage[0])
-                oGui.addDir(SITE_IDENTIFIER, 'showPage', '[COLOR teal]Go Page >>> [/COLOR]'+sNumPage[1], 'next.png', oOutputParameterHandler)
+                oGui.addDir(SITE_IDENTIFIER, 'showPage', '[COLOR teal]Choisir Page >>> [/COLOR]'+ sNumPage[1] + '/' + sNumPage[2] , 'next.png', oOutputParameterHandler)
  
     oGui.setEndOfDirectory()
          
@@ -217,15 +217,19 @@ def __checkForNextPage(sHtmlContent):
  
     return False
     
-def __checkForNumPage(sUrl):
+def __checkForNumPage(sHtmlContent):
     
-    sPattern = '((?:http://www\.film-streaming\.co/).+?.(?:php))(?:\?page.+?(.?\d)|)'
+    sPattern = '<(?:strong class="current"|span class="btn btn-default active")>([0-9]+) *<.+?<span class="btn btn-default">\.\.\. *<a class="btn btn-default" href="([^<>"]+?=)[0-9]+">([0-9]+)<\/a>'
     
     oParser = cParser()
-    aResult = oParser.parse(sUrl, sPattern)
+    aResult = oParser.parse(sHtmlContent, sPattern)
 
+    fh = open('c://test.txt', "w")
+    fh.write(sHtmlContent)
+    fh.close()
+    
     if (aResult[0] == True):
-        return aResult[1][0][0], aResult[1][0][1]
+        return URL_MAIN + aResult[1][0][1], aResult[1][0][0], aResult[1][0][2]
         
     return False
  
