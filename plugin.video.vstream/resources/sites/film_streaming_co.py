@@ -65,7 +65,20 @@ def showSearch():
         sUrl = 'http://www.film-streaming.co/search.php?movie='+sSearchText 
         resultSearch(sUrl)
         oGui.setEndOfDirectory()
-        return       
+        return 
+
+def showPage():
+    oGui = cGui()
+ 
+    sSearchNum = oGui.showNumBoard()
+    oInputParameterHandler = cInputParameterHandler()
+    sUrl = oInputParameterHandler.getValue('siteUrl')
+    if (sSearchNum != False):
+        sSearchNum = str(sSearchNum)
+        sUrl = sUrl+'?page='+sSearchNum 
+        showMovies(sUrl)
+        oGui.setEndOfDirectory()
+        return          
  
 
     
@@ -142,11 +155,14 @@ def resultSearch(sSearch = ''):
         
         
         
-def showMovies():
+def showMovies(sSearch = ''):
     oGui = cGui()
     
-    oInputParameterHandler = cInputParameterHandler()
-    sUrl = oInputParameterHandler.getValue('siteUrl')
+    if sSearch:
+      sUrl = sSearch
+    else:
+        oInputParameterHandler = cInputParameterHandler()
+        sUrl = oInputParameterHandler.getValue('siteUrl')
     
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
@@ -166,10 +182,10 @@ def showMovies():
                 break
            
             sThumbnail = URL_MAIN+str(aEntry[1])
-            sUrl = URL_MAIN+str(aEntry[0])
+            siteUrl = URL_MAIN+str(aEntry[0])
 
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', sUrl)
+            oOutputParameterHandler.addParameter('siteUrl', siteUrl)
             oOutputParameterHandler.addParameter('sMovieTitle', str(aEntry[2]))
             oOutputParameterHandler.addParameter('sThumbnail', sThumbnail)            
             oGui.addMovie(SITE_IDENTIFIER, 'showHosters', aEntry[2], 'films.png', sThumbnail, '', oOutputParameterHandler)
@@ -181,6 +197,12 @@ def showMovies():
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
             oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
+        
+            sNumPage = __checkForNumPage(sUrl)
+            if (sNumPage != False):
+                oOutputParameterHandler = cOutputParameterHandler()
+                oOutputParameterHandler.addParameter('siteUrl', sNumPage[0])
+                oGui.addDir(SITE_IDENTIFIER, 'showPage', '[COLOR teal]Go Page >>> [/COLOR]'+sNumPage[1], 'next.png', oOutputParameterHandler)
  
     oGui.setEndOfDirectory()
          
@@ -189,11 +211,22 @@ def __checkForNextPage(sHtmlContent):
  
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
-    print aResult
  
     if (aResult[0] == True):
         return URL_MAIN + aResult[1][0]
  
+    return False
+    
+def __checkForNumPage(sUrl):
+    
+    sPattern = '((?:http://www\.film-streaming\.co/).+?.(?:php))(?:\?page.+?(.?\d)|)'
+    
+    oParser = cParser()
+    aResult = oParser.parse(sUrl, sPattern)
+
+    if (aResult[0] == True):
+        return aResult[1][0][0], aResult[1][0][1]
+        
     return False
  
 def showHosters():

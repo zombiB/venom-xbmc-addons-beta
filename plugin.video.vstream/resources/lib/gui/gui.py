@@ -474,6 +474,16 @@ class cGui():
                 return sSearchText
 
         return False
+        
+    def showNumBoard(self, sDefaultNum=''):
+        dialog = xbmcgui.Dialog()
+        numboard = dialog.numeric(0, 'Entrer la page', sDefaultNum)
+        #numboard.doModal()
+        if numboard != None:
+                return numboard
+
+        return False
+      
 
     def openSettings(self):
         cConfig().showSettingsWindow()
