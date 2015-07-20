@@ -223,10 +223,6 @@ def __checkForNumPage(sHtmlContent):
     
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
-
-    fh = open('c://test.txt', "w")
-    fh.write(sHtmlContent)
-    fh.close()
     
     if (aResult[0] == True):
         return URL_MAIN + aResult[1][0][1], aResult[1][0][0], aResult[1][0][2]
