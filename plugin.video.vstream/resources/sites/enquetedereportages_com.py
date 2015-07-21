@@ -91,7 +91,7 @@ def showMovies(sSearch = ''):
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
    
-    sPattern = '<div class="entry-thumb"><a href="([^<]+)" title="([^<]+)" ><div class="thumb-icon"><i class="fa fa-link"></i></div><img .*? src="([^<]+)"'
+    sPattern = '<a href="([^<]+)" title="([^<]+)" >.+?<img width=".+?" height=".+?" src="(.+?)"'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
 	
@@ -112,12 +112,13 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[0]))
             oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
+            oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[2]))
             sTitle = sTitle.replace('http://enquetedereportages.com/','')
 			 
            
             print aEntry[1]
            
-            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', aEntry[2], aEntry[2], oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', aEntry[2], aEntry[0], oOutputParameterHandler)
  
         cConfig().finishDialog(dialog)
  
