@@ -73,9 +73,17 @@ def showPage():
     sSearchNum = oGui.showNumBoard()
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
+    sMaxPage = oInputParameterHandler.getValue('MaxPage')
     if (sSearchNum != False):
         sSearchNum = str(sSearchNum)
-        sUrl = sUrl + sSearchNum 
+        
+        if int(sSearchNum) > int (sMaxPage):
+            sSearchNum = sMaxPage
+            
+        sUrl = sUrl + sSearchNum
+        
+        print sUrl
+        
         showMovies(sUrl)
         oGui.setEndOfDirectory()
         return          
@@ -194,29 +202,33 @@ def showMovies(sSearch = ''):
  
         sNextPage = __checkForNextPage(sHtmlContent)
         if (sNextPage != False):
-            sCurrent = str(int(sNextPage[1])-1)
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', sNextPage[0])
-            oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next '+sCurrent+'/'+sNextPage[3]+'>>> [/COLOR]', 'next.png', oOutputParameterHandler)
+            oOutputParameterHandler.addParameter('siteUrl', sNextPage[1] + str(int(sNextPage[0]) + 1))
+            oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next ' + sNextPage[0] + '/' + sNextPage[2] + '>>> [/COLOR]', 'next.png', oOutputParameterHandler)
         
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', sNextPage[2])
+            oOutputParameterHandler.addParameter('siteUrl', sNextPage[1])
+            oOutputParameterHandler.addParameter('MaxPage', sNextPage[2])
             oGui.addDir(SITE_IDENTIFIER, 'showPage', '[COLOR teal]Choisir Page >>> [/COLOR]', 'next.png', oOutputParameterHandler)
  
     oGui.setEndOfDirectory()
          
 def __checkForNextPage(sHtmlContent):
-    sPattern = '(?:<span class="btn btn-default active">|<strong class="current">.+?</strong>).+?<a class="btn btn-default" href="(.+?=(.+?))">.+?</a>.+?<span class="btn btn-default">.+<a class="btn btn-default" href="(.+?=).+?">([0-9]+)</a>'
+    sPattern = '<(?:strong class="current"|span class="btn btn-default active")>([0-9]+) *<.+?<span class="btn btn-default">\.\.\. *<a class="btn btn-default" href="([^<>"]+?=)[0-9]+">([0-9]+)<\/a>'
+ 
+    #fh = open('c://test.txt', "w")
+    #fh.write(sHtmlContent)
+    #fh.close()
  
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
- 
+    
     if (aResult[0] == True):
-        #aResult[1][0][0] url next page
-        #aResult[1][0][1] num next page
-        #aResult[1][0][2] url vierge url.php?page=
-        #aResult[1][0][3] num derniere page
-        return URL_MAIN + aResult[1][0][0], aResult[1][0][1], URL_MAIN + aResult[1][0][2], aResult[1][0][3] 
+        #aResult[1][0][0] num current page
+        #aResult[1][0][1] url vierge url.php?page=
+        #aResult[1][0][2] num derniere page
+        
+        return aResult[1][0][0], URL_MAIN + aResult[1][0][1], aResult[1][0][2] 
  
     return False
  
