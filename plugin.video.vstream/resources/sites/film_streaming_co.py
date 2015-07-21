@@ -194,39 +194,30 @@ def showMovies(sSearch = ''):
  
         sNextPage = __checkForNextPage(sHtmlContent)
         if (sNextPage != False):
+            sCurrent = str(int(sNextPage[1])-1)
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
+            oOutputParameterHandler.addParameter('siteUrl', sNextPage[0])
+            oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next '+sCurrent+'/'+sNextPage[3]+'>>> [/COLOR]', 'next.png', oOutputParameterHandler)
         
-            sNumPage = __checkForNumPage(sHtmlContent)
-            if (sNumPage != False):
-                oOutputParameterHandler = cOutputParameterHandler()
-                oOutputParameterHandler.addParameter('siteUrl', sNumPage[0])
-                oGui.addDir(SITE_IDENTIFIER, 'showPage', '[COLOR teal]Choisir Page >>> [/COLOR]'+ sNumPage[1] + '/' + sNumPage[2] , 'next.png', oOutputParameterHandler)
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', sNextPage[2])
+            oGui.addDir(SITE_IDENTIFIER, 'showPage', '[COLOR teal]Choisir Page >>> [/COLOR]', 'next.png', oOutputParameterHandler)
  
     oGui.setEndOfDirectory()
          
 def __checkForNextPage(sHtmlContent):
-    sPattern = '(?:<span class="btn btn-default active">|<strong class="current">.+?</strong>).+?<a class="btn btn-default" href="(.+?)">.+?</a>'
+    sPattern = '(?:<span class="btn btn-default active">|<strong class="current">.+?</strong>).+?<a class="btn btn-default" href="(.+?=(.+?))">.+?</a>.+?<span class="btn btn-default">.+<a class="btn btn-default" href="(.+?=).+?">([0-9]+)</a>'
  
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
  
     if (aResult[0] == True):
-        return URL_MAIN + aResult[1][0]
+        #aResult[1][0][0] url next page
+        #aResult[1][0][1] num next page
+        #aResult[1][0][2] url vierge url.php?page=
+        #aResult[1][0][3] num derniere page
+        return URL_MAIN + aResult[1][0][0], aResult[1][0][1], URL_MAIN + aResult[1][0][2], aResult[1][0][3] 
  
-    return False
-    
-def __checkForNumPage(sHtmlContent):
-    
-    sPattern = '<(?:strong class="current"|span class="btn btn-default active")>([0-9]+) *<.+?<span class="btn btn-default">\.\.\. *<a class="btn btn-default" href="([^<>"]+?=)[0-9]+">([0-9]+)<\/a>'
-    
-    oParser = cParser()
-    aResult = oParser.parse(sHtmlContent, sPattern)
-    
-    if (aResult[0] == True):
-        return URL_MAIN + aResult[1][0][1], aResult[1][0][0], aResult[1][0][2]
-        
     return False
  
 def showHosters():
