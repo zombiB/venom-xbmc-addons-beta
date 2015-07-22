@@ -119,7 +119,22 @@ class cGui():
         
         oOutputParameterHandler.addParameter('sFav', sFunction)
         
-        self.addFolder(oGuiElement, oOutputParameterHandler)    
+        self.addFolder(oGuiElement, oOutputParameterHandler)
+        
+    def addNext(self, sId, sFunction, sLabel, oOutputParameterHandler = ''):
+        
+        oGuiElement = cGuiElement()
+        oGuiElement.setSiteName(sId)
+        oGuiElement.setFunction(sFunction)
+        oGuiElement.setTitle(sLabel)
+        oGuiElement.setIcon('next.png')
+        oGuiElement.setMeta(0)
+
+        oGuiElement.setDirFanart('next.png')
+        
+        self.createContexMenuPageSelect(oGuiElement, oOutputParameterHandler)
+        
+        self.addFolder(oGuiElement, oOutputParameterHandler)
 
     def addNone(self, sId):
         oGuiElement = cGuiElement()
@@ -246,6 +261,28 @@ class cGui():
 
         oGuiElement.addContextItem(oContext)
         
+    def createContexMenuPageSelect(self, oGuiElement, oOutputParameterHandler= ''):
+        oContext = cContextElement()
+        
+        oContext.setFile('cGui')
+        oContext.setSiteName(oGuiElement.getSiteName())
+        
+        oContext.setFunction('showPage')
+        oContext.setTitle('[COLOR azure]Selectionner page[/COLOR]')
+        oContext.setOutputParameterHandler(oOutputParameterHandler)
+        oGuiElement.addContextItem(oContext)
+        
+        oContext = cContextElement()
+        
+        oContext.setFile('cGui')
+        oContext.setSiteName(oGuiElement.getSiteName())
+        
+        oContext.setFunction('ReturnHome')
+        oContext.setTitle('[COLOR azure]Retour Site[/COLOR]')
+        oContext.setOutputParameterHandler(oOutputParameterHandler)
+        oGuiElement.addContextItem(oContext)
+        
+        
     def createContexMenuFav(self, oGuiElement, oOutputParameterHandler= ''):
         oContext = cContextElement()     
         oContext.setFile('cFav')
@@ -318,6 +355,7 @@ class cGui():
         sPluginPath = cPluginHandler().getPluginPath();
         aContextMenus = []
 
+        #Menus classiques reglés a la base
         if (len(oGuiElement.getContextItems()) > 0):
             for oContextItem in oGuiElement.getContextItems():                
                 oOutputParameterHandler = oContextItem.getOutputParameterHandler()
@@ -326,12 +364,12 @@ class cGui():
                 aContextMenus+= [ ( oContextItem.getTitle(), "XBMC.RunPlugin(%s)" % (sTest,),)]
 
             #oListItem.addContextMenuItems(aContextMenus)
-            oListItem.addContextMenuItems(aContextMenus, True)
+            oListItem.addContextMenuItems(aContextMenus, True)    
 
+        #Ajout de voir marque page
         oContextItem = cContextElement()
         oContextItem.setFile('cFav')
         oContextItem.setSiteName('cFav')
-        #oContextItem.setTitle('[COLOR teal]Voir Marque-page[/COLOR]')
         oContextItem.setTitle('[COLOR teal]'+cConfig().getlanguage(30210)+'[/COLOR]')
         oContextItem.setFunction('getFavourites')
         oOutputParameterHandler = oContextItem.getOutputParameterHandler()
@@ -339,25 +377,26 @@ class cGui():
         sTest = '%s?site=%s&function=%s&contextFav=true&%s' % (sPluginPath, oContextItem.getFile(), oContextItem.getFunction(), sParams)
         aContextMenus+= [ ( oContextItem.getTitle(), "XBMC.Container.Update(%s)" % (sTest,),)]
         oListItem.addContextMenuItems(aContextMenus)
-            
+        
+        #Menu speciaux si metadata
         if  oGuiElement.getTrailerUrl(): 
-                oOutputParameterHandler = cOutputParameterHandler()
-                oOutputParameterHandler.addParameter('sHosterIdentifier', 'youtube')
-                oOutputParameterHandler.addParameter('sMediaUrl', oGuiElement.getTrailerUrl())
-                oOutputParameterHandler.addParameter('sFileName', oGuiElement.getTitle())
-                oOutputParameterHandler.addParameter('sTitle', oGuiElement.getTitle())
-                oContextItem = cContextElement()
-                oContextItem.setFile('cHosterGui')
-                oContextItem.setSiteName('cHosterGui')
-                oContextItem.setTitle('[COLOR azure]Bande Annonce[/COLOR]')
-                oContextItem.setFunction('play')
-                oContextItem.setOutputParameterHandler(oOutputParameterHandler)
-                
-                oOutputParameterHandler = oContextItem.getOutputParameterHandler()
-                sParams = oOutputParameterHandler.getParameterAsUri()
-                sTest = '%s?site=%s&function=%s&%s' % (sPluginPath, oContextItem.getFile(), oContextItem.getFunction(), sParams)
-                aContextMenus+= [ ( oContextItem.getTitle(), "XBMC.RunPlugin(%s)" % (sTest,),)]
-                oListItem.addContextMenuItems(aContextMenus)
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('sHosterIdentifier', 'youtube')
+            oOutputParameterHandler.addParameter('sMediaUrl', oGuiElement.getTrailerUrl())
+            oOutputParameterHandler.addParameter('sFileName', oGuiElement.getTitle())
+            oOutputParameterHandler.addParameter('sTitle', oGuiElement.getTitle())
+            oContextItem = cContextElement()
+            oContextItem.setFile('cHosterGui')
+            oContextItem.setSiteName('cHosterGui')
+            oContextItem.setTitle('[COLOR azure]Bande Annonce[/COLOR]')
+            oContextItem.setFunction('play')
+            oContextItem.setOutputParameterHandler(oOutputParameterHandler)
+            
+            oOutputParameterHandler = oContextItem.getOutputParameterHandler()
+            sParams = oOutputParameterHandler.getParameterAsUri()
+            sTest = '%s?site=%s&function=%s&%s' % (sPluginPath, oContextItem.getFile(), oContextItem.getFunction(), sParams)
+            aContextMenus+= [ ( oContextItem.getTitle(), "XBMC.RunPlugin(%s)" % (sTest,),)]
+            oListItem.addContextMenuItems(aContextMenus)
         
         return oListItem
         
