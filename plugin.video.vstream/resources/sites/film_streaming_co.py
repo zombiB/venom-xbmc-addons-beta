@@ -214,8 +214,9 @@ def showMovies(sSearch = ''):
     oGui.setEndOfDirectory()
          
 def __checkForNextPage(sHtmlContent):
-    sPattern = '<(?:strong class="current"|span class="btn btn-default active")>([0-9]+) *<.+?<span class="btn btn-default">\.\.\. *<a class="btn btn-default" href="([^<>"]+?=)[0-9]+">([0-9]+)<\/a>'
- 
+    #sPattern = '<(?:strong class="current"|span class="btn btn-default active")>([0-9]+) *<.+?<span class="btn btn-default">\.\.\. *<a class="btn btn-default" href="([^<>"]+?=)[0-9]+">([0-9]+)<\/a>'
+    sPattern = '<(?:strong class="current"|span class="btn btn-default active")>([0-9]+) *<.+?class="btn btn-default" href="([^<>"]+?=)[0-9]+".*?>([0-9]+)<(?!.+?>[0-9]+<.+?)(.+?)<\/td>'
+    
     #fh = open('c://test.txt', "w")
     #fh.write(sHtmlContent)
     #fh.close()
