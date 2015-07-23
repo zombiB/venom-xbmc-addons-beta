@@ -71,23 +71,23 @@ def showPage():
     oGui = cGui()
  
     sSearchNum = oGui.showNumBoard()
-    oInputParameterHandler = cInputParameterHandler()
-    sUrl = oInputParameterHandler.getValue('siteUrl')
-    sMaxPage = oInputParameterHandler.getValue('MaxPage')
-    if (sSearchNum != False):
+    
+    if (sSearchNum):
+
+        oInputParameterHandler = cInputParameterHandler()
+        sUrl = oInputParameterHandler.getValue('siteUrl')
+        sMaxPage = oInputParameterHandler.getValue('MaxPage')
+        
         sSearchNum = str(sSearchNum)
         
         if int(sSearchNum) > int (sMaxPage):
             sSearchNum = sMaxPage
             
-        sUrl = sUrl + sSearchNum
-        
-        print sUrl
+        sUrl = sUrl + str(sSearchNum)
         
         showMovies(sUrl)
         oGui.setEndOfDirectory()
-        return          
- 
+        return
 
     
 def showGenre():
