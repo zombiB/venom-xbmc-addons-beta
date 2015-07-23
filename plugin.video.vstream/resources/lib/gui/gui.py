@@ -121,7 +121,7 @@ class cGui():
         
         self.addFolder(oGuiElement, oOutputParameterHandler)
         
-    def addNext(self, sId, sFunction, sLabel, oOutputParameterHandler = ''):
+    def addNext(self, sId, sFunction, sLabel, oOutputParameterHandler):
         
         oGuiElement = cGuiElement()
         oGuiElement.setSiteName(sId)
@@ -261,10 +261,12 @@ class cGui():
 
         oGuiElement.addContextItem(oContext)
         
-    def createContexMenuPageSelect(self, oGuiElement, oOutputParameterHandler= ''):
+    def createContexMenuPageSelect(self, oGuiElement, oOutputParameterHandler):
+        sSiteUrl = oGuiElement.getSiteName()
+        
         oContext = cContextElement()
         
-        oContext.setFile('cGui')
+        oContext.setFile(sSiteUrl)
         oContext.setSiteName(oGuiElement.getSiteName())
         
         oContext.setFunction('showPage')
@@ -274,10 +276,10 @@ class cGui():
         
         oContext = cContextElement()
         
-        oContext.setFile('cGui')
+        oContext.setFile(sSiteUrl)
         oContext.setSiteName(oGuiElement.getSiteName())
         
-        oContext.setFunction('ReturnHome')
+        oContext.setFunction('load')
         oContext.setTitle('[COLOR azure]Retour Site[/COLOR]')
         oContext.setOutputParameterHandler(oOutputParameterHandler)
         oGuiElement.addContextItem(oContext)
