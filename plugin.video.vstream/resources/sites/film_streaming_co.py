@@ -75,7 +75,7 @@ def showPage():
     if (sSearchNum):
 
         oInputParameterHandler = cInputParameterHandler()
-        sUrl = oInputParameterHandler.getValue('siteUrl')
+        sUrl = oInputParameterHandler.getValue('siteUrlbase')
         sMaxPage = oInputParameterHandler.getValue('MaxPage')
         
         sSearchNum = str(sSearchNum)
@@ -207,7 +207,7 @@ def showMovies(sSearch = ''):
             oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next ' + sNextPage[0] + '/' + sNextPage[2] + '>>> [/COLOR]', 'next.png', oOutputParameterHandler)
         
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', sNextPage[1])
+            oOutputParameterHandler.addParameter('siteUrlbase', sNextPage[1])
             oOutputParameterHandler.addParameter('MaxPage', sNextPage[2])
             oGui.addDir(SITE_IDENTIFIER, 'showPage', '[COLOR teal]Choisir Page >>> [/COLOR]', 'next.png', oOutputParameterHandler)
  
