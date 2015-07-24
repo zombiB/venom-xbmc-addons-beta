@@ -262,15 +262,16 @@ class cGui():
         oGuiElement.addContextItem(oContext)
         
     def createContexMenuPageSelect(self, oGuiElement, oOutputParameterHandler):
-        sSiteUrl = oGuiElement.getSiteName()
+        #sSiteUrl = oGuiElement.getSiteName()
         
         oContext = cContextElement()
         
-        oContext.setFile(sSiteUrl)
-        oContext.setSiteName(oGuiElement.getSiteName())
+        oContext.setFile('cGui')
+        oContext.setSiteName('cGui')
         
-        oContext.setFunction('showPage')
+        oContext.setFunction('selectpage')
         oContext.setTitle('[COLOR azure]Selectionner page[/COLOR]')
+        oOutputParameterHandler.addParameter('sId', oGuiElement.getSiteName())
         oContext.setOutputParameterHandler(oOutputParameterHandler)
         oGuiElement.addContextItem(oContext)
         
@@ -281,9 +282,7 @@ class cGui():
         
         oContext.setFunction('viewback')
         oContext.setTitle('[COLOR azure]Retour Site[/COLOR]')
-        
         oOutputParameterHandler.addParameter('sId', oGuiElement.getSiteName())
-        
         oContext.setOutputParameterHandler(oOutputParameterHandler)
         oGuiElement.addContextItem(oContext)
         
@@ -455,6 +454,19 @@ class cGui():
         sId = oInputParameterHandler.getValue('sId')
         
         sTest = '%s?site=%s' % (sPluginPath, sId)
+        xbmc.executebuiltin('XBMC.Container.Update(%s, replace)' % sTest )
+        
+    def selectpage(self):
+        sPluginPath = cPluginHandler().getPluginPath();
+        oInputParameterHandler = cInputParameterHandler()        
+        #sParams = oInputParameterHandler.getAllParameter()
+
+        sId = oInputParameterHandler.getValue('sId')
+        sUrlBase = oInputParameterHandler.getValue('siteUrlbase')
+        sMaxpage = oInputParameterHandler.getValue('MaxPage')
+        
+        sTest = '%s?site=%s' % (sPluginPath, sId)
+        sTest = sTest +'&function=showPage&siteUrlbase=' + urllib.quote(sUrlBase) + '&MaxPage=' + str(sMaxpage)
         xbmc.executebuiltin('XBMC.Container.Update(%s, replace)' % sTest )
     
     def setWatched(self):
