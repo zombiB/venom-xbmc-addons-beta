@@ -276,11 +276,14 @@ class cGui():
         
         oContext = cContextElement()
         
-        oContext.setFile(sSiteUrl)
-        oContext.setSiteName(oGuiElement.getSiteName())
+        oContext.setFile('cGui')
+        oContext.setSiteName('cGui')
         
-        oContext.setFunction('load')
+        oContext.setFunction('viewback')
         oContext.setTitle('[COLOR azure]Retour Site[/COLOR]')
+        
+        oOutputParameterHandler.addParameter('sId', oGuiElement.getSiteName())
+        
         oContext.setOutputParameterHandler(oOutputParameterHandler)
         oGuiElement.addContextItem(oContext)
         
@@ -443,6 +446,16 @@ class cGui():
 
     def updateDirectory(self):
         xbmc.executebuiltin("Container.Refresh")
+        
+    def viewback(self):
+        sPluginPath = cPluginHandler().getPluginPath();
+        oInputParameterHandler = cInputParameterHandler()        
+        sParams = oInputParameterHandler.getAllParameter()
+        
+        sId = oInputParameterHandler.getValue('sId')
+        
+        sTest = '%s?site=%s' % (sPluginPath, sId)
+        xbmc.executebuiltin('XBMC.Container.Update(%s, replace)' % sTest )
     
     def setWatched(self):
         oInputParameterHandler = cInputParameterHandler()        
