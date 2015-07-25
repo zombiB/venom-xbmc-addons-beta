@@ -9,6 +9,7 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.pluginHandler import cPluginHandler
 from resources.lib.epg import cePg
+from resources.lib.parser import cParser
 import xbmc
 import xbmcgui
 import xbmcplugin
@@ -271,6 +272,7 @@ class cGui():
         
         oContext.setFunction('selectpage')
         oContext.setTitle('[COLOR azure]Selectionner page[/COLOR]')
+        oOutputParameterHandler.addParameter('OldFunction', oGuiElement.getFunction())
         oOutputParameterHandler.addParameter('sId', oGuiElement.getSiteName())
         oContext.setOutputParameterHandler(oOutputParameterHandler)
         oGuiElement.addContextItem(oContext)
@@ -455,8 +457,37 @@ class cGui():
         
         sTest = '%s?site=%s' % (sPluginPath, sId)
         xbmc.executebuiltin('XBMC.Container.Update(%s, replace)' % sTest )
-        
+     
     def selectpage(self):
+        sPluginPath = cPluginHandler().getPluginPath();
+        oInputParameterHandler = cInputParameterHandler()        
+        #sParams = oInputParameterHandler.getAllParameter()
+
+        sId = oInputParameterHandler.getValue('sId')
+        sFunction = oInputParameterHandler.getValue('OldFunction')
+        siteUrl = oInputParameterHandler.getValue('siteUrl')
+        
+        oParser = cParser()
+        oldNum = oParser.getNumberFromString(siteUrl)
+        newNum = 0
+        if oldNum:
+            newNum = self.showNumBoard()
+        if newNum:
+            try:
+                siteUrl = siteUrl.replace(oldNum,newNum)
+                
+                oOutputParameterHandler = cOutputParameterHandler()
+                oOutputParameterHandler.addParameter('siteUrl', siteUrl)
+                sParams = oOutputParameterHandler.getParameterAsUri()
+                sTest = '%s?site=%s&function=%s&%s' % (sPluginPath, sId, sFunction, sParams)                
+                xbmc.executebuiltin('XBMC.Container.Update(%s)' % sTest )
+            except:
+                return False
+        
+        return False     
+
+        
+    def selectpage2(self):
         sPluginPath = cPluginHandler().getPluginPath();
         oInputParameterHandler = cInputParameterHandler()        
         #sParams = oInputParameterHandler.getAllParameter()
