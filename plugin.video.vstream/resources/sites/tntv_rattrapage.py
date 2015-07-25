@@ -201,10 +201,11 @@ def showHoster():
     sUrl = oInputParameterHandler.getValue('siteUrl')
     #sUrl = sUrl.replace("\'", '').replace('')', '')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
-    #sThumbnail = oInputParameterHandler.getValue('sThumbnail')
+    sThumbnail = oInputParameterHandler.getValue('sThumbnail')
     
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
+    
     
     #fh = open('c:\\test.txt', "w")
     #fh.write(sHtmlContent)
@@ -214,7 +215,7 @@ def showHoster():
     
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
-    
+
     if (aResult[0] == True):
         total = len(aResult[1])
         dialog = cConfig().createDialog(SITE_NAME)
@@ -248,7 +249,7 @@ def showHoster():
             if (oHoster != False):
                 oHoster.setDisplayName(sTitle)
                 oHoster.setFileName(sTitle)
-                cHosterGui().showHoster(oGui, oHoster, sHosterUrl, '')         
+                cHosterGui().showHoster(oGui, oHoster, sHosterUrl, sThumbnail)         
     
         cConfig().finishDialog(dialog)
 
