@@ -177,6 +177,10 @@ def load():
     oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
     oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'Mangas', 'animes.png', oOutputParameterHandler)
     
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', REPLAYTV_REPLAYTV[0])
+    oGui.addDir(SITE_IDENTIFIER, REPLAYTV_REPLAYTV[1], 'Replay tv', 'tv.png', oOutputParameterHandler)
+    
             
     oGui.setEndOfDirectory()
  
@@ -316,7 +320,7 @@ def showMovies(sSearch = ''):
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-            oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
+            oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', oOutputParameterHandler)
 
     if not sSearch:
         oGui.setEndOfDirectory()
@@ -402,12 +406,13 @@ def showHosters():
     sHtmlContent = sHtmlContent.replace('<iframe src="http://ads.affbuzzads.com','')
     sHtmlContent = sHtmlContent.replace('<iframe src="//ads.ad-center.com','')
 
-    sPattern = '<iframe src="([^<]+)" frameborder'
+    sPattern = '<a.+? (:?data-blogger-es="")>.+?</a>|<iframe src="([^<]+)" frameborder'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     
-    #print aResult
-    
+    if (aResult[1][0][0] == 'data-blogger-es=""'):
+        showSeries()
+                
     if (aResult[0] == True):
         total = len(aResult[1])
         dialog = cConfig().createDialog(SITE_NAME)

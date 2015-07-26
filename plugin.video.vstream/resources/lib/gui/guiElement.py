@@ -23,7 +23,7 @@ class cGuiElement:
         self.__sTitleSecond = ''
         self.__sFileName = ''
         self.__sDescription = ''
-        self.__sThumbnail = self.__sRootArt+'icon.png'
+        self.__sThumbnail = ''
         self.__sIcon = self.DEFAULT_FOLDER_ICON
         self.__sFanart = self.__sRootArt+'fanart.jpg'
         
