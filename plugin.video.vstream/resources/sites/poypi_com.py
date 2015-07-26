@@ -35,7 +35,7 @@ FRAMEPATTERN = '<object tabindex="0" name="mediaplayer".+?proxy\.link=(.+?)&auto
 # #pour zopap
 # URL_MAIN = 'http://www.zopap.com/paq/'
 # SEARCHPATTERN = '<fieldset><div><a href="\/paq\/(.+?)">(.+?)<\/a><\/div><\/fieldset>'
-# NORMALPATTERN = '<span style="list-style-type:none;" >.+? href="\/paq\/(.+?)">(.+?)<\/a><\/span>'
+# NORMALPATTERN = '<span style="list-style-type:none;" >.+? href="\/rgc\/(.+?)">(.+?)(?:<font color="#6da9c9"><i>.+?</i></font>|)<\/a><\/span>'
 # NEXTPAGEPATTERN = '<span class="pagenav">[0-9]+<.span><.li><li><a title=".+?" href="\/paq\/(.+?)" class="pagenav">'
 # FRAMEPATTERN = '<iframe src="\/paq\/(.+?)" width='
 # #pour zaloux
