@@ -92,6 +92,10 @@ def load():
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
     oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genres', 'genres.png', oOutputParameterHandler)
+    
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', DOC_DOCS[0])
+    oGui.addDir(SITE_IDENTIFIER, DOC_DOCS[1], 'Documentaires', 'doc.png', oOutputParameterHandler)
            
     oGui.setEndOfDirectory()
  
@@ -166,6 +170,7 @@ def showMovies(sSearch = ''):
                 break
            
             sTitle2 = aEntry[1]
+            sTitle2 = aEntry[1].replace('<font color="#6da9c9"><i>HD</i></font>', '[COLOR coral]HD[/COLOR]')
             sUrl2 = aEntry[0]
            
             #not found better way
