@@ -25,7 +25,7 @@ SITE_DESC = 'Film en streaming'
  
 #pour tous
 ACCEUILPATTERN  = ''#non utilisé
-FILMPATTERN = '<div class="article-content"><p style="text-align: center;"><img src="(.+?)" border.+?histoire.+?center;">(.+?)<\/p>'
+FILMPATTERN = '<div class="article-content"><p style="text-align: center;"><img src="(.+?)" border.+?<p style="text-align: left;">(.+?)<\/p>'
 #pour Poypi
 URL_MAIN = 'http://www.poypi.com/rgc/'
 SEARCHPATTERN = '<fieldset><div><a href="\/rgc\/(.+?)">(.+?)<\/a><\/div><\/fieldset>'
