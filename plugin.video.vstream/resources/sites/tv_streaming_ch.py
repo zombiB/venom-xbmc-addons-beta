@@ -200,10 +200,18 @@ def showSeries():
     sUrl = oInputParameterHandler.getValue('siteUrl')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
-    sUrl = sUrl+'/100/'
+    if sUrl.endswith('/'):
+        sUrl = sUrl+'100/'
+    else:
+        sUrl = sUrl+'/100/'
+        
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request();
     #sHtmlContent = sHtmlContent.replace('<strong>Téléchargement VOSTFR','').replace('<strong>Téléchargement VF','').replace('<strong>Téléchargement','')
+ 
+    #fh = open('c:\\test.txt', "w")
+    #fh.write(sHtmlContent)
+    #fh.close()
  
     sPattern = '<a *href="([^<]+)"><span>.+?<font class="">(.+?)<\/font><\/font>'
 
