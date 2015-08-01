@@ -224,9 +224,9 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('sMovieTitle', sDisplayTitle)
             oOutputParameterHandler.addParameter('sThumbnail', sThumb)
 
-            if '/seriestv/' in aEntry[1]  or 'saison' in aEntry[1]:
+            if '/seriestv/' in sUrl or 'saison' in aEntry[1]:
                 oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sDisplayTitle, '', sThumb,sCom, oOutputParameterHandler)
-            elif '/mangas/' in aEntry[1]:
+            elif '/mangas/' in sUrl:
                 oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sDisplayTitle, '', sThumb, sCom, oOutputParameterHandler)
             else:
                 oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sDisplayTitle, '', sThumb, sCom, oOutputParameterHandler)
