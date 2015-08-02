@@ -1,9 +1,10 @@
 #-*- coding: utf-8 -*-
 #Venom.
 from config import cConfig
-
+#from resources.lib.handler.pluginHandler import cPluginHandler       
 import urllib, urllib2
 import xbmc, xbmcgui, xbmcaddon
+import xbmcvfs
 import sys, time, os
 import hashlib, md5
 
@@ -35,6 +36,52 @@ class cAbout:
         except:            
             cConfig().error("%s,%s" % (cConfig().getlanguage(30205), url))
             return False
+            
+    def get_root_md5_sum(self, root, max_file_size=100*1024*1024):
+        try:
+            remote = open(root,'r')
+            hash = hashlib.md5()
+         
+            total_read = 0
+            while True:
+                data = remote.read(4096)
+                total_read += 4096
+         
+                if not data or total_read > max_file_size:
+                    break
+         
+                hash.update(data)
+         
+            return hash.hexdigest()
+        except:            
+            cConfig().error("%s,%s" % (cConfig().getlanguage(30205), url))
+            return False
+     
+    def __getFileNamesFromFolder(self, sFolder):
+        aNameList = []
+        items = os.listdir(sFolder)
+        for sItemName in items:
+            sFilePath = os.path.join(sFolder, sItemName)
+            # xbox hack
+            sFilePath = sFilePath.replace('\\', '/')
+            sUrlPath = "https://raw.githubusercontent.com/LordVenom/venom-xbmc-addons/master/plugin.video.vstream/resources/sites/"+sItemName
+            
+            if (os.path.isdir(sFilePath) == False):
+                if (str(sFilePath.lower()).endswith('py')):   
+                    aNameList.append([sFilePath,sUrlPath,sItemName])
+        return aNameList
+        
+    def getPlugins(self):
+        oConfig = cConfig()
+
+        sFolder = cConfig().getAddonPath()
+        sFolder = os.path.join(sFolder, 'resources/sites')
+
+        # xbox hack        
+        sFolder = sFolder.replace('\\', '/')
+        
+        aFileNames = self.__getFileNamesFromFolder(sFolder)
+        return aFileNames
       
 
     def main(self, env):
@@ -52,9 +99,32 @@ class cAbout:
                 cConfig().error("%s,%s" % (cConfig().getlanguage(30205), sUrl))
             return
 
-        if (env == 'about'):
-            sContent = ' Auteur: LordVenom\n Version & Repository: https://github.com/LordVenom/venom-xbmc-addons/releases\n Question & Support: https://github.com/LordVenom/venom-xbmc-addons/issues \n Question & Support: Twitter @lordvenom57\n'
-            self.TextBoxes('vStream Information', sContent)
+        if (env == 'update'):
+            aPlugins = self.getPlugins()
+            cConfig().showInfo('vStream', 'Patientez svp')
+            sContent = ""
+            sdown = 0
+
+            for aPlugin in aPlugins:
+                RootUrl = aPlugin[0]
+                WebUrl = aPlugin[1]
+                ItemName = aPlugin[2]
+                PlugWeb = self.get_remote_md5_sum(WebUrl)
+                PlugRoot = self.get_root_md5_sum(RootUrl)
+                if (PlugWeb != PlugRoot):
+                    try:
+                        self.__download(WebUrl, RootUrl)
+                        sContent += "[COLOR green]"+ItemName+"[/COLOR] OK \n"
+                    except:
+                        sContent += "[COLOR red]"+ItemName+"[/COLOR] Erreur \n"
+                        
+                else:
+                    sdown = sdown+1
+                    
+                
+            sContent += "Fichier à jour %s" %  (sdown)
+            #self.TextBoxes('vStream mise à Jour', sContent)
+            cConfig().createDialogOK(sContent)
             return
 
         else :
@@ -75,7 +145,21 @@ class cAbout:
                     cConfig().error("%s,%s" % (cConfig().getlanguage(30205), sUrl))
                 return
         return
-
+        
+    def __download(self, WebUrl, RootUrl):
+            inf = urllib.urlopen(WebUrl)
+            
+            f = xbmcvfs.File(RootUrl, 'w')
+            #if (xbmcvfs.exists(RootUrl)):
+                #xbmcvfs.delete()
+            #save it
+            line = inf.read()         
+            f.write(line)
+            
+            inf.close()
+            f.close()
+            
+        
     def TextBoxes(self, heading, anounce):
         class TextBox():
             # constants

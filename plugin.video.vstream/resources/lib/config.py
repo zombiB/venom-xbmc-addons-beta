@@ -124,6 +124,11 @@ class cConfig():
 
         return False
 
+    def createDialogOK(self, label):
+        oDialog = xbmcgui.Dialog()
+        oDialog.ok('vStream', label)  
+        return oDialog
+        
     def createDialog(self, sSite):
         oDialog = xbmcgui.DialogProgress()
         oDialog.create(sSite)  
