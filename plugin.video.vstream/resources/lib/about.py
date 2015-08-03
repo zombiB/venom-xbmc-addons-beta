@@ -64,7 +64,11 @@ class cAbout:
             sFilePath = os.path.join(sFolder, sItemName)
             # xbox hack
             sFilePath = sFilePath.replace('\\', '/')
-            sUrlPath = "https://raw.githubusercontent.com/LordVenom/venom-xbmc-addons/master/plugin.video.vstream/resources/sites/"+sItemName
+            
+            if (cConfig().getSetting('beta-view') == 'true'):
+                sUrlPath = "https://raw.githubusercontent.com/LordVenom/venom-xbmc-addons-beta/master/plugin.video.vstream/resources/sites/"+sItemName
+            else:
+                sUrlPath = "https://raw.githubusercontent.com/LordVenom/venom-xbmc-addons/master/plugin.video.vstream/resources/sites/"+sItemName
             
             if (os.path.isdir(sFilePath) == False):
                 if (str(sFilePath.lower()).endswith('py')):   
@@ -72,7 +76,6 @@ class cAbout:
         return aNameList
         
     def getPlugins(self):
-        oConfig = cConfig()
 
         sFolder = cConfig().getAddonPath()
         sFolder = os.path.join(sFolder, 'resources/sites')
@@ -101,11 +104,13 @@ class cAbout:
 
         if (env == 'update'):
             aPlugins = self.getPlugins()
-            cConfig().showInfo('vStream', 'Patientez svp')
+            total = len(aPlugins)
+            dialog = cConfig().createDialog('Update')
             sContent = ""
             sdown = 0
 
             for aPlugin in aPlugins:
+                cConfig().updateDialog(dialog, total)
                 RootUrl = aPlugin[0]
                 WebUrl = aPlugin[1]
                 ItemName = aPlugin[2]
@@ -114,15 +119,13 @@ class cAbout:
                 if (PlugWeb != PlugRoot):
                     try:
                         self.__download(WebUrl, RootUrl)
-                        sContent += "[COLOR green]"+ItemName+"[/COLOR] OK \n"
+                        sContent += "[COLOR green]"+ItemName+"[/COLOR] \n"
+                        sdown = sdown+1
                     except:
-                        sContent += "[COLOR red]"+ItemName+"[/COLOR] Erreur \n"
-                        
-                else:
-                    sdown = sdown+1
-                    
-                
-            sContent += "Fichier à jour %s" %  (sdown)
+                        sContent += "[COLOR red]"+ItemName+"[/COLOR] \n"
+              
+            cConfig().finishDialog(dialog)
+            sContent += "Fichier mise à jour %s / %s" %  (sdown, total)
             #self.TextBoxes('vStream mise à Jour', sContent)
             cConfig().createDialogOK(sContent)
             return

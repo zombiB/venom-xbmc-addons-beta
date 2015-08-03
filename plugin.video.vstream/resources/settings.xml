@@ -11,12 +11,7 @@
         <setting id="param_timeout" label="30027" type="number" default="1000"/>
         <setting id="history-view" type="bool" label="Activer l'historique de recherche" default="true"/>
 		
-		<setting label="Recherche mise à jour" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/about.py, update)"/>
-		
         <setting label="Changelog" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/about.py, changelog)"/>
-        
-		<setting label="Clear Cache Addon" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/clear.py, addon)"/>	
-		<setting label="Clear Cache XBMC" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/clear.py, xbmc)"/>
 
     </category>
 
@@ -226,6 +221,15 @@
         <setting id="color_videos" type="select" label="Couleur Vidéos" values="ivory|beige|wheat|tan|khaki|silver|gray|dimgray|navy|royalblue|mediumblue|azure|cyan|aquamarine|forestgreen|olive|chartreuse|lime|gold|yellow|coral|salmon|hotpink|fuchsia|violet|lavender|plum|maroon|crimson|red" default="gray" visible="eq(-1,true)"/>
 
     </category>
+	
+	<category label="30127">
+        <setting label="30127" type="lsep"/>
+		<setting label="Clear Cache Addon" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/clear.py, addon)"/>	
+		<setting label="Clear Cache XBMC" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/clear.py, xbmc)"/>
+		<setting label="30125" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/about.py, update)"/>
+		
+		<setting id="beta-view" type="bool" label="30126" default="false"/>
+    </category> 
 
     <!--<category label="30026">
         <setting label="30026" type="lsep"/>
