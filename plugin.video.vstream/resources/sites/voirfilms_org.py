@@ -426,6 +426,10 @@ def showHostersLink():
         #convertion pour vk
         aResult = aResult.replace('http://www.streamingentier.com/vk.php?code=','')
         
+        #correction en cas de bug
+        if not aResult.startswith('http'):
+            aResult = 'http:' + aResult
+        
         sHosterUrl = str(aResult)
         #print sHosterUrl
         oHoster = cHosterGui().checkHoster(sHosterUrl)
