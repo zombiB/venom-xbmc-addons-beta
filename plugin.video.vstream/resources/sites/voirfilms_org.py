@@ -21,10 +21,10 @@ SITE_DESC = 'Films et serie en streaming' #description courte de votre source
 URL_MAIN = 'http://www.voirfilms.org/' # url de votre source
 
 MOVIE_NEWS = ('http://www.voirfilms.org/', 'showMovies')
-MOVIE_ALLMOVIES = ('http://www.voirfilms.org/lesfilmstreamings', 'showMovies')
+MOVIE_ALLMOVIES = ('http://www.voirfilms.org/lesfilms1', 'showMovies')
 MOVIE_GENRES = (True, 'showGenre')
 
-SERIE_SERIES = ('http://www.voirfilms.org/series/', 'showMovies')
+SERIE_SERIES = ('http://www.voirfilms.org/series/page-1', 'showMovies')
   
 URL_SEARCH = ('', 'showMovies')
 #FUNCTION_SEARCH = 'showMovies'
