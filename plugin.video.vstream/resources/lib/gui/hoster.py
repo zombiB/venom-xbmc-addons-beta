@@ -189,6 +189,10 @@ class cHosterGui:
             return cHosterHandler().getHoster('openload')
         if ('vid.me' in sHosterUrl):
             return cHosterHandler().getHoster('vidme')
+        if ('zstream' in sHosterUrl):
+            return cHosterHandler().getHoster('zstream')
+        if ('watching' in sHosterUrl):
+            return cHosterHandler().getHoster('watching')
 
         #Si aucun hebergeur connu on teste les liens directs
         if (sHosterUrl[-4:] in '.mp4.avi.flv.m3u8'):
