@@ -114,10 +114,10 @@ class cHoster(iHoster):
 	return self.__sFileName
     
     def setUrl(self, sUrl):
-        self.__sUrl = sUrl.replace('http://hqq.tv/watch_video.php?v=','http://hqq.tv/player/embed_player.php?vid=')
-        self.__sUrl = sUrl.replace('http://netu.tv/watch_video.php?v=','http://hqq.tv/player/embed_player.php?vid=')
-        self.__sUrl = sUrl.replace('http://waaw.tv/watch_video.php?v=','http://hqq.tv/player/embed_player.php?vid=')
-    
+        self.__sUrl = sUrl.replace('http://netu.tv/','http://hqq.tv/')
+        self.__sUrl = self.__sUrl.replace('http://waaw.tv/','http://hqq.tv/')
+        self.__sUrl = self.__sUrl.replace('http://hqq.tv/watch_video.php?v=','http://hqq.tv/player/embed_player.php?vid=')
+        
     def __getIdFromUrl(self):
         sPattern = 'http:..hqq.tv.player.embed_player.php\?vid=([0-9A-Z]+)'
         oParser = cParser()
