@@ -29,7 +29,7 @@ FILMPATTERN = '<div class="article-content"><p style="text-align: center;"><img 
 #pour Poypi
 URL_MAIN = 'http://www.poypi.com/rgc/'
 SEARCHPATTERN = '<fieldset><div><a href="\/rgc\/(.+?)">(.+?)<\/a><\/div><\/fieldset>'
-NORMALPATTERN = '<span style="list-style-type:none;" >.+? href="\/rgc\/(.+?)">(.+?)<\/a><\/span>'
+NORMALPATTERN = '<span style="list-style-type:none;" >.+? href="\/rgc\/(.+?)">(.+?)(?:<font color="#979797"><i>.+?</i></font>|)<\/a><\/span>'
 NEXTPAGEPATTERN = '<span class="pagenav">[0-9]+<.span><.li><li><a title=".+?" href="\/rgc\/(.+?)" class="pagenav">'
 FRAMEPATTERN = '<object tabindex="0" name="mediaplayer".+?proxy\.link=(.+?)&autostart='
 # #pour zopap
