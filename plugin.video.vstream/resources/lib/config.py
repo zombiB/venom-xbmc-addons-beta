@@ -43,6 +43,9 @@ class cConfig():
 
     def getPluginId(self):
         return 'plugin.video.vstream'
+        
+    def getAddonId(self):
+        return self.__oId
     
     def getSettingCache(self):
         return self.__oCache

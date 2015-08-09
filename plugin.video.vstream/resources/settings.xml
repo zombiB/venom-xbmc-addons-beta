@@ -228,7 +228,6 @@
 		<setting label="Clear Cache XBMC" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/clear.py, xbmc)"/>
 		<setting label="30125" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/about.py, update)"/>
 		
-		<setting id="beta-view" type="bool" label="30126" default="false"/>
     </category> 
 
     <!--<category label="30026">

@@ -1,15 +1,24 @@
 #-*- coding: utf-8 -*-
 #Venom.
 from config import cConfig
-#from resources.lib.handler.pluginHandler import cPluginHandler       
+   
 import urllib, urllib2
 import xbmc, xbmcgui, xbmcaddon
 import xbmcvfs
 import sys, time, os
 import hashlib, md5
+try:    import json
+except: import simplejson as json
+import datetime, time 
+
+sLibrary = xbmc.translatePath(cConfig().getAddonPath())
+sys.path.append (sLibrary) 
+
+from resources.lib.handler.requestHandler import cRequestHandler
 
 SITE_IDENTIFIER = 'about'
 SITE_NAME = 'About'
+
 
 class cAbout:
 
@@ -65,10 +74,7 @@ class cAbout:
             # xbox hack
             sFilePath = sFilePath.replace('\\', '/')
             
-            if (cConfig().getSetting('beta-view') == 'true'):
-                sUrlPath = "https://raw.githubusercontent.com/LordVenom/venom-xbmc-addons-beta/master/plugin.video.vstream/resources/sites/"+sItemName
-            else:
-                sUrlPath = "https://raw.githubusercontent.com/LordVenom/venom-xbmc-addons/master/plugin.video.vstream/resources/sites/"+sItemName
+            sUrlPath = "https://raw.githubusercontent.com/LordVenom/venom-xbmc-addons/master/plugin.video.vstream/resources/sites/"+sItemName
             
             if (os.path.isdir(sFilePath) == False):
                 if (str(sFilePath.lower()).endswith('py')):   
@@ -88,8 +94,6 @@ class cAbout:
       
 
     def main(self, env):
-    
-        sUrl = 'https://raw.githubusercontent.com/LordVenom/venom-xbmc-addons/master/plugin.video.vstream/changelog.txt'
         
 
         if (env == 'changelog'):
@@ -102,7 +106,83 @@ class cAbout:
                 cConfig().error("%s,%s" % (cConfig().getlanguage(30205), sUrl))
             return
 
-        if (env == 'update'):
+        if (env == 'update'):            
+            self.__checkupdate('true')
+            return  xbmc.executebuiltin("SendClick(10)")
+
+        else :
+            #service
+            service_time = cConfig().getSetting('service_time')
+            if (service_time != ''):
+                #delay mise a jour            
+                time_sleep = datetime.timedelta(hours=10)
+                time_now = datetime.datetime.now()
+                
+                time_service = datetime.datetime.strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
+                #pour test
+                #time_service = time_service - datetime.timedelta(hours=7)
+                
+                if (time_now - time_service > time_sleep):
+                    self.__checkversion()
+                    self.__checkupdate('false')
+                    
+                    #Function update auto
+            else:
+                cConfig().setSetting('service_time', str(datetime.datetime.now()))
+                
+        return
+     
+    def __checkversion(self):
+            service_version = cConfig().getSetting('service_version')
+            if (service_version != ''):          
+                version = cConfig().getAddonVersion()
+                if (version > service_version):
+                    try:
+                        sUrl = 'https://raw.githubusercontent.com/LordVenom/venom-xbmc-addons/master/plugin.video.vstream/changelog.txt'
+                        oRequest =  urllib2.Request(sUrl)
+                        oResponse = urllib2.urlopen(oRequest)
+                        sContent = oResponse.read()
+                        self.TextBoxes('Changelog', sContent)
+                        cConfig().setSetting('service_version', str(cConfig().getAddonVersion()))
+                        return
+                    except:            
+                        cConfig().error("%s,%s" % (cConfig().getlanguage(30205), sUrl))
+                        return
+            else:
+                cConfig().setSetting('service_version', str(cConfig().getAddonVersion()))
+                return
+                
+    def __checkupdate(self, download):
+            service_time = cConfig().getSetting('service_time')
+            if (service_time != ''):          
+                try:
+                    sUrl = 'https://api.github.com/repos/LordVenom/venom-xbmc-addons/commits/master'
+                    oRequestHandler = cRequestHandler(sUrl)
+                    sHtmlContent = oRequestHandler.request(); 
+                    result = json.loads(sHtmlContent)
+                    
+                    time_service = datetime.datetime.strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
+                    #pour test
+                    #time_service = time_service - datetime.timedelta(hours=7)
+                    
+                    time_source = datetime.datetime.strptime(result['commit']['committer']['date'],'%Y-%m-%dT%H:%M:%SZ')
+                    
+                    if (time_source > time_service):
+                        if (download == 'true'):
+                            self.__checkdownload()
+                        cConfig().setSetting('home_update', str('true'))
+                    else:
+                        if (download == 'true'):
+                            cConfig().showInfo('vStream', 'Fichier a jour')
+                            
+                        cConfig().setSetting('home_update', str('false'))
+                                
+                    return
+                except:            
+                    return
+            return
+    
+    def __checkdownload(self):
             aPlugins = self.getPlugins()
             total = len(aPlugins)
             dialog = cConfig().createDialog('Update')
@@ -127,28 +207,10 @@ class cAbout:
             cConfig().finishDialog(dialog)
             sContent += "Fichier mise à jour %s / %s" %  (sdown, total)
             #self.TextBoxes('vStream mise à Jour', sContent)
+            cConfig().setSetting('service_time', str(datetime.datetime.now()))
             cConfig().createDialogOK(sContent)
             return
-
-        else :
-
-            stats_in = self.get_remote_md5_sum(sUrl) 
-
-            stats_out = cConfig().getSetting('date_update')
-
-
-            if (stats_out != stats_in):
-                try:
-                    oRequest =  urllib2.Request(sUrl)
-                    oResponse = urllib2.urlopen(oRequest)
-                    sContent = oResponse.read()
-                    self.TextBoxes('Changelog', sContent)
-                    cConfig().setSetting('date_update', str(stats_in))
-                except:            
-                    cConfig().error("%s,%s" % (cConfig().getlanguage(30205), sUrl))
-                return
-        return
-        
+            
     def __download(self, WebUrl, RootUrl):
             inf = urllib.urlopen(WebUrl)
             
