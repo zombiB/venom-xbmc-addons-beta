@@ -115,12 +115,12 @@ class cAbout:
             service_time = cConfig().getSetting('service_time')
             if (service_time != ''):
                 #delay mise a jour            
-                time_sleep = datetime.timedelta(hours=10)
+                time_sleep = datetime.timedelta(hours=48)
                 time_now = datetime.datetime.now()
                 
                 time_service = datetime.datetime.strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
                 #pour test
-                #time_service = time_service - datetime.timedelta(hours=7)
+                #time_service = time_service - datetime.timedelta(hours=48)
                 
                 if (time_now - time_service > time_sleep):
                     self.__checkversion()
@@ -163,7 +163,7 @@ class cAbout:
                     
                     time_service = datetime.datetime.strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
                     #pour test
-                    #time_service = time_service - datetime.timedelta(hours=7)
+                    #time_service = time_service - datetime.timedelta(hours=48)
                     
                     time_source = datetime.datetime.strptime(result['commit']['committer']['date'],'%Y-%m-%dT%H:%M:%SZ')
                     
