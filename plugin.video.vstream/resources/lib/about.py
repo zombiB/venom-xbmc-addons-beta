@@ -5,11 +5,10 @@ from config import cConfig
 import urllib, urllib2
 import xbmc, xbmcgui, xbmcaddon
 import xbmcvfs
-import sys, time, os
+import sys, datetime, time, os
 import hashlib, md5
 try:    import json
 except: import simplejson as json
-import datetime, time 
 
 sLibrary = xbmc.translatePath(cConfig().getAddonPath())
 sys.path.append (sLibrary) 
@@ -117,10 +116,9 @@ class cAbout:
                 #delay mise a jour            
                 time_sleep = datetime.timedelta(hours=48)
                 time_now = datetime.datetime.now()
-                
-                time_service = datetime.datetime.strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
+                time_service = self.__strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
                 #pour test
-                #time_service = time_service - datetime.timedelta(hours=48)
+                #time_service = time_service - datetime.timedelta(hours=50)
                 
                 if (time_now - time_service > time_sleep):
                     self.__checkversion()
@@ -131,6 +129,14 @@ class cAbout:
                 cConfig().setSetting('service_time', str(datetime.datetime.now()))
                 
         return
+     
+    #bug python
+    def __strptime(self, date, format):
+        try:
+            date = datetime.datetime.strptime(date, format)
+        except TypeError:
+            date = datetime.datetime(*(time.strptime(date, format)[0:6]))
+        return date
      
     def __checkversion(self):
             service_version = cConfig().getSetting('service_version')
@@ -161,11 +167,11 @@ class cAbout:
                     sHtmlContent = oRequestHandler.request(); 
                     result = json.loads(sHtmlContent)
                     
-                    time_service = datetime.datetime.strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
+                    time_service = self.__strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
                     #pour test
-                    #time_service = time_service - datetime.timedelta(hours=48)
+                    #time_service = time_service - datetime.timedelta(hours=50)
                     
-                    time_source = datetime.datetime.strptime(result['commit']['committer']['date'],'%Y-%m-%dT%H:%M:%SZ')
+                    time_source = self.__strptime(result['commit']['committer']['date'], "%Y-%m-%dT%H:%M:%SZ")
                     
                     if (time_source > time_service):
                         if (download == 'true'):
