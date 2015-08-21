@@ -149,7 +149,7 @@ def showMovies(sSearch = ''):
    
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
-    
+
     oParser = cParser()
     sPattern = '<div class="libre-movie libre-movie-block">.+?data-src="(.+?)".+?title="(.+?)".+?<h2 onclick="window.location.href=\'(.+?)\'">'
     if '/films/' in sUrl:
@@ -165,14 +165,15 @@ def showMovies(sSearch = ''):
             if dialog.iscanceled():
                 break
             
-            sTitle = str(aEntry[1])
+            sMovieTitle = str(aEntry[1])
             if '/films/' in sUrl:
-                sTitle = sTitle + ' [' + str(aEntry[3]) + ']'
-            sTitle = cUtil().DecoTitle(sTitle)
+                sMovieTitle = sMovieTitle + ' [' + str(aEntry[3]) + ']'
+                
+            sTitle = cUtil().DecoTitle(sMovieTitle)
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[2]))
-            oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
+            oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
             oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[0]))
 
             if '/series/' in sUrl or '/series/' in aEntry[1]:
@@ -222,6 +223,8 @@ def showHosters():
     sPattern = '<iframe.+?src="(.+?)"'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
+    
+    sMovieTitle = cUtil().DecoTitle(sMovieTitle)
 
     if (aResult[0] == True):
         total = len(aResult[1])
@@ -251,11 +254,6 @@ def seriesHosters():
     
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
-    #sHtmlContent = sHtmlContent.replace('http://creative.rev2pub.com','')
-    
-    #fh = open('c:\\serie.txt', "w")
-    #fh.write(sHtmlContent)
-    #fh.close()
                
     oParser = cParser()          
     sPattern = '<div class="e-number">.+?<iframe src="(.+?)".+?class="episode-id">(.+?)<'
@@ -269,12 +267,10 @@ def seriesHosters():
             if dialog.iscanceled():
                 break
             
-            sTitle = sMovieTitle + str(aEntry[1])
+            sTitle = sMovieTitle + ' ' + str(aEntry[1])
+            sTitle = cUtil().DecoTitle(sTitle)
             
             sHosterUrl = str(aEntry[0])
-            
-            print sHosterUrl
-            
             oHoster = cHosterGui().checkHoster(sHosterUrl)
             if (oHoster != False):
                 oHoster.setDisplayName(sTitle)
@@ -294,11 +290,6 @@ def mangasHosters():
     
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
-    #sHtmlContent = sHtmlContent.replace('http://creative.rev2pub.com','')
-    
-    #fh = open('c:\\serie.txt', "w")
-    #fh.write(sHtmlContent)
-    #fh.close()
                
     oParser = cParser()          
     sPattern = '<div class="e-number">.+?<iframe src="(.+?)".+?class="episode-id">(.+?)<'
@@ -312,10 +303,10 @@ def mangasHosters():
             if dialog.iscanceled():
                 break
             
-            sTitle = sMovieTitle + str(aEntry[1])
+            sTitle = sMovieTitle + ' ' + str(aEntry[1])
+            sTitle = cUtil().DecoTitle(sTitle)
             
             sHosterUrl = str(aEntry[0])
-            
             oHoster = cHosterGui().checkHoster(sHosterUrl)
             if (oHoster != False):
                 oHoster.setDisplayName(sTitle)
