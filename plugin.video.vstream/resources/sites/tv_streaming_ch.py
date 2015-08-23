@@ -175,11 +175,10 @@ def showMovies(sSearch = ''):
       
     sHtmlContent = reponse.read()
     reponse.close()
-
     
-    fh = open('c:\\test.txt', "w")
-    fh.write(sHtmlContent)
-    fh.close()
+    #fh = open('c:\\test.txt', "w")
+    ##fh.write(sHtmlContent)
+    #fh.close()
     
     sPattern = '<div.*?class="moviefilm"><a.*?href="([^<]+)">.+?<img.*?src="([^<]+)" alt="(.+?)".+?>'
     
