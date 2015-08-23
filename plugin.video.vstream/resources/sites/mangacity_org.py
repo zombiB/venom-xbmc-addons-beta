@@ -409,7 +409,7 @@ def showHosters():
                 if not (sHosterUrl[:4] == 'http'):
                     final = ''
                     
-                    sPattern = '[src|SRC]=(?:\'|")(https:.+?)(?:\'|")'
+                    sPattern = '[src|SRC]=(?:\'|")(https*:.+?)(?:\'|")'
                     aResult = re.findall(sPattern,sHosterUrl)
                     if aResult:
                         final = aResult[0]
