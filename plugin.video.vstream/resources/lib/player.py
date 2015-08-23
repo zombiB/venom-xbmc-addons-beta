@@ -98,9 +98,16 @@ class cPlayer(xbmc.Player):
         meta['site'] = self.sSite
         try:
             data = cDb().get_resume(meta)
+            print data
             if not data == '':
-                seekTime = float(data[0][3])
-                self.seekTime(seekTime)
+                time = float(data[0][3]) / 60
+                label = '%s %.2f minutes' % ('reprendre:', time)     
+                oDialog = cConfig().createDialogYesNo(label)
+                if (oDialog == 1):
+                    seekTime = float(data[0][3])
+                    self.seekTime(seekTime)
+                else: 
+                    pass
         except:
             pass
                 
