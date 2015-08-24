@@ -228,7 +228,7 @@ class cGui():
        
         sPluginHandle = cPluginHandler().getPluginHandle();
 
-        xbmcplugin.addDirectoryItem(sPluginHandle, sItemUrl, oListItem, isFolder=isFolder)        
+        xbmcplugin.addDirectoryItem(sPluginHandle, sItemUrl, oListItem, isFolder=isFolder)      
         
 
     def createListItem(self, oGuiElement):        
@@ -515,6 +515,7 @@ class cGui():
         row = cDb().get_watched(meta)
         if row:
             cDb().del_watched(meta)
+            cDb().del_resume(meta)
         else:
             cDb().insert_watched(meta)
         xbmc.executebuiltin( 'Container.Refresh' )

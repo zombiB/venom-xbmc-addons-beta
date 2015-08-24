@@ -274,6 +274,21 @@ class cDb:
             cConfig().log('SQL ERROR EXECUTE') 
             return False, False
         self.dbcur.close() 
+        
+    def del_resume(self, meta):
+        site = urllib.quote_plus(meta['site'])
+
+        sql_select = "DELETE FROM resume WHERE hoster = '%s'" % (site)
+
+        try:    
+            self.dbcur.execute(sql_select)
+            self.db.commit()
+            #cConfig().showInfo('vStream', 'Resume supprimer')
+            return False, False
+        except Exception, e:
+            cConfig().log('SQL ERROR EXECUTE') 
+            return False, False
+        self.dbcur.close()
 
     def getFav(self):
         oGui = cGui()

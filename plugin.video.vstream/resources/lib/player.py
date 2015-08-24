@@ -45,21 +45,13 @@ class cPlayer(xbmc.Player):
         xbmcPlayer.play(oPlayList)
         timer = int(cConfig().getSetting('param_timeout'))
         xbmc.sleep(timer)
-        # try:
-            
-            # if xbmcPlayer.getPlayingFile(): 
-                # cConfig().log("Start Player " + xbmcPlayer.getPlayingFile())
-                
-        # except:
-            # cConfig().showInfo('vStream', 'Start Player Impossible')
-            # cConfig().log("Start Player Impossible")
 
-        while not xbmc.abortRequested:
-            try: 
-                self.currentTime = self.getTime()
-                self.totalTime = self.getTotalTime()
-            except: break
-            xbmc.sleep(1000)
+        # while not xbmc.abortRequested:
+            # try: 
+                # self.currentTime = self.getTime()
+                # self.totalTime = self.getTotalTime()
+            # except: pass
+            # xbmc.sleep(1000)
 
         # dirty, but is works 
         if (cConfig().isDharma() == False):
