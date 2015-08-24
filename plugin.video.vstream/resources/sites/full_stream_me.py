@@ -82,13 +82,6 @@ def load():
             
     oGui.setEndOfDirectory()
 
-def DecoTitle(string):
-    #pr les tag
-    string = re.sub('(.*)([\[\(].{1,7}[\)\]])','\\1[COLOR coral]\\2[/COLOR]', str(string))
-    #pr les saisons
-    string = re.sub('(?i)(.*)(saison [0-9]+)','\\1[COLOR coral]\\2[/COLOR]', str(string))
-    return string
- 
 def showSearch():
     oGui = cGui()
 
@@ -209,7 +202,7 @@ def showMovies(sSearch = ''):
                 sTitle = sTitle + ' (' + aEntry[3] + ')'
             sTitle = sTitle.replace('Haute-qualité','HQ')
                 
-            sDisplayTitle = DecoTitle(sTitle)
+            sDisplayTitle = cUtil().DecoTitle(sTitle)
             
             # if not 'http' in sThumb:
                 # sThumb = URL_MAIN + sThumb
@@ -328,7 +321,7 @@ def serieHosters():
 
             sHosterUrl = str(aEntry[0])
             oHoster = cHosterGui().checkHoster(sHosterUrl)
-            sDisplayTitle = DecoTitle(sMovieTitle)
+            sDisplayTitle = cUtil().DecoTitle(sMovieTitle)
         
             if (oHoster != False):
                 sTitle = aEntry[1]
@@ -355,7 +348,7 @@ def serieHosters():
                         break
                         
                     sTitle = sMovieTitle + ' Episode ' + str(aEntry[0])
-                    sDisplayTitle = DecoTitle(sTitle)
+                    sDisplayTitle = cUtil().DecoTitle(sTitle)
 
                     oOutputParameterHandler = cOutputParameterHandler()
                     oOutputParameterHandler.addParameter('sEpisode', str(aEntry[0]))
@@ -389,7 +382,7 @@ def serieHosters():
                             
                         sHosterUrl = str(aEntry)
                         oHoster = cHosterGui().checkHoster(sHosterUrl)
-                        sDisplayTitle = DecoTitle(sMovieTitle)
+                        sDisplayTitle = cUtil().DecoTitle(sMovieTitle)
                     
                         if (oHoster != False):
                             sTitle = aEntry[1]
