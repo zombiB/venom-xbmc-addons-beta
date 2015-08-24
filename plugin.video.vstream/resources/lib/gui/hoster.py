@@ -195,6 +195,10 @@ class cHosterGui:
             return cHosterHandler().getHoster('watching')
         if ('letwatch' in sHosterUrl):
             return cHosterHandler().getHoster('letwatch')
+        if ('easyvid' in sHosterUrl):
+            return cHosterHandler().getHoster('easyvid')
+        if ('allvid' in sHosterUrl):
+            return cHosterHandler().getHoster('allvid')     
 
         #Si aucun hebergeur connu on teste les liens directs
         if (sHosterUrl[-4:] in '.mp4.avi.flv.m3u8'):
