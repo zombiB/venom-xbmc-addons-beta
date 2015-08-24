@@ -46,12 +46,12 @@ class cPlayer(xbmc.Player):
         timer = int(cConfig().getSetting('param_timeout'))
         xbmc.sleep(timer)
 
-        # while not xbmc.abortRequested:
-            # try: 
-                # self.currentTime = self.getTime()
-                # self.totalTime = self.getTotalTime()
-            # except: pass
-            # xbmc.sleep(1000)
+        while not xbmc.abortRequested:
+            try: 
+               self.currentTime = self.getTime()
+               self.totalTime = self.getTotalTime()
+            except: break
+            xbmc.sleep(1000)
 
         # dirty, but is works 
         if (cConfig().isDharma() == False):
@@ -90,7 +90,6 @@ class cPlayer(xbmc.Player):
         meta['site'] = self.sSite
         try:
             data = cDb().get_resume(meta)
-            print data
             if not data == '':
                 time = float(data[0][3]) / 60
                 label = '%s %.2f minutes' % ('reprendre:', time)     
