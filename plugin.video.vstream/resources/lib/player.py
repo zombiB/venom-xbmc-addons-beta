@@ -1,11 +1,13 @@
 from resources.lib.gui.guiElement import cGuiElement
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
+from resources.lib.handler.pluginHandler import cPluginHandler
 from resources.lib.config import cConfig
 from resources.lib.gui.gui import cGui
 from resources.lib.db import cDb
 
 
-import xbmc
+import xbmc, xbmcgui, xbmcplugin, sys
+import xbmcaddon,xbmcvfs
 import time
 
 class cPlayer(xbmc.Player):
@@ -37,6 +39,21 @@ class cPlayer(xbmc.Player):
     def __addItemToPlaylist(self, oGuiElement, oListItem):    
         oPlaylist = self.__getPlayList()	
         oPlaylist.add(oGuiElement.getMediaUrl(), oListItem )
+        
+    def run(self, sTitle, sUrl):
+        sPluginHandle = cPluginHandler().getPluginHandle();
+        meta = {'label': sTitle, 'title': sTitle}
+        poster = ''
+        item = xbmcgui.ListItem(path=sUrl, iconImage="DefaultVideo.png", thumbnailImage=poster)
+        item.setInfo( type="Video", infoLabels= meta )
+        xbmcplugin.setResolvedUrl(sPluginHandle, True, item)
+        
+        while True:
+            try: 
+               self.currentTime = self.getTime()
+               self.totalTime = self.getTotalTime()
+            except: break
+            xbmc.sleep(1000)
 
     def startPlayer(self):
         sPlayerType = self.__getPlayerType()
@@ -44,7 +61,7 @@ class cPlayer(xbmc.Player):
         oPlayList = self.__getPlayList()
         xbmcPlayer.play(oPlayList)
         timer = int(cConfig().getSetting('param_timeout'))
-        xbmc.sleep(timer)
+        xbmc.sleep(timer)            
 
         while not xbmc.abortRequested:
             try: 

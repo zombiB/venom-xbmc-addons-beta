@@ -205,6 +205,7 @@ class cDb:
             self.dbcur.execute(sql_select)
             #matchedrow = self.dbcur.fetchone()
             matchedrow = self.dbcur.fetchall()
+            #cConfig().log(matchedrow)
             return matchedrow        
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE') 

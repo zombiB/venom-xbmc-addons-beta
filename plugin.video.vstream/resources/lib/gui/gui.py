@@ -237,9 +237,10 @@ class cGui():
         oListItem.setInfo(oGuiElement.getType(), oGuiElement.getItemValues())
         oListItem.setThumbnailImage(oGuiElement.getThumbnail())
         
-        #oListItem.setProperty("Fanart_Image", oGuiElement.getFanart())
-        #oListItem.setProperty("IsPlayable", "true")
-        #oListItem.setProperty("Video", "true")
+        #modif le 26/08
+        oListItem.setProperty("IsPlayable", "true")
+        oListItem.setProperty("Video", "true")
+        #
 
         aProperties = oGuiElement.getItemProperties()
         for sPropertyKey in aProperties.keys():
