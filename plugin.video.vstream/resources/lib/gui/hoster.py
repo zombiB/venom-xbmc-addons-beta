@@ -83,9 +83,9 @@ class cHosterGui:
         
 
         #bug
-        #oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
+        oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
          
-        oGui.addFolder(oGuiElement, oOutputParameterHandler)
+        #oGui.addFolder(oGuiElement, oOutputParameterHandler)
 
     def checkHoster(self, sHosterUrl):
 
@@ -319,20 +319,25 @@ class cHosterGui:
             aLink = oHoster.getMediaLink()
 
             if (aLink[0] == True):
-
                 oGuiElement = cGuiElement()
                 oGuiElement.setSiteName(self.SITE_NAME)
                 oGuiElement.setMediaUrl(aLink[1])
                 oGuiElement.setTitle(oHoster.getFileName())
-                #oGuiElement.setThumbnail(sThumbnail)
                 oGuiElement.getInfoLabel()
-                #oGuiElement.setThumbnail(xbmc.getInfoLabel('ListItem.Art(thumb)'))
+                
                 oPlayer = cPlayer()
-                oPlayer.clearPlayList()
-                oPlayer.addItemToPlaylist(oGuiElement)
-                oPlayer.startPlayer()
-                #oPlayer.clearPlayList()
-                #xbmc.Player().play(aLink[1], oGuiElement)
+                oPlayer.run(oGuiElement, oHoster.getFileName(), aLink[1])
+                
+                # oGuiElement = cGuiElement()
+                # oGuiElement.setSiteName(self.SITE_NAME)
+                # oGuiElement.setMediaUrl(aLink[1])
+                # oGuiElement.setTitle(oHoster.getFileName())
+                # oGuiElement.getInfoLabel()
+                
+                # oPlayer = cPlayer()
+                # oPlayer.clearPlayList()
+                # oPlayer.addItemToPlaylist(oGuiElement)
+                # oPlayer.startPlayer()
                 return
             else:
                 cConfig().showInfo(sHosterName, 'Fichier introuvable')
