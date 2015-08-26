@@ -11,7 +11,7 @@ from resources.lib.config import cConfig
 from resources.lib.parser import cParser
 from resources.lib.util import cUtil
 import re,urllib2,urllib
- 
+
  
 SITE_IDENTIFIER = 'full_streamvk_com'
 SITE_NAME = 'Full-streamvk.com'
@@ -92,7 +92,7 @@ def showGenre():
 def showMovies(sSearch=''):
     oGui = cGui()
     if sSearch:
-        #on redecode la recherhce codÃ© il y a meme pas une seconde par l'addon
+        #on redecode la recherhce codé il y a meme pas une seconde par l'addon
         sSearch = urllib2.unquote(sSearch)
        
         query_args = { 'do' : 'search' , 'subaction' : 'search' , 'story' : str(sSearch) , 'x' : '0', 'y' : '0'}
@@ -136,7 +136,7 @@ def showMovies(sSearch=''):
             #sUrl = URL_MAIN+str(aEntry[1])
            
             sThumbnail = str(aEntry[0])
-            if not 'full-streamvk' in sThumbnail:
+            if not sThumbnail.startswith('http'):
                   sThumbnail = 'http://www.full-streamvk.com' + sThumbnail
             #print sThumbnail
  
@@ -157,23 +157,23 @@ def showMovies(sSearch=''):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
             oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
- 
+
              
     if not sSearch:
-        oGui.setEndOfDirectory()
-               
+        oGui.setEndOfDirectory() 
+                
 def __checkForNextPage(sHtmlContent):
-   
-    sPattern = '<div class="nextprev">.+?<a href="([^<>]+?)"><span class="pnext">Suivant<\/span>'
+    sPattern = 'href="([^<>]+?)">([Suivant >>])<\/a>'
+    sPattern = '<a class="btn btn-default" href="(.+?)">[Suivant >>]<\/a>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
  
     if (aResult[0] == True):
         return aResult[1][0]
  
-    return False
-       
-   
+    return False 
+        
+    
 def showHosters():
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler()
@@ -208,5 +208,4 @@ def showHosters():
    
         cConfig().finishDialog(dialog)
  
-
-        oGui.setEndOfDirectory()
+    oGui.setEndOfDirectory()
