@@ -119,11 +119,9 @@ class cAbout:
                 time_service = self.__strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
                 #pour test
                 #time_service = time_service - datetime.timedelta(hours=50)
-                
                 if (time_now - time_service > time_sleep):
                     self.__checkversion()
-                    self.__checkupdate('false')
-                    
+                    self.__checkupdate('false')                    
                     #Function update auto
             else:
                 cConfig().setSetting('service_time', str(datetime.datetime.now()))
@@ -184,7 +182,8 @@ class cAbout:
                         cConfig().setSetting('home_update', str('false'))
                                 
                     return
-                except:            
+                except:
+                    cConfig().setSetting('service_time', str(datetime.datetime.now()))
                     return
             return
     

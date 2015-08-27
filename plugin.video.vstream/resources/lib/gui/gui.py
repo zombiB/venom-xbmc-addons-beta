@@ -100,7 +100,7 @@ class cGui():
         
         self.createContexMenuDelFav(oGuiElement, oOutputParameterHandler)
         
-        self.addFolder(oGuiElement, oOutputParameterHandler)     
+        self.addFolder(oGuiElement, oOutputParameterHandler, False)     
     
     
     def addDir(self, sId, sFunction, sLabel, sIcon, oOutputParameterHandler = ''):

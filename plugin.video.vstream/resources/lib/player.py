@@ -48,7 +48,7 @@ class cPlayer(xbmc.Player):
         item.setInfo( type="Video", infoLabels= meta )
         xbmcplugin.setResolvedUrl(sPluginHandle, True, item)
         
-        while True:
+        while not xbmc.abortRequested:
             try: 
                self.currentTime = self.getTime()
                self.totalTime = self.getTotalTime()
