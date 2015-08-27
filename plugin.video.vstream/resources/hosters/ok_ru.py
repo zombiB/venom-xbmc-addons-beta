@@ -72,43 +72,26 @@ class cHoster(iHoster):
         web_url = 'http://' + sHost + '/dk?cmd=videoPlayerMetadata&mid=' + sId
         
         #bidouille en plus
-        a = int(time.time())
-        b = random.random()
-        web_url = web_url + '&rnd=' + str(a) + str(b)
+        #a = int(time.time())
+        #b = random.random()
+        #web_url = web_url + '&rnd=' + str(a) + str(b)
         
         #print web_url
         
-        UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0'
-        headers = {'User-Agent': UA ,
-                   'Host' : sHost,
-                   #'Referer': 'http://www.voirfilms.org/batman-unlimited-monstrueuse-pagaille.htm',
-                   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                   'Content-Type': 'text/html; charset=utf-8'}
+        HEADERS = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        }
+
         
         #oRequest = cRequestHandler(web_url)
         #sHtmlContent = oRequest.request()
-        
-        req = urllib2.Request( 'http://ok.ru/video/' + str(sId),None,headers)
-        try:
-            response = urllib2.urlopen(req)
-        except urllib2.URLError, e:
-            print e.read()
-            print e.reason
-        
-        print web_url
-        
 
-        
-        req = urllib2.Request(web_url,None,headers)
-        try:
-            response = urllib2.urlopen(req)
-        except urllib2.URLError, e:
-            print e.read()
-            print e.reason
-            
+        req = urllib2.Request(web_url, headers=HEADERS)
+        response = urllib2.urlopen(req)
         sHtmlContent = response.read()
         response.close()
-        
+            
         sHtmlContent = sHtmlContent.decode('unicode-escape')
         sHtmlContent = sHtmlContent.encode("utf-8")
         
@@ -140,14 +123,11 @@ class cHoster(iHoster):
                     
         
         #time.sleep( 5 )        
-                    
-        print api_call
-        #api_call = 'http://217.20.157.207/?sig=1840c53829262bb9b14d50010b73f1722d2ec7e4&ct=0&expires=1439657212454&clientType=0&id=51659082303&type=1'
         
-        UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        api_call = api_call + '|User-Agent=' + UA
+        #print api_call
         
         if (api_call):
+            api_call = '%s|User-Agent=%s&Accept=%s' % (api_call, HEADERS['User-Agent'], HEADERS['Accept'])
             return True,api_call
             
         return False, False
