@@ -138,9 +138,12 @@ class cDb:
 
         title = self.str_conv(meta['title'])
         siteurl = urllib.quote_plus(meta['siteurl'])        
-        
+        sIcon = self.str_conv(meta['icon'])
+
         ex = "INSERT INTO favorite (title, siteurl, site, fav, cat, icon, fanart) VALUES (?, ?, ?, ?, ?, ?, ?)"
-        self.dbcur.execute(ex, (title,siteurl, meta['site'],meta['fav'],meta['cat'],meta['icon'],meta['fanart']))
+        self.dbcur.execute(ex, (title,siteurl, meta['site'],meta['fav'],meta['cat'],sIcon,meta['fanart']))
+        
+        
 
         try:
             self.db.commit() 

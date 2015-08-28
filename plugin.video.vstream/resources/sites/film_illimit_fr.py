@@ -52,7 +52,8 @@ def showSearch():
  
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-        showMovies(sSearchText)
+        sUrl = 'http://xn--official-film-illimit-v5b.fr/?s='+sSearchText 
+        showMovies(sUrl)
         oGui.setEndOfDirectory()
         return  
             
@@ -117,13 +118,14 @@ def showMovies(sSearch = ''):
            
             sTitle = aEntry[2]+ ' [COLOR coral] '+aEntry[3]+'[/COLOR]'
             sUrl = aEntry[0].replace('http://official-film-illimité.fr', 'http://xn--official-film-illimit-v5b.fr')
+            sThumbnail = aEntry[1].replace('http://official-film-illimité.fr', 'http://xn--official-film-illimit-v5b.fr')
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(sUrl))
             oOutputParameterHandler.addParameter('sMovieTitle', str(aEntry[2]))
-            oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[1])) #sortis du poster
+            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail)) #sortis du poster
  
-            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, 'films.png', aEntry[1], '', oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, 'films.png', sThumbnail, '', oOutputParameterHandler)
  
         cConfig().finishDialog(dialog)
            
