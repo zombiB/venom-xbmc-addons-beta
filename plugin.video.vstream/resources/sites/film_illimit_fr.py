@@ -134,8 +134,7 @@ def showMovies(sSearch = ''):
             if (sNextPage != False):
                 oOutputParameterHandler = cOutputParameterHandler()
                 oOutputParameterHandler.addParameter('siteUrl', sNextPage)
-                oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]', 'next.png', oOutputParameterHandler)
-                #Ajoute une entrer pour le lien Next | pas de addMisc pas de poster et de description inutile donc
+                oGui.addNext(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Next >>>[/COLOR]' , oOutputParameterHandler)
  
     if not sSearch:
         oGui.setEndOfDirectory() #ferme l'affichage
