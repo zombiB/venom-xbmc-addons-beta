@@ -17,29 +17,20 @@ class cSiteHandler:
             return sys.argv[0]
         except:
             return ''
-            
-    def __str_conv(self, data):
-        if isinstance(data, str):
-            # Must be encoded in UTF-8
-            data = data.decode('utf8')
-        
-        import unicodedata
-        data = unicodedata.normalize('NFKD', data).encode('ascii','ignore')
-        
-        data = data.decode('string-escape')
-        return data
 
     def __getFileNamesFromFolder(self, sFolder):
         aNameList = []
-        sFolder = self.__str_conv(sFolder)
-        items = os.listdir(sFolder)
+        #items = os.listdir(sFolder)
+        items = os.listdir(unicode(sFolder, 'utf-8'))
         for sItemName in items:
-            sFilePath = os.path.join(sFolder, sItemName)
+            #sFilePath = os.path.join(sFolder, sItemName)
+            sFilePath = os.path.join(unicode(sFolder, 'utf-8'), sItemName)
             # xbox hack
             sFilePath = sFilePath.replace('\\', '/')
             
             if (os.path.isdir(sFilePath) == False):
-                if (str(sFilePath.lower()).endswith('py')):
+                #if (str(sFilePath.lower()).endswith('py')):
+                if (sFilePath.lower().endswith('py')):
                     sItemName = sItemName.replace('.py', '')
                     aNameList.append(sItemName)
         return aNameList
