@@ -23,11 +23,11 @@
 		<setting id="plugin_dpstreaming_org" type="bool" label="Dpstreaming (Films, Séries)" default="true"/>
 		<setting id="plugin_enquetedereportages_com" type="bool" label="Enquete de Reportages (Replay TV)" default="true"/>
 		<setting id="plugin_film_illimit_fr" type="bool" label="Film Illimit (Films)" default="true"/>
-		<setting id="plugin_film_streaming_co" type="bool" label="Film Streaming.co (Films)" default="false"/>
+		<setting id="plugin_film_streaming_co" type="bool" label="Film Streaming.co (Films)" default="true"/>
 		<setting id="plugin_filmstreamingz_fr" type="bool" label="FilmStreamingz.fr (Films)" default="true"/>
 		<setting id="plugin_frenchstream_org" type="bool" label="FrenchStream (Films, Séries)" default="true"/>
 		<setting id="plugin_full_stream_me" type="bool" label="Full Stream (Films, Séries)" default="true"/>
-		<setting id="plugin_full_streamvk_com" type="bool" label="Full Streamvk.com (Films)" default="false"/>
+		<setting id="plugin_full_streamvk_com" type="bool" label="Full Streamvk.com (Films)" default="true"/>
 		<setting id="plugin_fullmoviz_org" type="bool" label="FullMoviz (Films)" default="true"/>
 		<setting id="plugin_lestream_net" type="bool" label="leStream.net (Films)" default="true"/>
 		<setting id="plugin_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="true"/>
