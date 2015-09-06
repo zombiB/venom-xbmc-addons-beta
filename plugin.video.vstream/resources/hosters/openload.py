@@ -64,6 +64,39 @@ class cHoster(iHoster):
         oRequest = cRequestHandler(self.__sUrl)
         sHtmlContent = oRequest.request()
         
+        #fh = open('c:\\test.txt', "w")
+        #fh.write(sHtmlContent)
+        #fh.close()
+        
+        # UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
+        # headers = {'User-Agent': UA ,
+                   # 'Host' : 'openload.co',
+                   # 'Accept-Language':'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
+                   # #'Referer': 'http://www.voirfilms.org/batman-unlimited-monstrueuse-pagaille.htm',
+                   # 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                   # #'Content-Type': 'text/html; charset=utf-8'
+                   # 'Accept-Encoding' : 'gzip, deflate'
+                   # }
+        
+        
+        # class NoRedirection(urllib2.HTTPErrorProcessor):
+            # def http_response(self, request, response):
+                # return response
+            # https_response = http_response
+        
+        
+        # req = urllib2.Request(url,None, headers)
+        # try:
+            # response = urllib2.urlopen(req)
+        # except urllib2.URLError, e:
+            # print e.read()
+            # print e.reason
+            
+        # print response.geturl()
+        
+        # sHtmlContent = response.read()
+        # response.close()       
+        
         oParser = cParser()
         sPattern = 'urce type="video[^"<>]+?" src="([^<>"]+?)">'
         aResult = oParser.parse(sHtmlContent, sPattern)
@@ -77,6 +110,12 @@ class cHoster(iHoster):
             aResult = oParser.parse(sHtmlContent, sPattern)
             if (aResult[0] == True):
                 api_call = aResult[1][0]
+            else:
+                #3 eme essais
+                sPattern = '<source src="([^<>"]+?)?mime=true" type='
+                aResult = oParser.parse(sHtmlContent, sPattern)
+                if (aResult[0] == True):
+                    api_call = aResult[1][0]
         
         #print api_call
         
