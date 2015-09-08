@@ -1,6 +1,7 @@
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
 from resources.lib.config import cConfig
+from resources.lib.jjdecode import JJDecoder
 from resources.hosters.hoster import iHoster
 import re,urllib2
 import xbmcgui
@@ -63,7 +64,7 @@ class cHoster(iHoster):
         
         oRequest = cRequestHandler(self.__sUrl)
         sHtmlContent = oRequest.request()
-        
+
         #fh = open('c:\\test.txt', "w")
         #fh.write(sHtmlContent)
         #fh.close()
@@ -95,27 +96,41 @@ class cHoster(iHoster):
         # print response.geturl()
         
         # sHtmlContent = response.read()
-        # response.close()       
-        
+        # response.close()
+
         oParser = cParser()
-        sPattern = 'urce type="video[^"<>]+?" src="([^<>"]+?)">'
-        aResult = oParser.parse(sHtmlContent, sPattern)
-        
-        #1 er essais
+        sPattern = '<video.*?\s*?<script[\sa-z\/"=]*?>(.*?)<\/script>'
+        aResult = oParser.parse(sHtmlContent, sPattern)        
+
         if (aResult[0] == True):
-            api_call = aResult[1][0]
-        else:
-            #second essais
-            sPattern = 'script>\$\("video source"\)\.attr\("src", "(.+?)"\);'
+            sHtmlContent = JJDecoder(aResult[1][0]).decode()
+            sHtmlContent = sHtmlContent.replace('\\','')
+            sPattern = '=\s*?"(.*?)\?'
             aResult = oParser.parse(sHtmlContent, sPattern)
             if (aResult[0] == True):
                 api_call = aResult[1][0]
+        
+        else:       
+        
+            oParser = cParser()
+            sPattern = 'urce type="video[^"<>]+?" src="([^<>"]+?)">'
+            aResult = oParser.parse(sHtmlContent, sPattern)
+            
+            #1 er essais
+            if (aResult[0] == True):
+                api_call = aResult[1][0]
             else:
-                #3 eme essais
-                sPattern = '<source src="([^<>"]+?)?mime=true" type='
+                #second essais
+                sPattern = 'script>\$\("video source"\)\.attr\("src", "(.+?)"\);'
                 aResult = oParser.parse(sHtmlContent, sPattern)
                 if (aResult[0] == True):
                     api_call = aResult[1][0]
+                else:
+                    #3 eme essais
+                    sPattern = '<source src="([^<>"]+?)?mime=true" type='
+                    aResult = oParser.parse(sHtmlContent, sPattern)
+                    if (aResult[0] == True):
+                        api_call = aResult[1][0]
         
         #print api_call
         
