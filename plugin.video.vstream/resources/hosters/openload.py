@@ -3,8 +3,8 @@ from resources.lib.parser import cParser
 from resources.lib.config import cConfig
 from resources.lib.jjdecode import JJDecoder
 from resources.hosters.hoster import iHoster
+from resources.lib.packer import cPacker
 import re,urllib2
-import xbmcgui
 
 class cHoster(iHoster):
 
@@ -59,81 +59,23 @@ class cHoster(iHoster):
         return self.__getMediaLinkForGuest()
 
     def __getMediaLinkForGuest(self):
-
-        api_call =''
-        
         oRequest = cRequestHandler(self.__sUrl)
         sHtmlContent = oRequest.request()
 
-        #fh = open('c:\\test.txt', "w")
-        #fh.write(sHtmlContent)
-        #fh.close()
-        
-        # UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        # headers = {'User-Agent': UA ,
-                   # 'Host' : 'openload.co',
-                   # 'Accept-Language':'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
-                   # #'Referer': 'http://www.voirfilms.org/batman-unlimited-monstrueuse-pagaille.htm',
-                   # 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                   # #'Content-Type': 'text/html; charset=utf-8'
-                   # 'Accept-Encoding' : 'gzip, deflate'
-                   # }
-        
-        
-        # class NoRedirection(urllib2.HTTPErrorProcessor):
-            # def http_response(self, request, response):
-                # return response
-            # https_response = http_response
-        
-        
-        # req = urllib2.Request(url,None, headers)
-        # try:
-            # response = urllib2.urlopen(req)
-        # except urllib2.URLError, e:
-            # print e.read()
-            # print e.reason
-            
-        # print response.geturl()
-        
-        # sHtmlContent = response.read()
-        # response.close()
-
         oParser = cParser()
-        sPattern = '<video.*?\s*?<script[\sa-z\/"=]*?>(.*?)<\/script>'
-        aResult = oParser.parse(sHtmlContent, sPattern)        
-
+        sPattern = "(\s*eval\s*\(\s*function(?:.|\s)+?)</script>"
+        aResult = oParser.parse(sHtmlContent, sPattern)
+        
         if (aResult[0] == True):
-            sHtmlContent = JJDecoder(aResult[1][0]).decode()
-            sHtmlContent = sHtmlContent.replace('\\','')
-            sPattern = '=\s*?"(.*?)\?'
-            aResult = oParser.parse(sHtmlContent, sPattern)
+            sUnpacked = cPacker().unpack(aResult[1][0])
+            sContent = JJDecoder(sUnpacked).decode()
+            sContent = sContent.replace('\\','')
+
+            sPattern = 'src=\s*?"(.*?)\?'
+            aResult = oParser.parse(sContent, sPattern)
             if (aResult[0] == True):
                 api_call = aResult[1][0]
-        
-        else:       
-        
-            oParser = cParser()
-            sPattern = 'urce type="video[^"<>]+?" src="([^<>"]+?)">'
-            aResult = oParser.parse(sHtmlContent, sPattern)
-            
-            #1 er essais
-            if (aResult[0] == True):
-                api_call = aResult[1][0]
-            else:
-                #second essais
-                sPattern = 'script>\$\("video source"\)\.attr\("src", "(.+?)"\);'
-                aResult = oParser.parse(sHtmlContent, sPattern)
-                if (aResult[0] == True):
-                    api_call = aResult[1][0]
-                else:
-                    #3 eme essais
-                    sPattern = '<source src="([^<>"]+?)?mime=true" type='
-                    aResult = oParser.parse(sHtmlContent, sPattern)
-                    if (aResult[0] == True):
-                        api_call = aResult[1][0]
-        
-        #print api_call
-        
+
         if (api_call):
             return True, api_call
             
