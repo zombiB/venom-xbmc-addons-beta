@@ -24,7 +24,10 @@ class cPacker():
 
     def unpack(self, source):
         """Unpacks P.A.C.K.E.R. packed js code."""
-        payload, symtab, radix, count = self._filterargs(source)
+        if 'letwatch' in source:
+            payload, symtab, radix, count = self._filterargs2(source)
+        else :
+            payload, symtab, radix, count = self._filterargs(source)
 
         if count != len(symtab):
             raise self.UnpackingError('Malformed p.a.c.k.e.r. symtab.')
@@ -46,17 +49,19 @@ class cPacker():
     def _cleanstr(self, str):
         str = str.strip()
         if str.find("decodeURIComponent") == 0:
-            str = re.sub(r"(^decodeURIComponent\s*\(\s*('|\"))|(('|\")\s*\)$)", "", str);
+            str = re.sub(r"^decodeURIComponent\s*\(\s*('|\")", "", str);
+            str = re.sub(r"('|\")\s*\)$", "", str);
             str = urllib2.unquote(str)
-        elif str.find("\"") == 0:
-            str = re.sub(r"(^\")|(\"$)|(\".*?\")", "", str);
-        elif str.find("'") == 0:
-            str = re.sub(r"(^')|('$)|('.*?')", "", str);
+        else:
+            if str.find("\"") == 0:
+                str = re.sub(r"(^\")|(\"$)|(\".*?\")", "", str);
+            elif str.find("'") == 0:
+                str = re.sub(r"(^')|('$)|('.*?')", "", str);
 
         return str
 
     def _filterargs(self, source):
-        """Juice from a source file the four args needed by decoder."""
+        """decode openload"""
 
         juicer = (r"}\s*\(\s*([^,]*)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*\((.*?)\).split\((.*?)\)")
         args = re.search(juicer, source, re.DOTALL)
@@ -67,14 +72,22 @@ class cPacker():
             except ValueError:
                 raise self.UnpackingError('Corrupted p.a.c.k.e.r. data.')
 
-        juicer = (r"}\('(.*)', *(\d+), *(\d+), *'(.*)'\.split\('(.*?)'\)")
-        args = re.search(juicer, source, re.DOTALL)
-        if args:
-            a = args.groups()
-            try:
-                return a[0], a[3].split(a[4]), int(a[1]), int(a[2])
-            except ValueError:
-                raise self.UnpackingError('Corrupted p.a.c.k.e.r. data.')
+        # could not find a satisfying regex
+        raise self.UnpackingError('Could not make sense of p.a.c.k.e.r data (unexpected code structure)')
+        
+    def _filterargs2(self, source):
+        """Decode letwatch"""
+        juicers = [ (r"}\('(.*)', *(\d+), *(\d+), *'(.*)'\.split\('\|'\), *(\d+), *(.*)\)\)"),
+                    (r"}\('(.*)', *(\d+), *(\d+), *'(.*)'\.split\('\|'\)"),
+                  ]
+        for juicer in juicers:
+            args = re.search(juicer, source, re.DOTALL)
+            if args:
+                a = args.groups()
+                try:
+                    return a[0], a[3].split('|'), int(a[1]), int(a[2])
+                except ValueError:
+                    raise self.UnpackingError('Corrupted p.a.c.k.e.r. data.')
 
         # could not find a satisfying regex
         raise self.UnpackingError('Could not make sense of p.a.c.k.e.r data (unexpected code structure)')
