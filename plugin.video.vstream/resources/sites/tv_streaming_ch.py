@@ -96,7 +96,7 @@ def showSearch():
 
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-        sUrl = URL_SEARCH[0]+sSearchText  
+        sUrl = URL_SEARCH[0] + urllib.quote(sSearchText)  
         showMovies(sUrl)
         oGui.setEndOfDirectory()
         return  
