@@ -45,7 +45,20 @@ class cPacker():
 
     def _cleanstr(self, str):
         str = str.strip()
-        if str.find("decodeURIComponent") == 0:
+        if str.find("function") == 0:
+            pattern = (r"=\"([^\"]+).*}\s*\((\d+)\)")
+            args = re.search(pattern, str, re.DOTALL)
+            if args:
+                a = args.groups()
+                def openload_re(match):
+                    c = match.group(0)
+                    b = ord(c) + int(a[1])
+                    return chr(ord(c) if (90 if c <= "Z" else 122) >= b else b - 26)
+
+                str = re.sub(r"[a-zA-Z]", openload_re, a[0]);
+                str = urllib2.unquote(str)
+
+        elif str.find("decodeURIComponent") == 0:
             str = re.sub(r"(^decodeURIComponent\s*\(\s*('|\"))|(('|\")\s*\)$)", "", str);
             str = urllib2.unquote(str)
         elif str.find("\"") == 0:
@@ -58,7 +71,7 @@ class cPacker():
     def _filterargs(self, source):
         """Juice from a source file the four args needed by decoder."""
 
-        juicer = (r"}\s*\(\s*([^,]*)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*\((.*?)\).split\((.*?)\)")
+        juicer = (r"}\s*\(\s*(.*?)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*\((.*?)\).split\((.*?)\)")
         args = re.search(juicer, source, re.DOTALL)
         if args:
             a = args.groups()
