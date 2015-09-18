@@ -102,7 +102,7 @@ class cGui():
         
         self.addFolder(oGuiElement, oOutputParameterHandler, False)     
     
-    
+        
     def addDir(self, sId, sFunction, sLabel, sIcon, oOutputParameterHandler = ''):
         
         oGuiElement = cGuiElement()
@@ -113,6 +113,10 @@ class cGui():
         oGuiElement.setMeta(0)
 
         oGuiElement.setDirFanart(sIcon)
+        
+        #oGuiElement.setFanart(self.sFanart)
+        
+        
             
         # if oOutputParameterHandler.getValue('sFanart'):
             # sFanart = oOutputParameterHandler.getValue('sFanart')
