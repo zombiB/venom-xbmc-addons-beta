@@ -69,7 +69,8 @@ URL_MAIN = 'http://www.mangacity.org/'
 
 ANIM_LIST = ('http://www.mangacity.org/animes.php?liste=SHOWALPHA', 'ShowAlpha')
 ANIM_GENRES = (True, 'showGenre')
-ANIM_ANIMS = ('http://www.mangacity.org/nouveautees.php', 'showMovies')
+#ANIM_ANIMS = ('http://www.mangacity.org/nouveautees.php', 'showMovies')
+ANIM_ANIMS = ('http://www.mangacity.org/animes.php?liste=b1u3vv0lSorJk9Lex0tbKZEtbz8RlMC9', 'showMovies')
 
 URL_SEARCH = ('', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
@@ -82,17 +83,21 @@ def load(): #function charger automatiquement par l'addon l'index de votre navig
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/') # sortis du parametres siteUrl oublier pas la Majuscule
     oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
     
-    oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'Animes Nouveaute', 'films.png', oOutputParameterHandler)
+    # oOutputParameterHandler = cOutputParameterHandler()
+    # oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
+    # oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'Animés Nouveaute', 'news.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_LIST[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_LIST[1], 'Liste Animes', 'films.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_LIST[1], 'Animés A-Z', 'az.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_GENRES[0])
-    oGui.addDir(SITE_IDENTIFIER, ANIM_GENRES[1], 'Anime Genres', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, ANIM_GENRES[1], 'Animés Genres', 'genres.png', oOutputParameterHandler)
+    
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
+    oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'Animés', 'listes.png', oOutputParameterHandler)
             
     oGui.setEndOfDirectory() #ferme l'affichage
 
