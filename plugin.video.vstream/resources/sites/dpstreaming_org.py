@@ -272,17 +272,18 @@ def showMovies(sSearch = ''):
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request();
     sHtmlContent = sHtmlContent.replace('[Streaming]', '').replace('[Telecharger]', '')
-    sPattern = '<img width=".+?" height=".+?" src="([^<]+)" class="postim wp-post-image".+?<h2><a href="([^<]+)" rel="bookmark" .+?>([^<]+)</a></h2></div>.+?<p>(.+?)</p>'
-    oParser = cParser()
-    aResult = oParser.parse(sHtmlContent, sPattern)
-
-    if (aResult[0] == False):
+    #sPattern = '<img width=".+?" height=".+?" src="([^<]+)" class="postim wp-post-image".+?<h2><a href="([^<]+)" rel="bookmark" .+?>([^<]+)</a></h2></div>.+?<p>(.+?)</p>'
+    sPattern = '(?:<img width=".+?" height=".+?" src="([^<>"]+)"[^<>]+?\/>)*<\/a><\/div><div class="title">.+?<h2><a href="([^<]+)" rel="bookmark" .+?>([^<]+)<\/a><\/h2><\/div>.+?<p>(.+?)<\/p>'
+    
+    aResult = re.findall(sPattern,sHtmlContent)
+    
+    if not (aResult):
         oGui.addNone(SITE_IDENTIFIER)
         
-    if (aResult[0] == True):
-        total = len(aResult[1])
+    if (aResult):
+        total = len(aResult)
         dialog = cConfig().createDialog(SITE_NAME)
-        for aEntry in aResult[1]:
+        for aEntry in aResult:
             cConfig().updateDialog(dialog, total)
             if dialog.iscanceled():
                 break
@@ -295,11 +296,12 @@ def showMovies(sSearch = ''):
             sMovieTitle=re.sub('(\[.*\])','', sTitle)
             
             sTitle=re.sub('(.*)(\[.*\])','\\1 [COLOR azure]\\2[/COLOR]', sTitle)
-            
- 
+
             sCom = unicode(aEntry[3], 'utf-8')#converti en unicode
             sCom = unicodedata.normalize('NFD', sCom).encode('ascii', 'ignore').decode("unicode_escape")#vire accent et '\'
             sCom = unescape(sCom)
+            
+            sThumb = aEntry[0]
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
@@ -308,11 +310,11 @@ def showMovies(sSearch = ''):
             
             #Mange et Series fonctionnent pareil
             if '/series-tv/' in sUrl or 'saison' in aEntry[1]:
-                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, aEntry[0], aEntry[0], sCom, oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, sThumb, sThumb, sCom, oOutputParameterHandler)
             elif '/mangas/' in sUrl:
-                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, aEntry[0], aEntry[0], sCom, oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, sThumb, sThumb, sCom, oOutputParameterHandler)
             else:
-                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, aEntry[0], aEntry[0], sCom, oOutputParameterHandler)
+                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, sThumb, sThumb, sCom, oOutputParameterHandler)
         
         cConfig().finishDialog(dialog)
 
