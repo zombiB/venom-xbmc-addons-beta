@@ -272,6 +272,11 @@ def showMovies(sSearch = ''):
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request();
     sHtmlContent = sHtmlContent.replace('[Streaming]', '').replace('[Telecharger]', '')
+    
+    #fh = open('c:\\test.txt', "w")
+    #fh.write(sHtmlContent)
+    #fh.close()
+    
     #sPattern = '<img width=".+?" height=".+?" src="([^<]+)" class="postim wp-post-image".+?<h2><a href="([^<]+)" rel="bookmark" .+?>([^<]+)</a></h2></div>.+?<p>(.+?)</p>'
     sPattern = '(?:<img width=".+?" height=".+?" src="([^<>"]+)"[^<>]+?\/>)*<\/a><\/div><div class="title">.+?<h2><a href="([^<]+)" rel="bookmark" .+?>([^<]+)<\/a><\/h2><\/div>.+?<p>(.+?)<\/p>'
     
@@ -291,11 +296,11 @@ def showMovies(sSearch = ''):
             sTitle = unicode(aEntry[2], 'utf-8')#converti en unicode
             sTitle = unicodedata.normalize('NFD', sTitle).encode('ascii', 'ignore')#vire accent
             sTitle = unescape(str(sTitle))
-            sTitle = sTitle.encode( "utf-8")
+            sTitle = sTitle.encode("utf-8")
             
             sMovieTitle=re.sub('(\[.*\])','', sTitle)
             
-            sTitle=re.sub('(.*)(\[.*\])','\\1 [COLOR azure]\\2[/COLOR]', sTitle)
+            sTitle = cUtil().DecoTitle(sTitle)
 
             sCom = unicode(aEntry[3], 'utf-8')#converti en unicode
             sCom = unicodedata.normalize('NFD', sCom).encode('ascii', 'ignore').decode("unicode_escape")#vire accent et '\'
@@ -347,7 +352,6 @@ def showSeries():
     sHtmlContent = sHtmlContent.replace('<iframe src="http://ads.affbuzzads.com','')
     sHtmlContent = sHtmlContent.replace('<iframe src="//ads.ad-center.com','')
  
-    #sPattern = '<span style="color: #33cccc;"><strong>([^<]+)|>(Episode[^<]{2,12})<(?!\/a>)(.+?)(?:<.p|<br|<.div)'
     sPattern = '<span style="color: #33cccc;"><strong>([^<]+)|>(Episode[^<]{2,12})<(?!\/a>)(.{0,10}a href="http.+?)(?:<.p|<br|<.div)'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
@@ -408,7 +412,7 @@ def showHosters():
     sHtmlContent = sHtmlContent.replace('<iframe src="http://ads.affbuzzads.com','')
     sHtmlContent = sHtmlContent.replace('<iframe src="//ads.ad-center.com','')
 
-    sPattern = '<a.+? (:?data-blogger-es="")>.+?</a>|<iframe src="([^<]+)" frameborder'
+    sPattern = '<a.+? (:?data-blogger-es="")>.+?</a>|<iframe src="([^< "]+)"'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     
