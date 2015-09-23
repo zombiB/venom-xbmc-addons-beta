@@ -488,6 +488,8 @@ class cGui():
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('searchtext', sTitle)
         oOutputParameterHandler.addParameter('disp', 'search1')
+        oOutputParameterHandler.addParameter('readdb', 'False')
+         
         sParams = oOutputParameterHandler.getParameterAsUri()               
         sTest = '%s?site=%s&function=%s&%s' % (sPluginPath, 'cHome', 'searchMovie', sParams)
         xbmc.executebuiltin('XBMC.Container.Update(%s)' % sTest )
