@@ -32,7 +32,6 @@
 		<setting id="plugin_lestream_net" type="bool" label="leStream.net (Films)" default="true"/>
 		<setting id="plugin_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="true"/>
 		<setting id="plugin_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="true"/>
-		<setting id="plugin_notre_ecole_net" type="bool" label="Notre Ecole (Documentaires)" default="true"/>
 		<setting id="plugin_poypi_com" type="bool" label="Poypi.com (Films)" default="true"/>
 		<setting id="plugin_regarder_films" type="bool" label="Regarder.films (Séries)" default="true"/>
 		<setting id="plugin_reportagestv_com" type="bool" label="ReportagesTV (Documentaires)" default="true"/>
@@ -72,7 +71,6 @@
 		<setting id="search1_lestream_net" type="bool" label="leStream.net (Films)" default="false"/>
 		<setting id="search1_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="true"/>		
 		<setting id="search1_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="false"/>
-		<setting id="search1_notre_ecole_net" type="bool" label="Notre Ecole (Documentaires)" default="false"/>
 		<setting id="search1_poypi_com" type="bool" label="Poypi.com (Films)" default="true"/>
 		<setting id="search1_regarder_films" type="bool" label="Regarder.films (Séries)" default="false"/>
 		<setting id="search1_reportagestv_com" type="bool" label="ReportagesTV (Documentaires)" default="false"/>
@@ -108,7 +106,6 @@
 		<setting id="search2_lestream_net" type="bool" label="leStream.net (Films)" default="false"/>
 		<setting id="search2_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="true"/>
 		<setting id="search2_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="false"/>
-		<setting id="search2_notre_ecole_net" type="bool" label="Notre Ecole (Documentaires)" default="false"/>
 		<setting id="search2_poypi_com" type="bool" label="Poypi.com (Films)" default="false"/>
 		<setting id="search2_regarder_films" type="bool" label="Regarder.films (Séries)" default="false"/>
 		<setting id="search2_reportagestv_com" type="bool" label="ReportagesTV (Documentaires)" default="false"/>
@@ -145,7 +142,6 @@
 		<setting id="search3_lestream_net" type="bool" label="leStream.net (Films)" default="false"/>
 		<setting id="search3_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="false"/>
 		<setting id="search3_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="true"/>
-		<setting id="search3_notre_ecole_net" type="bool" label="Notre Ecole (Documentaires)" default="false"/>
 		<setting id="search3_poypi_com" type="bool" label="Poypi.com (Films)" default="false"/>
 		<setting id="search3_regarder_films" type="bool" label="Regarder.films (Séries)" default="false"/>
 		<setting id="search3_reportagestv_com" type="bool" label="ReportagesTV (Documentaires)" default="false"/>
@@ -182,7 +178,6 @@
 		<setting id="search4_lestream_net" type="bool" label="leStream.net (Films)" default="false"/>
 		<setting id="search4_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="false"/>
 		<setting id="search4_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="false"/>
-		<setting id="search4_notre_ecole_net" type="bool" label="Notre Ecole (Documentaires)" default="true"/>
 		<setting id="search4_poypi_com" type="bool" label="Poypi.com (Films)" default="false"/>
 		<setting id="search4_regarder_films" type="bool" label="Regarder.films (Séries)" default="false"/>
 		<setting id="search4_reportagestv_com" type="bool" label="ReportagesTV (Documentaires)" default="true"/>
