@@ -21,10 +21,9 @@ SITE_DESC = 'Film Streaming & Serie Streaming: Regardez films et series de quali
 URL_MAIN = 'http://streamingk.com'
 
 MOVIE_NEWS = ('http://streamingk.com/category/films/', 'showMovies')
-MOVIE_VIEWS = ('http://streamingk.com/most-viewed/', 'showMovies')
-MOVIE_COMMENTS = ('http://streamingk.com/most-popular/', 'showMovies')
-MOVIE_NOTES = ('http://streamingk.com/most-like/', 'showMovies')
+
 MOVIE_GENRES = (True, 'showGenre')
+
 SERIE_SERIES = ('http://streamingk.com/category/series-tv/', 'showMovies')
 
 URL_SEARCH = ('http://streamingk.com/?s=', 'showMovies')
@@ -35,40 +34,19 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
-    oGui.addDir(SITE_IDENTIFIER, 'showMoviesSearch', 'Films Recherche', 'search.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showMoviesSearch', 'Recherche', 'search.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_NEWS[0])
     oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'Films Nouveautés', 'films.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_VIEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_VIEWS[1], 'Films Les Plus Vus', 'films.png', oOutputParameterHandler)
-
-    oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_COMMENTS[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_COMMENTS[1], 'Films Les Plus Commentés', 'films.png', oOutputParameterHandler)
-
-    oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_NOTES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_NOTES[1], 'Films Les Mieux Notés', 'films.png', oOutputParameterHandler)
-
-    oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
     oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genres', 'genres.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
-    oGui.addDir(SITE_IDENTIFIER, 'showSeriesSearch', 'Series Recherche', 'search.png', oOutputParameterHandler)
-
-    oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
     oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'Series Nouveautés', 'series.png', oOutputParameterHandler)
-
-
-    oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', 'http://seriestreaming.org/les-mieux-notees/')
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Series Les Mieux Notées', 'series.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -187,17 +165,11 @@ def showSeries():
     
     oParser = cParser()
     
-    #on vire les telechargement et en passant accelere le traitement
-    sPattern = '<div class="filmicerik">(.+?)<strong>Telechargement</strong'
-    aResult = oParser.parse(sHtmlContent, sPattern)
-    if (aResult[0] == True):
-        sHtmlContent = aResult[1][0]
-    
     #sHtmlContent = sHtmlContent.replace('<a href="http://www.multiup.org','')
     #sHtmlContent = sHtmlContent.replace('<iframe src="http://ads.affbuzzads.com','')
     #sHtmlContent = sHtmlContent.replace('<iframe src="//ads.ad-center.com','')
  
-    sPattern = '<span style="color: #33cccc;[^<>"]+?"><strong>([^<>]+)|>(Episode[^<]{2,12})<(?!\/a>)(.{0,10}a href="http.+?)(?:<.p|<br|<.div)'
+    sPattern = '<span style="color: #33cccc;[^<>"]*">(?:<strong>)*((?:Stream|Telec)[^<>]+)|>(Episode[^<]{2,12})<(?!\/a>)(.{0,10}a href="http.+?)(?:<.p|<br|<.div)'
     aResult = oParser.parse(sHtmlContent, sPattern)
     
     #astuce en cas d'episode unique
@@ -295,8 +267,6 @@ def serieHosters():
     sUrl = oInputParameterHandler.getValue('siteUrl')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
-
-    print sUrl
     
     oParser = cParser()
     sPattern = 'href="([^<]+)" target="_blank"[^<>]*>.+?<\/a>'
