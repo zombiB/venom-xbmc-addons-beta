@@ -79,12 +79,10 @@ def load(): #function charger automatiquement par l'addon l'index de votre navig
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_VFS[0])
-    oOutputParameterHandler.addParameter('type', 'VF')
     oGui.addDir(SITE_IDENTIFIER, ANIM_VFS[1], 'Animes VF', 'films.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_VOSTFRS[0])
-    oOutputParameterHandler.addParameter('type', 'VOSTFR')
     oGui.addDir(SITE_IDENTIFIER, ANIM_VOSTFRS[1], 'Anime VOSTFR', 'films.png', oOutputParameterHandler)   
             
     oGui.setEndOfDirectory() #ferme l'affichage
@@ -148,10 +146,15 @@ def showGenre(): #affiche les genres
     
 def ShowAlpha2():
     oInputParameterHandler = cInputParameterHandler()
-    sUrl = 'http://www.mangacity.org/animes.php?liste=SHOWALPHA'
-    sType = oInputParameterHandler.getValue('type')
+    sUrl = oInputParameterHandler.getValue('siteUrl')
+    
+    sUrl2 = 'http://www.mangacity.org/animes.php?liste=SHOWALPHA'
+    
+    sType = 'VF'
+    if 'vostfr' in sUrl:
+        sType = 'VOSTFR'
 
-    oRequestHandler = cRequestHandler(sUrl)
+    oRequestHandler = cRequestHandler(sUrl2)
     sHtmlContent = oRequestHandler.request()
     
     oParser = cParser()
