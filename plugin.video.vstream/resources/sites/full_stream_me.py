@@ -18,15 +18,20 @@ SITE_DESC = 'Film Serie et Anime en Streaming HD - Vk.Com - Netu.tv - ExaShare -
 
 URL_MAIN = 'http://full-stream.me'
 
+MOVIE_MOVIE = ('http://full-stream.me/', 'showMovies')
 MOVIE_NEWS = ('http://full-stream.me/', 'showMovies')
 MOVIE_NOTES = ('http://full-stream.me/films-en-streaming/', 'showMovies')
 MOVIE_VIEWS = ('http://full-stream.me/index.php?do=les-plus-vues/', 'showMovies')
 MOVIE_COMMENTS = ('http://full-stream.me/index.php?do=les-plus-commentes/', 'showMovies')
 MOVIE_GENRES = (True, 'showGenre')
+
 SERIE_SERIES = ('http://full-stream.me/seriestv/', 'showMovies')
+SERIE_NEWS = ('http://full-stream.me/seriestv/', 'showMovies')
 SERIE_VFS = ('http://full-stream.me/seriestv/vf/', 'showMovies')
 SERIE_VOSTFRS = ('http://full-stream.me/seriestv/vostfr/', 'showMovies')
+
 ANIM_ANIMS = ('http://full-stream.me/mangas/','showMovies')
+ANIM_NEWS = ('http://full-stream.me/mangas/','showMovies')
 ANIM_VFS = ('http://full-stream.me/mangas/mangas-vf/', 'showMovies')
 ANIM_VOSTFRS = ('http://full-stream.me/mangas/mangas-vostfr/', 'showMovies')
 
