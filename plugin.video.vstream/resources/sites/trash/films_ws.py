@@ -13,20 +13,22 @@ from resources.lib.util import cUtil
 import re, urllib
 
 SITE_IDENTIFIER = 'films_ws'
-SITE_NAME = 'Telecharger-films.ws'
+SITE_NAME = 'Telecharger-films.com'
 SITE_DESC = 'Streaming ou Telechargement films series mangas gratuitement et sans limite. Des films en exclusivite en qualite DVD a regarder ou telecharger'
 
-URL_MAIN = 'http://www.telecharger-films.ws/'
+URL_MAIN = 'http://www.telecharger-films.com/'
 
-MOVIE_NEWS = ('http://www.telecharger-films.ws/telecharger-films-gratuit/', 'showMovies')
+MOVIE_NEWS = ('http://www.telecharger-films.com/telecharger-films-gratuit/', 'showMovies')
+MOVIE_MOVIE = ('http://www.telecharger-films.com/telecharger-films-gratuit/', 'showMovies')
+MOVIE_VOSTFR = ('http://www.telecharger-films.com/telecharger-films-gratuit/films-vostfr/', 'showMovies')
 
-SERIE_SERIES = ('http://www.telecharger-films.ws/telecharger-serie/', 'showMovies')
-SERIE_VFS = ('http://www.telecharger-films.ws/telecharger-serie/series-fr/', 'showMovies')
-SERIE_VOSTFRS = ('http://www.telecharger-films.ws/telecharger-serie/sries-vostfr/', 'showMovies')
+#SERIE_SERIES = ('http://www.telecharger-films.com/telecharger-serie/', 'showMovies')
+#SERIE_VFS = ('http://www.telecharger-films.com/telecharger-serie/series-fr/', 'showMovies')
+#SERIE_VOSTFRS = ('http://www.telecharger-films.com/telecharger-serie/sries-vostfr/', 'showMovies')
 
 MOVIE_GENRES = (True, 'showGenre')
 
-URL_SEARCH = ('http://www.telecharger-films.ws/index.php?do=search&subaction=search&story=', 'showMovies')
+URL_SEARCH = ('http://www.telecharger-films.com/index.php?do=search&subaction=search&story=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
 def load():
@@ -65,10 +67,10 @@ def showSearch():
 
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-            sUrl = 'http://www.telecharger-films.ws/index.php?do=search&subaction=search&story='+sSearchText  
-            showMovies(sUrl)
-            oGui.setEndOfDirectory()
-            return  
+        sUrl = 'http://www.telecharger-films.com/index.php?do=search&subaction=search&story='+sSearchText  
+        showMovies(sUrl)
+        oGui.setEndOfDirectory()
+        return  
     
     
 def showGenre():
@@ -77,27 +79,27 @@ def showGenre():
     sUrl = oInputParameterHandler.getValue('siteUrl')
  
     liste = []
-    liste.append( ['Action','http://www.telecharger-films.ws/telecharger-films-action/'] )
-    liste.append( ['Animation','http://www.telecharger-films.ws/telecharger-films-animation/'] )
-    liste.append( ['Arts Martiaux','http://www.telecharger-films.ws/telecharger-films-arts-martiaux/'] )
-    liste.append( ['Aventure','http://www.telecharger-films.ws/telecharger-films-aventure/'] )
-    liste.append( ['Biopic','http://www.telecharger-films.ws/telecharger-films-biopic/'] )
-    liste.append( ['Comedie','http://www.telecharger-films.ws/telecharger-films-comdie/'] )
-    liste.append( ['Comedie Dramatique','http://www.telecharger-films.ws/telecharger-films-comdie-dramatique/'] )
-    liste.append( ['Drame','http://www.telecharger-films.ws/telecharger-films-drame/'] )
-    liste.append( ['Espionnage','http://www.telecharger-films.ws/telecharger-films-espionnage/'] )
-    liste.append( ['Famille','http://www.telecharger-films.ws/telecharger-films-famille/'] )
-    liste.append( ['Fantastique','http://www.telecharger-films.ws/telecharger-films-fantastique/'] )
-    liste.append( ['Guerre','http://www.telecharger-films.ws/telecharger-films-guerre/'] )
-    liste.append( ['Historique','http://www.telecharger-films.ws/telecharger-films-historique/'] )
-    liste.append( ['Epouvante-Horreur','http://www.telecharger-films.ws/telecharger-films-epouvante-horreur/'] )
-    liste.append( ['Musical','http://www.telecharger-films.ws/telecharger-films-musical/'] )
-    liste.append( ['Policier','http://www.telecharger-films.ws/telecharger-films-policier/'] )
-    liste.append( ['Romance','http://www.telecharger-films.ws/telecharger-films-romance/'] )
-    liste.append( ['Science-Fiction','http://www.telecharger-films.ws/telecharger-films-science-fiction/'] )
-    liste.append( ['Sport','http://www.telecharger-films.ws/telecharger-films-sport/'] )
-    liste.append( ['Western','http://www.telecharger-films.ws/telecharger-film-western/'] )
-    liste.append( ['Thriller','http://www.telecharger-films.ws/telecharger-films-thriller/'] )
+    liste.append( ['Action','http://www.telecharger-films.com/telecharger-films-action/'] )
+    liste.append( ['Animation','http://www.telecharger-films.com/telecharger-films-animation/'] )
+    liste.append( ['Arts Martiaux','http://www.telecharger-films.com/telecharger-films-arts-martiaux/'] )
+    liste.append( ['Aventure','http://www.telecharger-films.com/telecharger-films-aventure/'] )
+    liste.append( ['Biopic','http://www.telecharger-films.com/telecharger-films-biopic/'] )
+    liste.append( ['Comedie','http://www.telecharger-films.com/telecharger-films-comdie/'] )
+    liste.append( ['Comedie Dramatique','http://www.telecharger-films.com/telecharger-films-comdie-dramatique/'] )
+    liste.append( ['Drame','http://www.telecharger-films.com/telecharger-films-drame/'] )
+    liste.append( ['Espionnage','http://www.telecharger-films.com/telecharger-films-espionnage/'] )
+    liste.append( ['Famille','http://www.telecharger-films.com/telecharger-films-famille/'] )
+    liste.append( ['Fantastique','http://www.telecharger-films.com/telecharger-films-fantastique/'] )
+    liste.append( ['Guerre','http://www.telecharger-films.com/telecharger-films-guerre/'] )
+    liste.append( ['Historique','http://www.telecharger-films.com/telecharger-films-historique/'] )
+    liste.append( ['Epouvante-Horreur','http://www.telecharger-films.com/telecharger-films-epouvante-horreur/'] )
+    liste.append( ['Musical','http://www.telecharger-films.com/telecharger-films-musical/'] )
+    liste.append( ['Policier','http://www.telecharger-films.com/telecharger-films-policier/'] )
+    liste.append( ['Romance','http://www.telecharger-films.com/telecharger-films-romance/'] )
+    liste.append( ['Science-Fiction','http://www.telecharger-films.com/telecharger-films-science-fiction/'] )
+    liste.append( ['Sport','http://www.telecharger-films.com/telecharger-films-sport/'] )
+    liste.append( ['Western','http://www.telecharger-films.com/telecharger-film-western/'] )
+    liste.append( ['Thriller','http://www.telecharger-films.com/telecharger-films-thriller/'] )
                 
     for sTitle,sUrl in liste:
         
@@ -120,7 +122,7 @@ def showMovies(sSearch = ''):
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request();
     sHtmlContent = sHtmlContent.replace('[MULTI]', '').replace('Telecharger', '')
-    sPattern = 'div class="storybtm">.+?<a title="([^<]+)" href="([^<]+)">.+?<!--dle_image_begin:.+?--><img src="(.+?)".+?<!--dle_image_end-->.+?<br /><i>(.+?)</i><br />'
+    sPattern = '<h2 class="dtitle"><a title=".+?" href="(.+?)">(.+?)</a></h2>.+?<img src="(.+?)".+?syn_film.png".+?<i>(.+?)</i>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     
@@ -128,6 +130,7 @@ def showMovies(sSearch = ''):
 
     if (aResult[0] == False):
         oGui.addNone(SITE_IDENTIFIER)
+        return False
         
     if (aResult[0] == True):
         total = len(aResult[1])
@@ -137,24 +140,22 @@ def showMovies(sSearch = ''):
             if dialog.iscanceled():
                 break
             
-            sTitle = aEntry[0].replace('gratuit','')
-            sMovieTitle=re.sub('(\[.*\])','', str(sTitle))
-            sTitle=re.sub('(.*)(\[.*\])','\\1 [COLOR azure]\\2[/COLOR]', str(sTitle))
+            sTitle = aEntry[1]
+            #sMovieTitle=re.sub('(\[.*\])','', str(sTitle))
+            #sTitle=re.sub('(.*)(\[.*\])','\\1 [COLOR azure]\\2[/COLOR]', str(sTitle))
             
-            
-            
-            
-            #oGuiElement = cGuiElement()
-            #oGuiElement.setFileName(sMovieTitle)
+            sTitle = sTitle.replace('[TrueFrench]','[VF]')
+            sTitle = sTitle.replace('[Francais]','[VF]')
+            sDisplayTitle = cUtil().DecoTitle(sTitle)
 
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
-            oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
+            oOutputParameterHandler.addParameter('siteUrl', str(aEntry[0]))
+            oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
             oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[2]))
-            if '/series-tv/' in sUrl or 'saison' in aEntry[0]:
-                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle, '', aEntry[2], aEntry[3], oOutputParameterHandler)
+            if '/telecharger-serie/' in sUrl:
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sDisplayTitle, '', aEntry[2], aEntry[3], oOutputParameterHandler)
             else:
-                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', aEntry[2], aEntry[3], oOutputParameterHandler)
+                oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sDisplayTitle, '', aEntry[2], aEntry[3], oOutputParameterHandler)
         
         cConfig().finishDialog(dialog)
 
@@ -248,9 +249,10 @@ def showHosters():
             sHosterUrl = str(aEntry)
             #oHoster = __checkHoster(sHosterUrl)
             oHoster = cHosterGui().checkHoster(sHosterUrl)
+            sDisplayTitle = cUtil().DecoTitle(sMovieTitle)
         
             if (oHoster != False):
-                oHoster.setDisplayName(sMovieTitle)
+                oHoster.setDisplayName(sDisplayTitle)
                 oHoster.setFileName(sMovieTitle)
                 cHosterGui().showHoster(oGui, oHoster, sHosterUrl, sThumbnail)
 
