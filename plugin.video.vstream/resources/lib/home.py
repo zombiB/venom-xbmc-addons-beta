@@ -137,6 +137,14 @@ class cHome:
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
         oGui.addDir(SITE_IDENTIFIER, 'movieGenres', '[COLOR '+color_films+']'+cConfig().getlanguage(30105)+'[/COLOR]', 'genres.png', oOutputParameterHandler)
+
+        oOutputParameterHandler = cOutputParameterHandler()
+        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oGui.addDir(SITE_IDENTIFIER, 'movieVF', '[COLOR '+color_films+']'+cConfig().getlanguage(30134)+'[/COLOR]', 'vf.png', oOutputParameterHandler)
+       
+        oOutputParameterHandler = cOutputParameterHandler()
+        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oGui.addDir(SITE_IDENTIFIER, 'movieVOSTFRs', '[COLOR '+color_films+']'+cConfig().getlanguage(30135)+'[/COLOR]', 'vostfr.png', oOutputParameterHandler)
         
         oGui.setEndOfDirectory()
         
@@ -232,6 +240,12 @@ class cHome:
 
     def movieGenres(self):
         self.__callpluging('MOVIE_GENRES', '[COLOR '+color_films+']'+cConfig().getlanguage(30105)+'[/COLOR]', 'genres.png')
+
+    def movieVF(self):
+        self.__callpluging('MOVIE_VF', '[COLOR '+color_films+']'+cConfig().getlanguage(30134)+'[/COLOR]', 'vf.png')
+
+    def movieVOSTFR(self):
+        self.__callpluging('MOVIE_STFR', '[COLOR '+color_films+']'+cConfig().getlanguage(30135)+'[/COLOR]', 'vostfr.png')
 
     def serieSeries(self):
         self.__callpluging('SERIE_SERIES', '[COLOR '+color_series+']'+cConfig().getlanguage(30130)+'[/COLOR]', 'series.png')
