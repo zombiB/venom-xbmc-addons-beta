@@ -20,10 +20,14 @@ SITE_DESC = 'Films et serie en streaming'
 URL_MAIN = 'http://www.voirfilms.org/'
 
 MOVIE_NEWS = ('http://www.voirfilms.org/', 'showMovies')
-MOVIE_ALLMOVIES = ('http://www.voirfilms.org/lesfilms1', 'showMovies')
+MOVIE_MOVIE = ('http://www.voirfilms.org/lesfilms1', 'showMovies')
 MOVIE_GENRES = (True, 'showGenre')
 
 SERIE_SERIES = ('http://www.voirfilms.org/series/page-1', 'showMovies')
+SERIE_NEWS = ('http://www.voirfilms.org/series/page-1', 'showMovies')
+  
+ANIM_ANIMS = ('http://www.voirfilms.org/animes/page-1', 'showMovies')
+ANIM_NEWS = ('http://www.voirfilms.org/animes/page-1', 'showMovies')
   
 URL_SEARCH = ('', 'showMovies')
 #FUNCTION_SEARCH = 'showMovies'
@@ -61,8 +65,8 @@ def load(): #function charger automatiquement par l'addon l'index de votre navig
     oGui.addDir(SITE_IDENTIFIER, MOVIE_NEWS[1], 'Films Nouveautés', 'news.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', MOVIE_ALLMOVIES[0])
-    oGui.addDir(SITE_IDENTIFIER, MOVIE_ALLMOVIES[1], 'Tout les films', 'films.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', MOVIE_MOVIE[0])
+    oGui.addDir(SITE_IDENTIFIER, MOVIE_MOVIE[1], 'Tout les films', 'films.png', oOutputParameterHandler)
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
@@ -240,7 +244,7 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
             oOutputParameterHandler.addParameter('sThumbnail', sPicture) #sortis du poster
  
-            if '/serie/' in aEntry[1] :
+            if '/serie/' in aEntry[1] or '/animes/' in aEntry[1]:
                 oGui.addTV(SITE_IDENTIFIER, 'serieHosters', sTitle, sPicture, sPicture, '', oOutputParameterHandler)
             else:
                 oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, sPicture, sPicture, '', oOutputParameterHandler)
