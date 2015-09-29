@@ -10,14 +10,13 @@ from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.config import cConfig
 from resources.lib.parser import cParser
 from resources.lib.util import cUtil
-import re,xbmcgui
-import htmlentitydefs,unicodedata
+import re,xbmcgui,unicodedata
+#import htmlentitydefs
 
-#juste pour dlprotect
-from time import time
-from base64 import urlsafe_b64encode
-import urllib2,xbmc,urllib
-from urllib2 import URLError
+
+from resources.lib.dl_deprotect import DecryptDlProtect
+
+
 
 SITE_IDENTIFIER = 'streamingk_com'
 SITE_NAME = 'Streamingk.com'
@@ -26,79 +25,22 @@ SITE_DESC = 'Film Streaming & Serie Streaming: Regardez films et series de quali
 URL_MAIN = 'http://streamingk.com'
 
 MOVIE_NEWS = ('http://streamingk.com/category/films/', 'showMovies')
+MOVIE_MOVIE = ('http://streamingk.com/category/films/', 'showMovies')
 
 MOVIE_GENRES = (True, 'showGenre')
 
 SERIE_SERIES = ('http://streamingk.com/category/series-tv/', 'showMovies')
+SERIE_NEWS = ('http://streamingk.com/category/series-tv/', 'showMovies')
 
 ANIM_ANIMS = ('http://streamingk.com/category/mangas/', 'showMovies')
+ANIM_NEWS = ('http://streamingk.com/category/mangas/', 'showMovies')
 
 REPLAYTV_REPLAYTV = ('http://streamingk.com/category/emissions-tv/', 'showMovies')
 
 URL_SEARCH = ('http://streamingk.com/?s=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
-def DecryptDlProtect(url):
-    if not (url): return ''
-    
-    headers = {
-    'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0',
-    'Referer' : url ,
-    'Host' : 'www.dl-protect.com',
-    #'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Language': 'en-gb, en;q=0.9',
-    'Pragma' : '',
-    'Accept-Charset' : '',
-    }
-    
-    request = urllib2.Request(url,None,headers)
-    try: 
-        reponse = urllib2.urlopen(request)
-    except URLError, e:
-        print e.read()
-        print e.reason
-        
-    sHtmlContent = reponse.read()
-    
-    #Recuperatioen et traitement cookies ???
-    cookies=reponse.info()['Set-Cookie']
-    c2 = re.findall('__cfduid=(.+?); .+? cu=(.+?);.+?PHPSESSID=(.+?);',cookies)
-    cookies = '__cfduid=' + str(c2[0][0]) + ';cu=' + str(c2[0][1]) + ';PHPSESSID=' + str(c2[0][2])
-    
-    reponse.close()
-        
-    key = re.findall('input name="key" value="(.+?)"',sHtmlContent)
-    
-    #Ce parametre ne sert pas encore pour le moment
-    mstime = int(round(time() * 1000))
-    b64time = "_" + urlsafe_b64encode(str(mstime)).replace("=", "%3D")
 
-    if 'Please click on continue to see' in sHtmlContent:
-        #tempo necessaire
-        cGui().showInfo("Patientez", 'Decodage en cours' , 2)
-        xbmc.sleep(1000)
-        
-        query_args = ( ('submitform' , '' ) , ( 'key' , key[0] ) , ('i' , b64time ), ( 'submitform' , 'Continuer')  )
-        data = urllib.urlencode(query_args)
-        
-        #rajout des cookies
-        headers.update({'Cookie': cookies})
-
-        request = urllib2.Request(url,data,headers)
-
-        try: 
-            reponse = urllib2.urlopen(request)
-        except URLError, e:
-            print e.read()
-            print e.reason
-            
-        sHtmlContent = reponse.read()
-        
-        reponse.close()
-    
-    return sHtmlContent
-        
- 
 
 def load(): 
     oGui = cGui()
@@ -392,10 +334,9 @@ def serieHosters():
                 if result != -1:
                     UrlList = vid_list[result]
 
-            if (UrlList):  
+            if (UrlList):
                 sHtmlContent = DecryptDlProtect(UrlList)
                 if sHtmlContent:
-                    
                     sPattern = '<br .><a href="(.+?)" target="_blank">http:.+?<.a>'
                     aResult = oParser.parse(sHtmlContent, sPattern)
                     liste = True
