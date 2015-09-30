@@ -224,7 +224,7 @@ class cHome:
         oGui.setEndOfDirectory()
 
     def movieMovie(self):
-        self.__callpluging('MOVIE_MOVIE', '[COLOR '+color_films+']'+cConfig().getlanguage(30130)+'[/COLOR]', 'news.png')
+        self.__callpluging('MOVIE_MOVIE', '[COLOR '+color_films+']'+cConfig().getlanguage(30130)+'[/COLOR]', 'listes.png')
 
     def movieNews(self):
         self.__callpluging('MOVIE_NEWS', '[COLOR '+color_films+']'+cConfig().getlanguage(30101)+'[/COLOR]', 'news.png')
@@ -248,7 +248,7 @@ class cHome:
         self.__callpluging('MOVIE_VOSTFR', '[COLOR '+color_films+']'+cConfig().getlanguage(30135)+'[/COLOR]', 'vostfr.png')
 
     def serieSeries(self):
-        self.__callpluging('SERIE_SERIES', '[COLOR '+color_series+']'+cConfig().getlanguage(30130)+'[/COLOR]', 'series.png')
+        self.__callpluging('SERIE_SERIES', '[COLOR '+color_series+']'+cConfig().getlanguage(30130)+'[/COLOR]', 'listes.png')
 
     def serieNews(self):
         self.__callpluging('SERIE_NEWS', '[COLOR '+color_series+']'+cConfig().getlanguage(30106)+'[/COLOR]', 'series.png')
@@ -263,7 +263,7 @@ class cHome:
         self.__callpluging('SERIE_GENRES', '[COLOR '+color_series+']'+cConfig().getlanguage(30132)+'[/COLOR]', 'series.png')
 
     def animAnims(self):
-        self.__callpluging('ANIM_ANIMS', '[COLOR '+color_anims+']'+cConfig().getlanguage(30130)+'[/COLOR]', 'animes.png')
+        self.__callpluging('ANIM_ANIMS', '[COLOR '+color_anims+']'+cConfig().getlanguage(30130)+'[/COLOR]', 'listes.png')
 
     def animNews(self):
         self.__callpluging('ANIM_NEWS', '[COLOR '+color_anims+']'+cConfig().getlanguage(30109)+'[/COLOR]', 'animes.png')
@@ -290,7 +290,7 @@ class cHome:
         self.__callpluging('MOVIE_NETS', '[COLOR '+color_videos+']'+cConfig().getlanguage(30114)+'[/COLOR]', 'buzz.png')
         
     def replayReplay(self):
-        self.__callpluging('REPLAYTV_REPLAYTV', '[COLOR '+color_replaytvs+']'+cConfig().getlanguage(30117)+'[/COLOR]', 'tv.png')
+        self.__callpluging('REPLAYTV_REPLAYTV', '[COLOR '+color_replaytvs+']'+cConfig().getlanguage(30117)+'[/COLOR]', 'listes.png')
 
     def replayNews(self):
         self.__callpluging('REPLAYTV_NEWS', '[COLOR '+color_replaytvs+']'+cConfig().getlanguage(30133)+'[/COLOR]', 'tv.png')
