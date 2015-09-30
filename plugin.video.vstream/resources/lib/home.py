@@ -203,12 +203,16 @@ class cHome:
         
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-        oGui.addDir(SITE_IDENTIFIER, 'replayReplay', '[COLOR '+color_anims+']'+cConfig().getlanguage(30117)+'[/COLOR]', 'animes.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'replayReplay', '[COLOR '+color_anims+']'+cConfig().getlanguage(30130)+'[/COLOR]', 'listes.png', oOutputParameterHandler)
         
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-        oGui.addDir(SITE_IDENTIFIER, 'replayNews', '[COLOR '+color_anims+']'+cConfig().getlanguage(30133)+'[/COLOR]', 'animes.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'replayNews', '[COLOR '+color_anims+']'+cConfig().getlanguage(30133)+'[/COLOR]', 'tv.png', oOutputParameterHandler)
         
+        oOutputParameterHandler = cOutputParameterHandler()
+        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oGui.addDir(SITE_IDENTIFIER, 'replayGenres', '[COLOR '+color_anims+']'+cConfig().getlanguage(30136)+'[/COLOR]', 'tv.png', oOutputParameterHandler)
+
         oGui.setEndOfDirectory()
 
     def showSources(self):
@@ -290,10 +294,13 @@ class cHome:
         self.__callpluging('MOVIE_NETS', '[COLOR '+color_videos+']'+cConfig().getlanguage(30114)+'[/COLOR]', 'buzz.png')
         
     def replayReplay(self):
-        self.__callpluging('REPLAYTV_REPLAYTV', '[COLOR '+color_replaytvs+']'+cConfig().getlanguage(30117)+'[/COLOR]', 'listes.png')
+        self.__callpluging('REPLAYTV_REPLAYTV', '[COLOR '+color_replaytvs+']'+cConfig().getlanguage(30130)+'[/COLOR]', 'listes.png')
 
     def replayNews(self):
         self.__callpluging('REPLAYTV_NEWS', '[COLOR '+color_replaytvs+']'+cConfig().getlanguage(30133)+'[/COLOR]', 'tv.png')
+        
+    def replayGenres(self):
+        self.__callpluging('REPLAYTV_GENRES', '[COLOR '+color_replaytvs+']'+cConfig().getlanguage(30136)+'[/COLOR]', 'tv.png')
         
     def showSearch(self):
 
