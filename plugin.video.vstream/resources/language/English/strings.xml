@@ -58,17 +58,17 @@
     <string id="30210">Display Bookmark</string>
         
     <!-- catégorie -->
-    <string id="30101">Movies - News</string>
-    <string id="30102">Movies - Most seeing</string>
-    <string id="30103">Movies - Most commented</string>
-    <string id="30104">Movies - Top rated</string>
-    <string id="30105">Movies - Genre</string>
-    <string id="30106">Series - News</string>
-    <string id="30107">Series - VF</string>
-    <string id="30108">Series - VOSTFR</string>
-    <string id="30109">Animes - News</string>
-    <string id="30110">Animes - VF</string>
-    <string id="30111">Animes - VOSTFR</string>
+    <string id="30101">Movies News</string>
+    <string id="30102">Movies Most seeing</string>
+    <string id="30103">Movies Most commented</string>
+    <string id="30104">Movies Top rated</string>
+    <string id="30105">Movies Genre</string>
+    <string id="30106">Series News</string>
+    <string id="30107">Series VF</string>
+    <string id="30108">Series VOSTFR</string>
+    <string id="30109">Animes News</string>
+    <string id="30110">Animes VF</string>
+    <string id="30111">Animes VOSTFR</string>
     <string id="30112">documentary</string>
     <string id="30113">Sport</string>
     <string id="30114">Web Video</string>
@@ -85,11 +85,15 @@
     <string id="30127">Tool</string>
     <!--version 3.0.5 -->
     <string id="30130">Lists</string>
-    <string id="30131">Animes -  Genres</string>
-    <string id="30132">Series -  Genres</string>    
-    <string id="30133">Newss</string>
-    <string id="30134">Movies - VF</string>    
-    <string id="30135">Movies - VOSTFR</string>
-    <string id="30136">TvShow Genre</string>
+    <string id="30131">Animes Genres</string>
+    <string id="30132">Series Genres</string>    
+    <string id="30133">Television Replay News</string>
+    <string id="30134">Movies VF</string>    
+    <string id="30135">Movies VOSTFR</string>
+	<string id="30136">Television Replay Genre</string>
+	<string id="30137">Television Replay Sources</string>
+	<string id="30138">Movies Sources</string>
+	<string id="30139">Series Sources</string>
+	<string id="30140">Animes Sources</string>
         
 </strings>

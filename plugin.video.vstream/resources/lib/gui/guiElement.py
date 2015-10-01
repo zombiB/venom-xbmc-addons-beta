@@ -159,17 +159,16 @@ class cGuiElement:
             
         elif sIcon == 'tv.png':
             self.__sFanart = cConfig().getSetting('images_tvs')
-            
-        elif sIcon == 'replay.png':
+        elif ('replay' in sIcon):
             self.__sFanart = cConfig().getSetting('images_replaytvs')
             
-        elif (sIcon == 'films.png') |(sIcon == 'genres.png') | (sIcon == 'news.png') | (sIcon == 'az.png') | (sIcon == 'notes.png') | (sIcon == 'comments.png'):
+        elif ('films' in sIcon):
             self.__sFanart = cConfig().getSetting('images_films')
             
-        elif (sIcon == 'series.png') |(sIcon == 'seriesvf.png') | (sIcon == 'seriesvostfr.png') | (sIcon == 'seriesaz.png') | (sIcon == 'seriesgenres.png'):
+        elif ('series' in sIcon):
             self.__sFanart = cConfig().getSetting('images_series')
             
-        elif (sIcon == 'animes.png') |(sIcon == 'animesvf.png') | (sIcon == 'animesvostfr.png') | (sIcon == 'animesaz.png') | (sIcon == 'animesgenres.png'):
+        elif ('animes' in sIcon):
             self.__sFanart = cConfig().getSetting('images_anims')
             
         elif sIcon == 'doc.png':
