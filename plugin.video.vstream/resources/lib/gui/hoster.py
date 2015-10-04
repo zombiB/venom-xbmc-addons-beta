@@ -203,6 +203,8 @@ class cHosterGui:
             return cHosterHandler().getHoster('amazon')
         if ('filepup' in sHosterUrl):
             return cHosterHandler().getHoster('filepup')
+        if ('v-vids' in sHosterUrl):
+            return cHosterHandler().getHoster('v_vids')
 
         #Si aucun hebergeur connu on teste les liens directs
         if (sHosterUrl[-4:] in '.mp4.avi.flv.m3u8'):
