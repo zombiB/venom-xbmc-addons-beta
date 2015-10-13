@@ -259,11 +259,12 @@ def showHostersLink():
     sUrl = ''
     
     #Decodage du lien
-    if 'poy*' in sUrllink:
-        EncodedLink = sUrllink.replace('poy*','')
-        Key = "ZgJ4yYMx4aiH2Nh8fpHh"
+    if 'fa*' in sUrllink:
+        EncodedLink = sUrllink.replace('fa*','')
+        Key = "JyI8fNAUVUDrrbbT1nxg"
         x = GKDecrypter(192,128)
         sUrl = x.decrypt(EncodedLink, Key, "ECB").split('\0')[0]
+        #print sUrl
     else:
         #recuperation urls
         oRequestHandler = cRequestHandler(sUrllink)
