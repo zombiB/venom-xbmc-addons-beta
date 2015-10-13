@@ -12,23 +12,34 @@ from resources.lib.parser import cParser #recherche de code
 from resources.lib.util import cUtil
 import urllib2,urllib,re
 import xbmcgui
-#from t0mm0.common.net import Net
-#import unicodedata
+import unicodedata,htmlentitydefs
+
+import resources.lib.GKDecrypter
+from resources.lib.GKDecrypter import decryptKey
+from resources.lib.GKDecrypter import GKDecrypter
  
  
-SITE_IDENTIFIER = 'fadoz_com' #identifant nom de votre fichier remplacer les espaces et les . par _ aucun caractere speciale
-SITE_NAME = 'Fadoz.com' # nom que xbmc affiche
-SITE_DESC = 'Film en streaming' #description courte de votre source
+SITE_IDENTIFIER = 'fadoz_com'
+SITE_NAME = 'Fadoz.com'
+SITE_DESC = 'Film en streaming'
  
-URL_MAIN = 'http://www.fadoz.com' # url de votre source
- 
-#definis les url pour les catégories principale ceci et automatique si la deffition et présente elle seras afficher.
- 
-MOVIE_NEWS = ('http://www.fadoz.com/rva/', 'showMovies')
- 
+ACCEUILPATTERN  = ''#non utilisé
+FILMPATTERN = '<div class="article-content"><p style="text-align: center;"><img src="(.+?)" border.+?<p style="text-align: left;">([^<>]+?)<\/p>'
+URL_MAIN = 'http://www.fadoz.com/rva/'
+SEARCHPATTERN = '<fieldset><div><a href="\/rva\/(.+?)">(.+?)<\/a><\/div><\/fieldset>'
+NORMALPATTERN = '<span style="list-style-type:none;" >.+? href="\/rva\/(.+?)">(.+?)<(?:font|\/a)'
+NEXTPAGEPATTERN = '<span class="pagenav">[0-9]+<.span><.li><li><a title=".+?" href="\/rva\/(.+?)" class="pagenav">'
+FRAMEPATTERN = '<object tabindex="0" name="mediaplayer".+?proxy\.link=(.+?)&autostart='
+#FRAMEPATTERN2 = '<iframe width="100%" height="350" src="(.+?)" frameborder="0" scrolling="no" allowfullscreen><\/iframe>'
+FRAMEPATTERN2 = '>(?:([^<>]+?)<\/a><\/h2>)*<iframe[^<>]+?src="(.+?)"[^<>]+?><\/iframe>'
+
+#pour l'addon
+MOVIE_NEWS = (URL_MAIN, 'showMovies')
 MOVIE_GENRES = (True, 'showGenre')
- 
-URL_SEARCH = ('http://www.fadoz.com/rva/index.php?ordering=&searchphrase=all&Itemid=1&option=com_search&searchword=', 'showMovies')
+
+DOC_DOCS = (URL_MAIN + 'index.php?option=com_content&view=category&id=26', 'showMovies')
+
+URL_SEARCH = (URL_MAIN + 'index.php?ordering=&searchphrase=all&Itemid=1&option=com_search&searchword=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
  
  
@@ -57,8 +68,8 @@ def unescape(text):
 def load():
     oGui = cGui()
  
-    oOutputParameterHandler = cOutputParameterHandler() #apelle la function pour sortir un parametre
-    oOutputParameterHandler.addParameter('siteUrl', 'http://venom/') # sortis du parametres siteUrl oublier pas la Majuscule
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', 'http://venom/')
     oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
    
     oOutputParameterHandler = cOutputParameterHandler()
@@ -69,97 +80,87 @@ def load():
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
     oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genres', 'genres.png', oOutputParameterHandler)
     
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', DOC_DOCS[0])
+    oGui.addDir(SITE_IDENTIFIER, DOC_DOCS[1], 'Documentaires', 'doc.png', oOutputParameterHandler)
            
-    oGui.setEndOfDirectory() #ferme l'affichage
+    oGui.setEndOfDirectory()
  
 def showSearch():
     oGui = cGui()
  
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-        sUrl = 'http://www.fadoz.com/rva/index.php?ordering=&searchphrase=all&Itemid=1&option=com_search&searchword=' + sSearchText
+        sUrl = URL_MAIN + 'index.php?ordering=&searchphrase=all&Itemid=1&option=com_search&searchword=' + sSearchText
         showMovies(sUrl)
         oGui.setEndOfDirectory()
         return  
    
    
-def showGenre(): #affiche les genres
+def showGenre():
     oGui = cGui()
- 
-    #juste a entrer c'est caterorie et les lien qui vont bien
+
     liste = []
-    liste.append( ['Action','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=1:action-&Itemid=13&layout=default'] )
-    liste.append( ['Animation','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=2&Itemid=2'] )    
-    liste.append( ['Aventure','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=4:aventure-&Itemid=14&layout=default'] )
-    liste.append( ['Comedie','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=4:aventure-&Itemid=14&layout=default'] )
-    liste.append( ['Documentaires','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=26&Itemid=4'] )
-    liste.append( ['Drame','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=7:drame-&Itemid=16&layout=default'] )
-    liste.append( ['Fantastique','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=8:fantastique-&Itemid=17&layout=default'] )    
-    liste.append( ['Horreur','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=9:horreur-&Itemid=18&layout=default'] )
-    liste.append( ['Policier','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=10:policier-&Itemid=19&layout=default'] )
-    liste.append( ['Science Fiction','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=11:science-fiction-&Itemid=20&layout=default'] )
-    liste.append( ['Spectacle','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=3&Itemid=5'] )    
-    liste.append( ['Thriller','http://www.fadoz.com/rva/index.php?option=com_content&view=category&id=12:thriller-&Itemid=21&layout=default'] )
-               
-    for sTitle,sUrl in liste:#boucle
-       
+    liste.append( ['Action',URL_MAIN + 'index.php?option=com_content&view=category&id=1'] )
+    liste.append( ['Aventure',URL_MAIN + 'index.php?option=com_content&view=category&id=4'] )
+    liste.append( ['Comedie',URL_MAIN + 'index.php?option=com_content&view=category&id=6'] )
+    liste.append( ['Drame',URL_MAIN + 'index.php?option=com_content&view=category&id=7'] )
+    liste.append( ['Epouvante Horreur',URL_MAIN + 'index.php?option=com_content&view=category&id=9'] ) 
+    liste.append( ['Fantastique',URL_MAIN + 'index.php?option=com_content&view=category&id=8'] )  
+    liste.append( ['Policier',URL_MAIN + 'index.php?option=com_content&view=category&id=10'] )
+    liste.append( ['Science Fiction',URL_MAIN + 'index.php?option=com_content&view=category&id=11'] )
+    liste.append( ['Thriller',URL_MAIN + 'index.php?option=com_content&view=category&id=12'] )
+    liste.append( ['Animation',URL_MAIN + 'index.php?option=com_content&view=category&id=2'] )
+    liste.append( ['Documentaires',URL_MAIN + 'index.php?option=com_content&view=category&id=26'] )  
+    liste.append( ['Spectacle',URL_MAIN + 'index.php?option=com_content&view=category&id=3'] ) 
+                
+    for sTitle,sUrl in liste:
+        
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', sUrl)#sortis de l'url en parametre
+        oOutputParameterHandler.addParameter('siteUrl', sUrl)
         oGui.addDir(SITE_IDENTIFIER, 'showMovies', sTitle, 'genres.png', oOutputParameterHandler)
        
-    oGui.setEndOfDirectory()
+    oGui.setEndOfDirectory() 
  
 def showMovies(sSearch = ''):
-    oGui = cGui() #ouvre l'affichage
- 
+    oGui = cGui()
+
     if sSearch :
         sUrl = sSearch
-        sPattern = '<fieldset>(\t|\n)+<div>(?:\t|\n)+<span class="small">(?:\r|\n|.)+?<.span>(\t|\n)+<a href="(.+?)">(\t|\n)+(.+?)<.a>'
+        sPattern = SEARCHPATTERN
     else :
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
-       
-        if (sUrl == 'http://www.fadoz.com/rva/') :
-            sPattern = '<b><a style="font-size: 14px;" href="(.+?)" class="latestnews">(\t|\n)+(.+?)<.a><.b>'
-        else:
-            sPattern = '<td headers="tableOrdering">(\t|\n)+<a href="(.+?)">(\t|\n)+(.+?)<.a>'
- 
+        sPattern = NORMALPATTERN
+   
     #print sUrl
    
     oRequestHandler = cRequestHandler(sUrl)
-    sHtmlContent = oRequestHandler.request();
-       
-    #oParser = cParser()
-    #aResult = oParser.parse(sHtmlContent, sPattern)
+    sHtmlContent = oRequestHandler.request()
    
-    aResult = re.findall(sPattern, sHtmlContent)
+    oParser = cParser()
+    aResult = oParser.parse(sHtmlContent, sPattern)
    
     #print aResult
    
-    if not (aResult == False):
-        total = len(aResult)
+    if (aResult[0] == True):
+        total = len(aResult[1])
         dialog = cConfig().createDialog(SITE_NAME)
        
-        for aEntry in aResult:
+        for aEntry in aResult[1]:
             cConfig().updateDialog(dialog, total)
             if dialog.iscanceled():
                 break
            
-            if sSearch:
-                sTitle2 = aEntry[4]
-                sUrl2 = aEntry[2]
-            elif sUrl == 'http://www.fadoz.com/rva/' :
-                sTitle2 = aEntry[2]
-                sUrl2 = aEntry[0]
-            else :
-                sTitle2 = aEntry[3]
-                sUrl2 = aEntry[1]
-               
-            #sTitle = sTitle.replace('film ','')
+            sTitle2 = aEntry[1]
+            sTitle2 = aEntry[1].replace('<font color="#6da9c9"><i>HD</i></font>', '[COLOR coral]HD[/COLOR]')
+            sUrl2 = aEntry[0]
            
             #not found better way
             #sTitle = unicode(sTitle, errors='replace')
             #sTitle = sTitle.encode('ascii', 'ignore').decode('ascii')
+            
+            #sTitle2 = cUtil().DecoTitle(sTitle2)
            
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(URL_MAIN) + str(sUrl2))
@@ -169,7 +170,7 @@ def showMovies(sSearch = ''):
  
         cConfig().finishDialog(dialog)
            
-        sNextPage = __checkForNextPage(sHtmlContent)#cherche la page suivante
+        sNextPage = __checkForNextPage(sHtmlContent)
         if (sNextPage != False):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sNextPage)
@@ -177,10 +178,10 @@ def showMovies(sSearch = ''):
             #Ajoute une entrer pour le lien Next | pas de addMisc pas de poster et de description inutile donc
  
     if not sSearch:
-        oGui.setEndOfDirectory() #ferme l'affichage
+        oGui.setEndOfDirectory()
    
-def __checkForNextPage(sHtmlContent): #cherche la page suivante
-    sPattern = '<a href="([^<]+)" title="Suivant">Suivant<.a>'
+def __checkForNextPage(sHtmlContent):
+    sPattern = NEXTPAGEPATTERN
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     if (aResult[0] == True):
@@ -198,53 +199,50 @@ def showHosters():
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
- 
-    #print sUrl
    
     oRequestHandler = cRequestHandler(sUrl)
-    sHtmlContent = oRequestHandler.request();
+    sHtmlContent = oRequestHandler.request()
    
-    sPattern = '<div class="article-content">(\t|\n)*<p style="text-align: center;"><img src="(.+?)" border="0"'
-    aResult = re.findall(sPattern, sHtmlContent)
-    if aResult:
-        sThumb = aResult[0][1]
+    oParser = cParser()
+    sPattern = FILMPATTERN
+    aResult = oParser.parse(sHtmlContent, sPattern)
        
+    sThumb = aResult[1][0][0]
+    sComm = unescape(aResult[1][0][1])
+ 
     sHtmlContent = sHtmlContent.replace('\r','')
    
-    #sPattern = '>>>>> histoire <<<< :(.|\r|)+center;">\r+(.+?)\r+<.p>'
-    sPattern = '>>> histoire <<<(?:.+?)center;">(.+?)<.p>(?:.+?)>>>> Illimit'
-    aResult = re.findall(sPattern, sHtmlContent)
-    if aResult:
-        sComm = unescape(aResult[0])
- 
-    sPattern = 'class="jwts_tabbertab" title="(.+?)">.+?<iframe src="(\/rva\/.+?)" width='
-    aResult = re.findall(sPattern, sHtmlContent)
- 
-    #Si il n'a pas de selection de qualitéé
-    if (aResult == []):
-        sPattern = '<iframe src="(\/rva\/.+?)" width='
-        aResult = re.findall(sPattern, sHtmlContent)
-        aResult = [('???',aResult[0])]
- 
-       
+    sPattern = FRAMEPATTERN
+    aResult = oParser.parse(sHtmlContent, sPattern)
+    
+    if not (aResult[0] == True):
+        sPattern = FRAMEPATTERN2
+        aResult = oParser.parse(sHtmlContent, sPattern)
+            
     #print aResult
  
-    if not (aResult == [] ):
-        total = len(aResult)
+    if (aResult[0] == True):
+        total = len(aResult[1])
         dialog = cConfig().createDialog(SITE_NAME)
        
-        for aEntry in aResult:
+        for aEntry in aResult[1]:
             cConfig().updateDialog(dialog, total)
             if dialog.iscanceled():
                 break
-           
-            sLink = str(URL_MAIN) + urllib.unquote(aEntry[1]).decode('utf8')
+
+            Squality = '???'
+            if len(aEntry[1]) < 2:
+                sLink = aEntry
+            else:
+                sLink = aEntry[1]
+                if aEntry[0]:
+                    Squality = aEntry[0]
            
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', sLink)
             oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
  
-            oGui.addMovie(SITE_IDENTIFIER, 'showHostersLink', '[COLOR teal][' + str(aEntry[0]) + '][/COLOR] ' + sMovieTitle, sThumb, sThumb, sComm, oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'showHostersLink', '[COLOR teal][' + Squality + '][/COLOR] ' + sMovieTitle, sThumb, sThumb, sComm, oOutputParameterHandler)
  
         cConfig().finishDialog(dialog)
        
@@ -255,33 +253,47 @@ def showHostersLink():
     oGui = cGui()
    
     oInputParameterHandler = cInputParameterHandler()
-    sUrl = oInputParameterHandler.getValue('siteUrl')
-    sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')  
+    sUrllink = oInputParameterHandler.getValue('siteUrl')
+    sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
+    
+    sUrl = ''
+    
+    #Decodage du lien
+    if 'poy*' in sUrllink:
+        EncodedLink = sUrllink.replace('poy*','')
+        Key = "ZgJ4yYMx4aiH2Nh8fpHh"
+        x = GKDecrypter(192,128)
+        sUrl = x.decrypt(EncodedLink, Key, "ECB").split('\0')[0]
+    else:
+        #recuperation urls
+        oRequestHandler = cRequestHandler(sUrllink)
+        sHtmlContent = oRequestHandler.request()
    
-    #recuperation urls
-    oRequestHandler = cRequestHandler(sUrl)
-    sHtmlContent = oRequestHandler.request()
-   
-    #fh = open('c:\\test.txt', "w")
-    #fh.write(sHtmlContent)
-    #fh.close()
-   
-    url = re.findall('"file":"(.+?)", "label":"(.+?)",', sHtmlContent)
-   
-    #dialogue final
-   
-    if (url):
-        for aEntry in url:
+        #fh = open('c:\\test.txt', "w")
+        #fh.write(sHtmlContent)
+        #fh.close()
+
+        oParser = cParser()
+        sPattern = 'proxy.link=(.+?)&'
+        aResult = oParser.parse(sHtmlContent, sPattern)
+        
+        if (aResult[0] == True):
+            sUrl = aResult[1][0]
+
+    #url = re.findall('<iframe src="(.+?)"', sHtmlContent)
+
+    if (sUrl):
  
-            sTitle = '[COLOR teal][' + str(aEntry[1]) + '][/COLOR] ' + sMovieTitle
-            sUrl = aEntry[0]
- 
-            sHosterUrl = str(sUrl)
-            oHoster = cHosterGui().checkHoster(sHosterUrl)
-           
-            if (oHoster != False):
-                oHoster.setDisplayName(sTitle)
-                oHoster.setFileName(sTitle)
-                cHosterGui().showHoster(oGui, oHoster, sHosterUrl, '')
+        sTitle = sMovieTitle
+        sUrl = sUrl
+
+        sHosterUrl = str(sUrl)
+        oHoster = cHosterGui().checkHoster(sHosterUrl)
+       
+        if (oHoster != False):
+            oHoster.setDisplayName(sTitle)
+            oHoster.setFileName(sTitle)
+            cHosterGui().showHoster(oGui, oHoster, sHosterUrl, '')
            
         oGui.setEndOfDirectory()
+      
