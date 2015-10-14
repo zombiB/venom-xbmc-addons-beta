@@ -253,10 +253,10 @@ def showMovies(sSearch = ''):
             sUrl = sUrl
         
         #sPattern = 'fullstreaming">.*?<img src="(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a><\/h3>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*Regarder<\/a>'
-        sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*<span style="font-family:.+?>(.+?)<\/span>'
+        sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)(?:&.+?)*".+?<h3.+?><a href="(.+?)">(.+?)<\/a>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*<span style="font-family:.+?>(.+?)<\/span>'
     else:
         sUrl = oInputParameterHandler.getValue('siteUrl')
-        sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)".+?<h3.+?><a href="(.+?)">(.+?)<\/a>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*<span style="font-family:.+?>(.+?)<\/span>'
+        sPattern = 'fullstreaming">.*?<img src=".+?src=(.+?)(?:&.+?)*".+?<h3.+?><a href="(.+?)">(.+?)<\/a>.+?(?:<a href=".quality.+?">(.+?)<\/a>.+?)*<span style="font-family:.+?>(.+?)<\/span>'
 
     #recuperation de la page
     oRequestHandler = cRequestHandler(sUrl)
@@ -274,7 +274,7 @@ def showMovies(sSearch = ''):
             if dialog.iscanceled():
                 break
                 
-            sThumb = str(aEntry[0]).replace('&w=220&h=301','')
+            sThumb = str(aEntry[0])
             sTitle = aEntry[2]
             if aEntry[3] :
                 sTitle = sTitle + ' (' + aEntry[3] + ')'
@@ -438,5 +438,3 @@ def serieHosters():
         cConfig().finishDialog(dialog)
                 
     oGui.setEndOfDirectory()
-    
-    
