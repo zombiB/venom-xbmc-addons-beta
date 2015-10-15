@@ -22,7 +22,7 @@ URL_MAIN = 'http://cinemay.com'
 MOVIE_MOVIE = ('http://www.cinemay.com/films/', 'showMovies')
 MOVIE_GENRES = (True, 'showGenre')
 
-SERIE_SERIES = 'http://www.cinemay.com/serie/' 
+SERIE_SERIES = ('http://www.cinemay.com/serie/', 'showMovies')
 
 URL_SEARCH = ('http://www.cinemay.com/?s=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
@@ -43,7 +43,7 @@ def load():
     oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genres', 'genres.png', oOutputParameterHandler) 
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES)
+    oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
     oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Séries', 'series.png', oOutputParameterHandler)
     
             
@@ -127,8 +127,11 @@ def showMovies(sSearch=''):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
             oOutputParameterHandler.addParameter('sMovieTitle', str(aEntry[2]))
-            oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[0]))            
-            oGui.addMovie(SITE_IDENTIFIER, 'showLinks', aEntry[2], '', aEntry[0], aEntry[3], oOutputParameterHandler)
+            oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[0]))
+            if '/serie/' in sUrl or '/serie/' in aEntry[0]:
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', aEntry[2],'', aEntry[0], aEntry[3], oOutputParameterHandler)
+            else:         
+                oGui.addMovie(SITE_IDENTIFIER, 'showLinks', aEntry[2], '', aEntry[0], aEntry[3], oOutputParameterHandler)
 
         cConfig().finishDialog(dialog)
             
@@ -153,7 +156,62 @@ def __checkForNextPage(sHtmlContent):
 
     return False
     
+
+def showSeries():
+    oGui = cGui()
+    oInputParameterHandler = cInputParameterHandler()
+    sUrl = oInputParameterHandler.getValue('siteUrl')
+    sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
+    sThumbnail = oInputParameterHandler.getValue('sThumbnail')
+
+    oRequestHandler = cRequestHandler(sUrl)
+    sHtmlContent = oRequestHandler.request();
+ 
+    sPattern = '<ul class="css-tabs_series skin3">(.+?)</ul><div class="css-panes_series skin3">(.+?)</div></div>'
+
+    oParser = cParser()
+    aResult = oParser.parse(sHtmlContent, sPattern)
     
+    list = str(aResult[1][0][0]).split('<li>')
+    list2 = str(aResult[1][0][1]).split('<div>')
+
+    newList = ''
+    for index, item in enumerate(list):
+        item2 = list2[index]        
+        newList+=( item + item2)
+
+        
+    sPattern = '<a href="#">([^<]+)</a>|<li class="bordred"><small><em>.+?</em></small>.+?<a href="([^<]+)" class="link_series_epi">([^<]+)</a></li>'
+
+    oParser = cParser()
+    aResult = oParser.parse(newList, sPattern)
+    
+    
+    if (aResult[0] == True):
+        total = len(aResult[1])
+        dialog = cConfig().createDialog(SITE_NAME)
+        for aEntry in aResult[1]:
+            cConfig().updateDialog(dialog, total)
+            if dialog.iscanceled():
+                break
+
+            if aEntry[0]:
+                oOutputParameterHandler = cOutputParameterHandler()
+                oOutputParameterHandler.addParameter('siteUrl', str(sUrl))
+                oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
+                oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
+                oGui.addDir(SITE_IDENTIFIER, 'showSeries', '[COLOR red]'+str(aEntry[0])+'[/COLOR]', 'host.png', oOutputParameterHandler)
+                
+            sTitle = sMovieTitle+' - '+aEntry[2]
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
+            oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
+            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
+            oGui.addTV(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, '', oOutputParameterHandler)            
+    
+        cConfig().finishDialog(dialog)
+
+    oGui.setEndOfDirectory()    
 def showLinks():
     oGui = cGui()
     
