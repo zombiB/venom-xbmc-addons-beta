@@ -9,12 +9,13 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler 
 from resources.lib.config import cConfig 
 from resources.lib.parser import cParser 
+from resources.lib.util import cUtil
 
 
 
 SITE_IDENTIFIER = 'cinemay_com' 
-SITE_NAME = 'Cinemay.com (en cours)' 
-SITE_DESC = 'films en streaming, vk streaming, youwatch, vimple , streaming hd , streaming 720p , streaming sans limite' 
+SITE_NAME = 'Cinemay.com' 
+SITE_DESC = 'films et series en streaming' 
 
 URL_MAIN = 'http://cinemay.com' 
 
@@ -70,8 +71,8 @@ def showGenre():
     liste.append( ['Arts Martiaux','http://www.cinemay.com/arts-martiaux/'] )
     liste.append( ['Aventure','http://www.cinemay.com/aventure/'] )
     liste.append( ['Biopic','http://www.cinemay.com/biopic/'] )
-    liste.append( ['ComÃ©die','http://www.cinemay.com/comedie/'] )
-    liste.append( ['ComÃ©die Dramatique','http://www.cinemay.com/comedie-dramatique/'] )
+    liste.append( ['Comédie','http://www.cinemay.com/comedie/'] )
+    liste.append( ['Comédie Dramatique','http://www.cinemay.com/comedie-dramatique/'] )
     liste.append( ['Documentaire','http://www.cinemay.com/documentaire/'] )
     liste.append( ['Drame','http://www.cinemay.com/drame/'] )
     liste.append( ['Epouvante Horreur','http://www.cinemay.com/epouvante-horreur/'] ) 
@@ -82,12 +83,12 @@ def showGenre():
     liste.append( ['Historique','http://www.cinemay.com/histoirique/'] )
     liste.append( ['Manga','http://www.cinemay.com/manga/'] )    
     liste.append( ['Musical','http://www.cinemay.com/musical/'] )
-    liste.append( ['Non_classÃ©','http://www.cinemay.com/non-classe/'] )
+    liste.append( ['Non_classé','http://www.cinemay.com/non-classe/'] )
     liste.append( ['peplum','http://www.cinemay.com/peplum-2/'] )        
     liste.append( ['Policier','http://www.cinemay.com/policier/'] )
     liste.append( ['Romance','http://www.cinemay.com/romance/'] )
     liste.append( ['Science_Fiction','http://www.cinemay.com/science-fiction/'] )
-    liste.append( ['Spectacle','http://www.cinemay.com/spectacle/'] )
+    liste.append( ['Spéctacle','http://www.cinemay.com/spectacle/'] )
     liste.append( ['Thriller','http://www.cinemay.com/thriller/'] )
     liste.append( ['Western','http://www.cinemay.com/western/'] )
                 
@@ -124,14 +125,15 @@ def showMovies(sSearch=''):
             if dialog.iscanceled():
                 break
 
+            sTitle = aEntry[2].replace('streaming','').replace('Streaming','')
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
-            oOutputParameterHandler.addParameter('sMovieTitle', str(aEntry[2]))
+            oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
             oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[0]))
             if '/serie/' in sUrl or '/serie/' in aEntry[0]:
-                oGui.addTV(SITE_IDENTIFIER, 'showSeries', aEntry[2],'', aEntry[0], aEntry[3], oOutputParameterHandler)
-            else:         
-                oGui.addMovie(SITE_IDENTIFIER, 'showLinks', aEntry[2], '', aEntry[0], aEntry[3], oOutputParameterHandler)
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', sTitle,'', aEntry[0], aEntry[3], oOutputParameterHandler)
+            else:
+                oGui.addMovie(SITE_IDENTIFIER, 'showLinks', sTitle, '', aEntry[0], aEntry[3], oOutputParameterHandler)
 
         cConfig().finishDialog(dialog)
             
@@ -196,18 +198,21 @@ def showSeries():
                 break
 
             if aEntry[0]:
+                sSaison = aEntry[0]
                 oOutputParameterHandler = cOutputParameterHandler()
                 oOutputParameterHandler.addParameter('siteUrl', str(sUrl))
                 oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
                 oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
                 oGui.addDir(SITE_IDENTIFIER, 'showSeries', '[COLOR red]'+str(aEntry[0])+'[/COLOR]', 'host.png', oOutputParameterHandler)
                 
-            sTitle = sMovieTitle+' - '+aEntry[2]
-            oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
-            oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
-            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
-            oGui.addTV(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, '', oOutputParameterHandler)            
+            else: 
+                sTitle = sMovieTitle+' -'+sSaison+aEntry[2]
+                sDisplayTitle = cUtil().DecoTitle(sTitle)
+                oOutputParameterHandler = cOutputParameterHandler()
+                oOutputParameterHandler.addParameter('siteUrl', str(aEntry[1]))
+                oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
+                oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
+                oGui.addTV(SITE_IDENTIFIER, 'showHosters', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler)            
     
         cConfig().finishDialog(dialog)
 
@@ -234,7 +239,7 @@ def showLinks():
             sHoster = cHosterGui().checkHoster(aEntry[1].lower())
             if (sHoster != False):
             
-                sTitle = sMovieTitle + ' -[COLOR skyblue]' + sHoster.getDisplayName()+'[/COLOR]'
+                sTitle = sMovieTitle + ' - [COLOR skyblue]' + sHoster.getDisplayName()+'[/COLOR]'
                 sUrl = URL_MAIN+aEntry[0]
                 
                 oOutputParameterHandler = cOutputParameterHandler()
@@ -268,10 +273,11 @@ def showHosters():
             sHosterUrl = str(aEntry)
             #oHoster = __checkHoster(sHosterUrl)
             oHoster = cHosterGui().checkHoster(sHosterUrl)
+            sDisplayTitle = cUtil().DecoTitle(sMovieTitle)
         
             if (oHoster != False):
                 #sMovieTitle=re.sub(r'\[.*\]',r'',sMovieTitle)
-                oHoster.setDisplayName(sMovieTitle)
+                oHoster.setDisplayName(sDisplayTitle)
                 oHoster.setFileName(sMovieTitle)
                 cHosterGui().showHoster(oGui, oHoster, sHosterUrl, sThumbnail)
 

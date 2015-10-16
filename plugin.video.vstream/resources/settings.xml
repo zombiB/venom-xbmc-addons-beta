@@ -19,6 +19,7 @@
 		<setting label="30022" type="lsep"/>
 		<setting id="plugin_adkami_com" type="bool" label="Adkami (Séries, Animés)" default="true"/>
 		<setting id="plugin_buzzmonclick_com" type="bool" label="Buzzmonclick (Replay TV, Documentaires)" default="true"/>
+		<setting id="plugin_cinemay_com" type="bool" label="Cinemay (Films, Séries)" default="true"/>
 		<setting id="plugin_docspot_fr" type="bool" label="DocSpot (Documentaires)" default="true"/>
 		<setting id="plugin_dpstreaming_org" type="bool" label="Dpstreaming (Films, Séries)" default="true"/>
 		<setting id="plugin_enquetedereportages_com" type="bool" label="Enquete de Reportages (Replay TV)" default="true"/>
@@ -58,6 +59,7 @@
 		
 		<setting id="search1_adkami_com" type="bool" label="Adkami (Séries, Animés)" default="false"/>
 		<setting id="search1_buzzmonclick_com" type="bool" label="Buzzmonclick (Replay TV, Documentaires)" default="false"/>
+		<setting id="search1_cinemay_com" type="bool" label="Cinemay (Films, Séries)" default="false"/>
 		<setting id="search1_docspot_fr" type="bool" label="DocSpot (Documentaires)" default="false"/>
 		<setting id="search1_dpstreaming_org" type="bool" label="Dpstreaming (Films, Séries)" default="true"/>
 		<setting id="search1_enquetedereportages_com" type="bool" label="Enquete de Reportages (Replay TV)" default="false"/>
@@ -93,6 +95,7 @@
 		
 		<setting id="search2_adkami_com" type="bool" label="Adkami (Séries, Animés)" default="true"/>
 		<setting id="search2_buzzmonclick_com" type="bool" label="Buzzmonclick (Replay TV, Documentaires)" default="false"/>
+		<setting id="search2_cinemay_com" type="bool" label="Cinemay (Films, Séries)" default="false"/>
 		<setting id="search2_docspot_fr" type="bool" label="DocSpot (Documentaires)" default="false"/>
 		<setting id="search2_dpstreaming_org" type="bool" label="Dpstreaming (Films, Séries)" default="true"/>
 		<setting id="search2_enquetedereportages_com" type="bool" label="Enquete de Reportages (Replay TV)" default="false"/>
@@ -129,6 +132,7 @@
 		
 		<setting id="search3_adkami_com" type="bool" label="Adkami (Séries, Animés)" default="true"/>
 		<setting id="search3_buzzmonclick_com" type="bool" label="Buzzmonclick (Replay TV, Documentaires)" default="false"/>
+		<setting id="search3_cinemay_com" type="bool" label="Cinemay (Films, Séries)" default="false"/>
 		<setting id="search3_docspot_fr" type="bool" label="DocSpot (Documentaires)" default="false"/>
 		<setting id="search3_dpstreaming_org" type="bool" label="Dpstreaming (Films, Séries)" default="false"/>
 		<setting id="search3_enquetedereportages_com" type="bool" label="Enquete de Reportages (Replay TV)" default="false"/>
@@ -165,6 +169,7 @@
 		
 		<setting id="search4_adkami_com" type="bool" label="Adkami (Séries, Animés)" default="false"/>
 		<setting id="search4_buzzmonclick_com" type="bool" label="Buzzmonclick (Replay TV, Documentaires)" default="true"/>
+		<setting id="search4_cinemay_com" type="bool" label="Cinemay (Films, Séries)" default="false"/>
 		<setting id="search4_docspot_fr" type="bool" label="DocSpot (Documentaires)" default="true"/>
 		<setting id="search4_dpstreaming_org" type="bool" label="Dpstreaming (Films, Séries)" default="false"/>
 		<setting id="search4_enquetedereportages_com" type="bool" label="Enquete de Reportages (Replay TV)" default="false"/>
