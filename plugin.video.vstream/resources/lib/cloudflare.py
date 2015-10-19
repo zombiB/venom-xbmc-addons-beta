@@ -1,10 +1,31 @@
 #-*- coding: utf-8 -*-
 #
 from resources.lib.config import cConfig
+from resources.lib.gui.gui import cGui
 import re,os
 import urllib2,urllib
 import xbmc
 
+#Cookie path
+#C:\Users\BRIX\AppData\Roaming\Kodi\userdata\addon_data\plugin.video.vstream\
+
+#Light method
+    # req = urllib2.Request(sUrl,None,headers)
+    # try:
+        # response = urllib2.urlopen(req)
+        # sHtmlContent = response.read()
+        # response.close()
+            
+    # except urllib2.HTTPError, e:
+
+        # if e.code == 503:
+            # if CloudflareBypass().check(e.headers):
+                # cookies = e.headers['Set-Cookie']
+                # cookies = cookies.split(';')[0]
+                # sHtmlContent = CloudflareBypass().GetHtml(sUrl,e.read(),cookies)
+    
+#Heavy method
+# sHtmlContent = CloudflareBypass().GetHtml(sUrl)
 
 def parseInt(chain):
 
@@ -60,8 +81,9 @@ class CloudflareBypass(object):
         return data
             
   
-    def check(self,htmlcontent):
-        if 'Checking your browser before accessing' in htmlcontent:
+    def check(self,head):
+        #if 'Checking your browser before accessing' in htmlcontent:
+        if ( "URL=/cdn-cgi/" in head.get("Refresh", "") and head.get("Server", "") == "cloudflare-nginx" ):
             self.state = True
             return True
         return False
@@ -82,7 +104,7 @@ class CloudflareBypass(object):
         return str(rep)
         
         
-    def Valid(self,url,htmlcontent,cookies):
+    def GetHtml(self,url,htmlcontent = '',cookies = ''):
         
         self.hostComplet = re.sub(r'(https*:\/\/[^/]+)(\/*.*)','\\1',url)
         self.host = re.sub(r'https*:\/\/','',self.hostComplet)
@@ -104,16 +126,27 @@ class CloudflareBypass(object):
             print 'cookies present'
         else:
         
-            #1 er etape : On recharge la page, pas forcement necessaire mais evite les probleme de headers
-            opener = urllib2.build_opener(NoRedirection)
-            opener.addheaders = self.headers
-            #opener.addheaders.append (('Cookie', self.cookies))
-
-            response = opener.open(url)
-            htmlcontent = response.read()
-            response.close()
-            
-            #print htmlcontent
+            #if we need a first load
+            if (htmlcontent == '') and  (cookies == ''):
+                #print "1 er chargement"
+                opener = urllib2.build_opener(NoRedirection)
+                opener.addheaders = self.headers
+                
+                response = opener.open(url)
+                
+                #code
+                htmlcontent = response.read()
+                
+                #cookie
+                head = response.headers
+                cookies = head['Set-Cookie']
+                cookies = cookies.split(';')[0]
+                
+                response.close()
+                
+                #if no protection
+                if not self.check(head):
+                    return htmlcontent
             
             #2 eme etape recuperation cookies
             hash = re.findall('<input type="hidden" name="jschl_vc" value="(.+?)"\/>',htmlcontent)[0]
@@ -122,31 +155,41 @@ class CloudflareBypass(object):
             #calcul de la reponse
             rep = self.GetResponse(htmlcontent)
 
+            #Temporisation
+            cGui().showInfo("Information", 'Decodage protection CloudFlare' , 5)
             xbmc.sleep(5000)
             
             NewUrl = self.hostComplet + '/cdn-cgi/l/chk_jschl?jschl_vc='+ urllib.quote_plus(hash) +'&pass=' + urllib.quote_plus(passe) + '&jschl_answer=' + rep
-            
+
             opener = urllib2.build_opener(NoRedirection)
             opener.addheaders = self.headers
-            #opener.addheaders.append(('Cookie', self.cookies))
+            #on rajoute le premier cookie
+            #opener.addheaders.append(('Cookie', cookies))
             
             response = opener.open(NewUrl)
+            print response.headers
 
             if 'Set-Cookie' in response.headers:
                 cookies = str(response.headers.get('Set-Cookie'))
                 c1 = re.findall('__cfduid=(.+?);',cookies)
                 c2 = re.findall('cf_clearance=(.+?);',cookies)
+                
                 if not c1 or not c2:
-                    return False
+                    print "Probleme protection Cloudflare : Decodage rate"
+                    cGui().showInfo("Erreur", 'Probleme protection CloudFlare' , 5)
+                    response.close()
+                    return ''
+                    
                 cookies = '__cfduid=' + c1[0] + '; cf_clearance=' + c2[0]
                 response.close()
             else:
-                print "Cookies manquants"
+                print "Probleme protection Cloudflare : Cookies manquants"
+                cGui().showInfo("Erreur", 'Probleme protection CloudFlare' , 5)
                 response.close()
-                return False
+                return ''
                 
             #Memorisation
-            print cookies
+            #print cookies
             self.SaveCookie(self.host.replace('.','_'),cookies)
 
 
@@ -159,18 +202,17 @@ class CloudflareBypass(object):
         
         response = opener.open(url)
         htmlcontent = response.read()
-        if self.check(htmlcontent):
+        head = response.headers
+        if self.check(head):
             #probleme, cookies plus valide, on l'efface, sera remit a jour la prochaine fois
             print "Cookies Out of date"
             self.DeleteCookie(self.host.replace('.','_'))
-            return False
+            return ''
             
         response.close()
-            
-        #print htmlcontent
-        
-        fh = open('c:\\test.txt', "w")
-        fh.write(htmlcontent)
-        fh.close()
+
+        #fh = open('c:\\test.txt', "w")
+        #fh.write(htmlcontent)
+        #fh.close()
         
         return htmlcontent
