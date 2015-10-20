@@ -346,11 +346,13 @@ class cHosterGui:
                 # oPlayer.startPlayer()
                 return
             else:
-                cConfig().showInfo(sHosterName, 'Fichier introuvable')
+                #cConfig().showInfo(sHosterName, 'Fichier introuvable')
+                cConfig().error("Fichier introuvable ")
                 return
 
         except:
-            cConfig().showInfo(sHosterName, 'Fichier introuvable')
+            #cConfig().showInfo(sHosterName, 'Fichier introuvable')
+            cConfig().error("Fichier introuvable ")
             return
 
         oGui.setEndOfDirectory()
