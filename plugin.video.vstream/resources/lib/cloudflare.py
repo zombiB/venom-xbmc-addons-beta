@@ -85,7 +85,11 @@ class CloudflareBypass(object):
     def GetHeadercookie(self,url):
         #urllib.quote_plus()
         Domain = re.sub(r'https*:\/\/([^/]+)(\/*.*)','\\1',url)
-        return urllib.urlencode({'User-Agent':UA,'Cookie': self.Readcookie(Domain.replace('.','_')) })
+        cook = self.Readcookie(Domain.replace('.','_'))
+        if cook == '':
+            return urllib.urlencode({'User-Agent':UA})
+            
+        return urllib.urlencode({'User-Agent':UA,'Cookie': cook })
 
 
   
@@ -95,7 +99,16 @@ class CloudflareBypass(object):
             self.state = True
             return True
         return False
-        
+    
+    def SetHeader(self):
+        head=[]
+        head.append(('User-Agent', UA))
+        head.append(('Host' , self.host))
+        head.append(('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'))
+        head.append(('Referer', self.url))
+        head.append(('Content-Type', 'text/html; charset=utf-8'))
+        return head
+          
     def GetResponse(self,htmlcontent):
         line1 = re.findall('var t,r,a,f, (.+?)={"(.+?)":\+*(.+?)};',htmlcontent)
 
@@ -116,15 +129,16 @@ class CloudflareBypass(object):
         
         self.hostComplet = re.sub(r'(https*:\/\/[^/]+)(\/*.*)','\\1',url)
         self.host = re.sub(r'https*:\/\/','',self.hostComplet)
+        self.url = url
         
-        self.headers = [('User-Agent', UA),
-                       ('Host' , self.host),
-                       ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
-                       ('Accept-Language','fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3'),
-                       #('Accept-Encoding','gzip, deflate'),
-                       ('Referer', url),
-                       #('Cookie' , self.cookies),
-                       ('Content-Type', 'text/html; charset=utf-8')]
+        # self.headers = [('User-Agent', UA),
+                       # ('Host' , self.host),
+                       # ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
+                       # ('Accept-Language','fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3'),
+                       # #('Accept-Encoding','gzip, deflate'),
+                       # ('Referer', url),
+                       # #('Cookie' , self.cookies),
+                       # ('Content-Type', 'text/html; charset=utf-8')]
                        
                        
         cookieMem = self.Readcookie(self.host.replace('.','_'))
@@ -134,8 +148,8 @@ class CloudflareBypass(object):
             
             #Test PRIORITAIRE
             opener = urllib2.build_opener(NoRedirection)
-            opener.addheaders = self.headers
-            
+            opener.addheaders = self.SetHeader()
+                      
             #on rajoute les nouveaux coockies
             opener.addheaders.append (('Cookie', cookies))
             
@@ -162,8 +176,8 @@ class CloudflareBypass(object):
         if (htmlcontent == '') or (cookies == ''):
             print "Pas de code html ni de cookie"
             opener = urllib2.build_opener(NoRedirection)
-            opener.addheaders = self.headers
-            
+            opener.addheaders = self.SetHeader()
+           
             response = opener.open(url)
             
             #code
@@ -172,6 +186,10 @@ class CloudflareBypass(object):
             #htmlcontent = fh.read()
             #fh.close()
             
+            #if no protection
+            head = response.headers
+            if not self.check(head):
+                return htmlcontent
             
             
             #cookie
@@ -200,7 +218,7 @@ class CloudflareBypass(object):
         NewUrl = self.hostComplet + '/cdn-cgi/l/chk_jschl?jschl_vc='+ urllib.quote_plus(hash) +'&pass=' + urllib.quote_plus(passe) + '&jschl_answer=' + rep
         
         opener = urllib2.build_opener(NoRedirection)
-        opener.addheaders = self.headers
+        opener.addheaders = self.SetHeader()
         
         #on rajoute le premier cookie
         if not cookies == '':
@@ -220,6 +238,8 @@ class CloudflareBypass(object):
             if not c1 or not c2:
                 print "Probleme protection Cloudflare : Decodage rate"
                 print response.headers
+                print 'c1 ' +c1 + 'c2 ' + c2
+                print cookies
                 cGui().showInfo("Erreur", 'Probleme protection CloudFlare' , 5)
                 response.close()
                 return ''
@@ -242,11 +262,8 @@ class CloudflareBypass(object):
 
         #3 eme etape : on refait la requete mais avec les nouveaux cookies
         
-        #une petite tempo, je sais pas pkoi, mais ca deconne si trop rapide
-        xbmc.sleep(2000)
-        
         opener = urllib2.build_opener(NoRedirection)
-        opener.addheaders = self.headers
+        opener.addheaders = self.SetHeader()
         
         #on rajoute les nouveaux coockies
         opener.addheaders.append (('Cookie', cookies))
