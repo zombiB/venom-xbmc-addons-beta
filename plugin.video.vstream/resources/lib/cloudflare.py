@@ -35,7 +35,7 @@ def parseInt(chain):
     chain = chain.replace(' ','')
     chain = re.sub(r'!!\[\]','1',chain) # !![] = 1
     chain = re.sub(r'\(!\+\[\]','(1',chain)  #si le bloc commence par !+[] >> +1
-    chain = re.sub(r'(\([^()]+)\+\[\]\)','(\\1)*10)',chain)  # si le bloc commence par !+[] et fini par +[] >> *10
+    chain = re.sub(r'(\([^()]+)\+\[\]\)','(\\1)*10)',chain)  # si le bloc fini par +[] >> *10
     
     #bidouilles a optimiser non geree encore par regex
     chain = re.sub(r'\(\+\[\]\)','0',chain)
@@ -81,15 +81,16 @@ class CloudflareBypass(object):
             return ''
         
         return data
-            
+    
+    #Return param for head
     def GetHeadercookie(self,url):
         #urllib.quote_plus()
         Domain = re.sub(r'https*:\/\/([^/]+)(\/*.*)','\\1',url)
         cook = self.Readcookie(Domain.replace('.','_'))
         if cook == '':
-            return urllib.urlencode({'User-Agent':UA})
+            return ''
             
-        return urllib.urlencode({'User-Agent':UA,'Cookie': cook })
+        return '|' + urllib.urlencode({'User-Agent':UA,'Cookie': cook })
 
 
   
@@ -130,16 +131,6 @@ class CloudflareBypass(object):
         self.hostComplet = re.sub(r'(https*:\/\/[^/]+)(\/*.*)','\\1',url)
         self.host = re.sub(r'https*:\/\/','',self.hostComplet)
         self.url = url
-        
-        # self.headers = [('User-Agent', UA),
-                       # ('Host' , self.host),
-                       # ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
-                       # ('Accept-Language','fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3'),
-                       # #('Accept-Encoding','gzip, deflate'),
-                       # ('Referer', url),
-                       # #('Cookie' , self.cookies),
-                       # ('Content-Type', 'text/html; charset=utf-8')]
-                       
                        
         cookieMem = self.Readcookie(self.host.replace('.','_'))
         if not (cookieMem == ''):
@@ -150,22 +141,24 @@ class CloudflareBypass(object):
             opener = urllib2.build_opener(NoRedirection)
             opener.addheaders = self.SetHeader()
                       
-            #on rajoute les nouveaux coockies
+            #Add saved cookies
             opener.addheaders.append (('Cookie', cookies))
             
             response = opener.open(url)
             htmlcontent = response.read()
             head = response.headers
             if not self.check(head):
-                # ok tout bon
+                # ok no more protection
                 response.close()
                 return htmlcontent
             
-            #probleme, cookies plus valide, on l'efface et on recommence
+            response.close()
+            
+            #Arf, problem, cookies not working, delete them
             print "Cookies Out of date"
             self.DeleteCookie(self.host.replace('.','_'))
             
-            #on a le nouveau code html, now on recupere le 1 er cookie
+            #Get the first new cookie, we already have the new html code
             cookies = ''
             if 'Set-Cookie' in head:
                 cookies = head['Set-Cookie']
@@ -174,7 +167,6 @@ class CloudflareBypass(object):
         
         #if we need a first load
         if (htmlcontent == '') or (cookies == ''):
-            print "Pas de code html ni de cookie"
             opener = urllib2.build_opener(NoRedirection)
             opener.addheaders = self.SetHeader()
            
@@ -191,7 +183,7 @@ class CloudflareBypass(object):
             if not self.check(head):
                 return htmlcontent
             
-            
+            print "Page protegée, tout a charger"
             #cookie
             head = response.headers
             if 'Set-Cookie' in head:
@@ -199,10 +191,6 @@ class CloudflareBypass(object):
                 cookies = cookies.split(';')[0]
             
             response.close()
-            
-            #if no protection
-            if not self.check(head):
-                return htmlcontent
         
         #2 eme etape recuperation cookies
         hash = re.findall('<input type="hidden" name="jschl_vc" value="(.+?)"\/>',htmlcontent)[0]
@@ -220,7 +208,7 @@ class CloudflareBypass(object):
         opener = urllib2.build_opener(NoRedirection)
         opener.addheaders = self.SetHeader()
         
-        #on rajoute le premier cookie
+        #Add first cookie
         if not cookies == '':
             opener.addheaders.append(('Cookie', cookies))
         
@@ -237,15 +225,11 @@ class CloudflareBypass(object):
             
             if not c1 or not c2:
                 print "Probleme protection Cloudflare : Decodage rate"
-                print response.headers
-                print 'c1 ' +c1 + 'c2 ' + c2
-                print cookies
                 cGui().showInfo("Erreur", 'Probleme protection CloudFlare' , 5)
                 response.close()
                 return ''
                 
             cookies = '__cfduid=' + c1[0] + '; cf_clearance=' + c2[0]
-            print cookies
 
         else:
             print "Probleme protection Cloudflare : Cookies manquants"
@@ -256,25 +240,21 @@ class CloudflareBypass(object):
         response.close()
         
         #Memorisation
-        #print cookies
         self.SaveCookie(self.host.replace('.','_'),cookies)
 
 
-        #3 eme etape : on refait la requete mais avec les nouveaux cookies
-        
+        #3 eme etape : on refait la requete mais avec les nouveaux cookies       
         opener = urllib2.build_opener(NoRedirection)
         opener.addheaders = self.SetHeader()
         
-        #on rajoute les nouveaux coockies
+        #Add the two cookies
         opener.addheaders.append (('Cookie', cookies))
-        
-        print opener.addheaders
         
         response = opener.open(url)
         htmlcontent = response.read()
         head = response.headers
         if self.check(head):
-            #probleme, nouveau cookies non valide, on l'efface, sera remit a jour la prochaine fois
+            #Arf new cookie not working
             print "New cookie not working"
             #self.DeleteCookie(self.host.replace('.','_'))
             response.close()
