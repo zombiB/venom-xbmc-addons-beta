@@ -183,7 +183,7 @@ def showMovies(sSearch = ''):
     ##fh.write(sHtmlContent)
     #fh.close()
     
-    sPattern = '<div.*?class="moviefilm"><a.*?href="([^<]+)">.+?<img.*?src="([^<]+)" alt="(.+?)".+?>'
+    sPattern = '<div.*?class="moviefilm"><a.*?href="([^<]+)">.*?<img.*?src="([^<]+)" alt="(.+?)".+?>'
     
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
@@ -338,8 +338,6 @@ def showHosters():
     sPattern = '<iframe.+?src="(http[^<>]+?)" [^<>]+?><\/iframe>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
-    
-    #print aResult
      
     if (aResult[0] == True):
         total = len(aResult[1])
