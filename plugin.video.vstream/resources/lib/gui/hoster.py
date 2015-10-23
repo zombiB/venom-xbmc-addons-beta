@@ -205,6 +205,8 @@ class cHosterGui:
             return cHosterHandler().getHoster('filepup')
         if ('v-vids' in sHosterUrl):
             return cHosterHandler().getHoster('v_vids')
+        if ('vid.ag' in sHosterUrl):
+            return cHosterHandler().getHoster('vid_ag')
 
         #Si aucun hebergeur connu on teste les liens directs
         if (sHosterUrl[-4:] in '.mp4.avi.flv.m3u8'):
