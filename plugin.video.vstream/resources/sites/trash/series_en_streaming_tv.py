@@ -16,7 +16,6 @@ import unicodedata,htmlentitydefs
 
 from resources.lib.cloudflare import CloudflareBypass
  
- 
 SITE_IDENTIFIER = 'series_en_streaming_tv'
 SITE_NAME = 'Series-en-streaming.tv'
 SITE_DESC = 'Serie en streaming'
@@ -28,7 +27,27 @@ SERIE_SERIES = ('http://www.series-en-streaming.tv/liste/', 'AlphaSearch')
 
 URL_SEARCH = (URL_MAIN + 'search/', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
- 
+
+def unescape(text):
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":
+                    return unichr(int(text[3:-1], 16))
+                else:
+                    return unichr(int(text[2:-1]))
+            except ValueError:
+                pass
+        else:
+            # named entity
+            try:
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+            except KeyError:
+                pass
+        return text # leave as is
+    return re.sub("&#?\w+;", fixup, text)
 
 def load():
     oGui = cGui()
@@ -86,7 +105,6 @@ def AlphaDisplay():
     oParser = cParser()
     sPattern = '<a href=\'(http:\/\/www\.series-en-streaming\.tv\/serie\/.+?)\'>(' + sLetter + '[^<>]+?)<\/a><br>'
     aResult = oParser.parse(sHtmlContent, sPattern)
-    print sPattern
    
     if (aResult[0] == True):
         total = len(aResult[1])
@@ -96,7 +114,10 @@ def AlphaDisplay():
             if dialog.iscanceled():
                 break
                 
-            sTitle = aEntry[1]            
+            sTitle = aEntry[1]
+            sTitle = cUtil().unescape(sTitle)
+            sTitle = cUtil().removeHtmlTags(sTitle)
+            sTitle = sTitle.encode( "utf-8")            
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', aEntry[0])
@@ -142,8 +163,6 @@ def showMovies(sSearch = ''):
     sPattern = "<a href='([^'<>]+?)' data-original-title='' title=''><img src='([^'<>]+?)' width='100%' height='100%' title='' data-original-title=''><h3 data-original-title='' title=''>(.+?)<\/h3>"
     aResult = oParser.parse(sHtmlContent, sPattern)
    
-    #print aResult
-   
     if (aResult[0] == True):
         
         SpecHead = CloudflareBypass().GetHeadercookie(sUrl)
@@ -158,7 +177,7 @@ def showMovies(sSearch = ''):
 
             sThumb = aEntry[1]
             if URL_MAIN in sThumb:
-                sThumb = sThumb + '|' + SpecHead
+                sThumb = sThumb + SpecHead
             #print sThumb
            
             #not found better way
@@ -168,10 +187,9 @@ def showMovies(sSearch = ''):
             #sTitle = sTitle.encode('ascii', 'ignore').decode('ascii')
             
             sTitle = aEntry[2]
-            sTitle = cUtil().removeHtmlTags(sTitle)
             sTitle = cUtil().unescape(sTitle)
+            sTitle = cUtil().removeHtmlTags(sTitle)
             sTitle = sTitle.encode( "utf-8")
-
             
             #sDisplayTitle = cUtil().DecoTitle(sTitle)
            
@@ -293,7 +311,7 @@ def showEpisode():
             sTitle = aEntry[2]
             sThumb = aEntry[0]
             if URL_MAIN in sThumb:
-                sThumb = sThumb + '|' + SpecHead        
+                sThumb = sThumb + SpecHead        
             sCom = aEntry[3]
             
             
