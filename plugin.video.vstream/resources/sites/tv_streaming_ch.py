@@ -99,7 +99,7 @@ def showSearch():
 
     sSearchText = oGui.showKeyBoard()
     if (sSearchText != False):
-        sUrl = URL_SEARCH[0] + urllib.quote(sSearchText)
+        sUrl = URL_SEARCH[0] + sSearchText
         showMovies(sUrl)
         oGui.setEndOfDirectory()
         return  
@@ -158,6 +158,10 @@ def showMovies(sSearch = ''):
     oGui = cGui()
     if sSearch:
       sUrl = sSearch
+      #correction
+      sUrl = sUrl.replace(URL_SEARCH[0],'')
+      sUrl = URL_SEARCH[0] + urllib.quote(sUrl)
+
     else:
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
@@ -338,6 +342,8 @@ def showHosters():
     sPattern = '<iframe.+?src="(http[^<>]+?)" [^<>]+?><\/iframe>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
+    
+    print aResult
      
     if (aResult[0] == True):
         total = len(aResult[1])
