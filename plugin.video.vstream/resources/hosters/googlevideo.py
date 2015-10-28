@@ -106,11 +106,12 @@ class cHoster(iHoster):
                     best = 0
                     quality = 0
                     
-                    videos = re.compile(',{"url":"(https://redirector\.googlevideo\.com/.+?)","height":([0-9]+?),"width":([0-9]+?),"type":"video/.+?"}').findall(html.group(1))
+                    videos = re.compile(',{"url":"(https://redirector\.googlevideo\.com/.+?)".+?"height":([0-9]+?),"width":([0-9]+?),"type":"video/.+?"}').findall(html.group(1))
                     
                     if not videos:
-                        videos = re.compile(',{"url":"(https://lh3\.googleusercontent\.com/.+?)","height":([0-9]+?),"width":([0-9]+?),"type":"video/.+?"}').findall(html.group(1))
+                        videos = re.compile(',{"url":"(https://lh3\.googleusercontent\.com/.+?)".+?"height":([0-9]+?),"width":([0-9]+?),"type":"video/.+?"}').findall(html.group(1))
                     
+                    print videos
                     if videos:
                         if len(videos) > 1:
                             for index, video in enumerate(videos):
