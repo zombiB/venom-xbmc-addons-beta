@@ -98,7 +98,7 @@ class cHoster(iHoster):
                     html = re.search('\["shared_group_' + re.escape(vid_id) + '"\](.+?),"ccOverride":"false"}', resp, re.DOTALL)
                 else:
                     #Methode brute en test
-                    html = re.search('\["shared_group_[0-9]+"\](.+?),"ccOverride":"false"}', resp, re.DOTALL)
+                    html = re.search('(?:,|\[)"shared_group_[0-9]+"\](.+?),"ccOverride":"false"}', resp, re.DOTALL)
                     
                 if html:
                     vid_list = []
