@@ -73,7 +73,7 @@ class cHosterGui:
             #Beta context download menu
             oContext = cContextElement()
             oContext.setFile('cDownload')
-            oContext.setSiteName(self.SITE_NAME)
+            oContext.setSiteName('cDownload')
             oContext.setFunction('AddtoDownloadList')
             oContext.setTitle(cConfig().getlanguage(30202))
             oContext.setOutputParameterHandler(oOutputParameterHandler)
