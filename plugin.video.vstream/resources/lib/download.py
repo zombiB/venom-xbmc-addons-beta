@@ -1,18 +1,141 @@
+#-*- coding: utf-8 -*-
+
+from resources.lib.gui.hoster import cHosterGui
 from resources.lib.config import cConfig
+from resources.lib.handler.inputParameterHandler import cInputParameterHandler
+from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
+from resources.lib.handler.hosterHandler import cHosterHandler
+from resources.lib.gui.gui import cGui
+from resources.lib.gui.guiElement import cGuiElement
+from resources.lib.db import cDb
 #from traceback import print_exc
-import urllib2
+import urllib2,urllib
 import xbmc
 import xbmcgui
 import xbmcvfs
 import string
 import re
+import threading,os
 
-class cDownload:
+SITE_IDENTIFIER = 'cDownload'
+
+#http://kodi.wiki/view/Add-on:Common_plugin_cache
+#https://pymotw.com/2/threading/
+
+class cDownloadProgressBar():
+    def __init__(self):
+        self.processIsCanceled = False
+        self.iCount = 0
+        self.oUrlHandler = None
+        self.f = None
         
-    def __createProcessDialog(self):
+        self.__sTitle = ''
+        
+        self.__workersByName = {}
+        
+        try:
+            import StorageServer
+            self.Memorise = StorageServer.StorageServer("VstreamDownloader")
+        except:
+            print 'Le download ne marchera pas correctement'
+            
+        #queue = self.Memorise.get("SimpleDownloaderQueue")
+        #if self.Memorise.lock("SimpleDownloaderQueueLock"):
+        #self.Memorise.set("SimpleDownloaderQueue", repr(items))
+        
+        
+    def createProcessDialog(self):
         oDialog = xbmcgui.DialogProgressBG()
         oDialog.create('Download')            
         self.__oDialog = oDialog
+        #xbmc.sleep(1000)
+        return self.__oDialog
+        
+        
+    def _StartDownload(self,dummy1 ='',dummy2 = ''):
+        
+        diag = self.createProcessDialog()
+        #diag.isFinished()
+        
+        #self.Memorise.set("VstreamDownloaderClass", self)
+        #self.Memorise.set("VstreamDownloaderClass", repr(self))
+        self.Memorise.set("VstreamDownloaderWorking", "1")
+        
+        self.iCount = 0
+        
+        headers = self.oUrlHandler.info()
+        
+        iTotalSize = -1
+        if "content-length" in headers:
+            iTotalSize = int(headers["Content-Length"])
+        
+        chunk = 16 * 1024
+        
+        while not (self.processIsCanceled):
+            
+            self.iCount = self.iCount +1
+            data = self.oUrlHandler.read(chunk)
+            if not data: break
+            self.f.write(data)
+            self.__stateCallBackFunction(self.iCount, chunk, iTotalSize)
+            if self.Memorise.get("VstreamDownloaderWorking") == "0":
+                self.processIsCanceled = True
+            
+            
+        self.oUrlHandler.close()
+        self.f.close()
+        self.__oDialog.close()
+
+
+    def __stateCallBackFunction(self, iCount, iBlocksize, iTotalSize):
+
+        iPercent = int(float(iCount * iBlocksize * 100) / iTotalSize)
+        self.__oDialog.update(iPercent, self.__sTitle, self.__formatFileSize(float(iCount * iBlocksize))+'/'+self.__formatFileSize(iTotalSize))
+        
+        if (self.__oDialog.isFinished()) and not (self.__processIsCanceled):
+            self.__processIsCanceled = True
+            self.__oDialog.close()
+
+    def download(self, sTitle , oUrlHandler, fpath):
+        if not self.Memorise.lock("VstreamDownloaderLock"):
+            cConfig().showInfo('Telechargements deja demarrés', sTitle)
+            return
+        
+        #self.Memorise.set("VstreamDownloaderInstance", repr(self))
+
+        self.__sTitle = sTitle
+        self.__instance = repr(self)
+
+        self.f = xbmcvfs.File(fpath, 'w')
+        self.oUrlHandler = oUrlHandler
+        
+        self._run_async(self._StartDownload,'','')
+        
+    def __formatFileSize(self, iBytes):
+        iBytes = int(iBytes)
+        if (iBytes == 0):
+            return '%.*f %s' % (2, 0, 'MB')
+        
+        return '%.*f %s' % (2, iBytes/(1024*1024.0) , 'MB')
+        
+    def StopAll(self):
+        
+        self.Memorise.unlock("VstreamDownloaderLock")       
+        self.Memorise.set("VstreamDownloaderWorking", "0")
+                
+        return
+        
+    def _run_async(self, func, *args, **kwargs):
+        from threading import Thread
+        worker = Thread(target=func, args=args, kwargs=kwargs)
+        self.__workersByName[worker.getName()] = worker
+        worker.start()
+        return worker
+        
+        
+class cDownload:  
+    def __init__(self):
+        pass
 
     def __createDownloadFilename(self, sTitle):
         sTitle = re.sub(' +',' ',sTitle) #Vire double espace
@@ -21,59 +144,39 @@ class cDownload:
         filename = filename.replace(' .','.')
         #filename = filename.replace(' ','_') #pas besoin de ca, enfin pr moi en tout cas
         return filename
+   
+    def download(self, sUrl, sTitle,sDownloadPath):
 
-    def download(self, sUrl, sTitle):
-        self.__processIsCanceled = False
-        sTitle = self.__createTitle(sUrl, sTitle)
-        self.__sTitle = self.__createDownloadFilename(sTitle)
+        __processIsCanceled = False
+        self.__sTitle = sTitle
         
-        oGui = cConfig()
-        self.__sTitle = oGui.showKeyBoard(self.__sTitle)
-        if (self.__sTitle != False and len(self.__sTitle) > 0):
+        #oGui = cConfig()
+        
+        #resolve url
+        #oHoster = cHosterGui().checkHoster(sUrl)
+        #oHoster.setUrl(sUrl)
+        #aLink = oHoster.getMediaLink()
+        aLink = (True,'http://vs23.exashare.com:8777/u6x2mwbi5mm56odwt3zojwfqxct6xc2rrsu3ifq55wynvxy6jrrwbsnzks3a/v.mp4')
 
-            #chemin de sauvegarde
-            sPath2 = cConfig().getSetting('Download_Folder')
+        if (aLink[0] == True):
+            sUrl = aLink[1]
+        else:
+            cConfig().showInfo('Lien non resolvable', sTitle)
+            return
+        
+        try:
+            cConfig().log("Telechargement " + str(sUrl))
+            test = cDownloadProgressBar()
+            test.download(self.__sTitle,urllib2.urlopen(sUrl), sDownloadPath)
+            cConfig().log("Telechargement ok")
 
-            dialog = xbmcgui.Dialog()
-            sPath = dialog.browse(3, 'Downloadfolder', 'files', '', False, False , sPath2)
+        except:
+            #print_exc()
+            cConfig().showInfo('Telechargement impossible', sTitle)
+            cConfig().log("Telechargement impossible")
+            pass
             
-            if (sPath != ''):
-                cConfig().setSetting('Download_Folder',sPath)
-                
-                sDownloadPath = xbmc.translatePath(sPath +  '%s' % (self.__sTitle, ))
-
-                try:
-                    cConfig().log("Telechargement " + str(sUrl))
-                    self.__createProcessDialog()
-                    self.__download(urllib2.urlopen(sUrl), sDownloadPath)   
-                except:
-                    #print_exc()
-                    cConfig().showInfo('Telechargement impossible', self.__sTitle)
-                    cConfig().log("Telechargement impossible")
-                    pass
-                    
-                self.__oDialog.close()
-
-    def __download(self, oUrlHandler, fpath):
-        headers = oUrlHandler.info()
-        
-        iTotalSize = -1
-        if "content-length" in headers:
-            iTotalSize = int(headers["Content-Length"])
-
-        chunk = 16 * 1024
-        #f = open(fpath, "w")
-        f = xbmcvfs.File(fpath, 'w')
-
-        iCount = 0        
-        while 1:
-            iCount = iCount +1
-            data = oUrlHandler.read(chunk)
-            if not data: break
-            f.write(data)
-            self.__stateCallBackFunction(iCount, chunk, iTotalSize)
-        oUrlHandler.close()
-        f.close()
+        #self.__oDialog.close()
             
 
     def __createTitle(self, sUrl, sTitle):
@@ -100,19 +203,177 @@ class cDownload:
         #    sTitle = sTitle + '.' + sSuffix
             
         return sTitle
-
-    def __stateCallBackFunction(self, iCount, iBlocksize, iTotalSize):
-        iPercent = int(float(iCount * iBlocksize * 100) / iTotalSize)
-        self.__oDialog.update(iPercent, self.__sTitle, self.__formatFileSize(float(iCount * iBlocksize))+'/'+self.__formatFileSize(iTotalSize))
-
-        if (self.__oDialog.isFinished()):
-            self.__processIsCanceled = True
-            self.__oDialog.close()
             
     
-    def __formatFileSize(self, iBytes):
-        iBytes = int(iBytes)
-        if (iBytes == 0):
-            return '%.*f %s' % (2, 0, 'MB')
+
+
         
-        return '%.*f %s' % (2, iBytes/(1024*1024.0) , 'MB')
+    def getDownload(self):
+        oGui = cGui()
+    
+        oOutputParameterHandler = cOutputParameterHandler()
+        oGui.addDir(SITE_IDENTIFIER, 'dummy', 'Demarrer', 'mark.png', oOutputParameterHandler)
+        
+        oOutputParameterHandler = cOutputParameterHandler()
+        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Arreter', 'mark.png', oOutputParameterHandler)
+
+        oOutputParameterHandler = cOutputParameterHandler()
+        oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Telechargement', 'mark.png', oOutputParameterHandler)
+   
+        oGui.setEndOfDirectory()
+    
+    def dummy(self):
+        pass
+    
+    def StartDownloadList(self):
+        row = cDb().get_Download()
+        
+        for data in row:
+
+            title = data[1]
+            url = urllib.unquote_plus(data[2])
+            path = data[3]
+            thumbnail = data[4]
+            
+            print 'telechargement de : ' + title
+            break
+                
+        self.download(url,title,path)
+
+    def StopDownloadList(self):
+
+        test = cDownloadProgressBar()    
+        test.StopAll()
+
+        return
+
+    def getDownloadList(self):
+        oGui = cGui()
+
+        oInputParameterHandler = cInputParameterHandler()
+
+        #try:
+        if (1 == 1):
+            row = cDb().get_Download()
+            print row
+            
+            for data in row:
+
+                title = data[1]
+                url = urllib.unquote_plus(data[2])
+                function = data[3]
+                thumbnail = data[4]
+
+                oOutputParameterHandler = cOutputParameterHandler()
+                oOutputParameterHandler.addParameter('sUrl', url)
+                oOutputParameterHandler.addParameter('sMovieTitle', title)
+                oOutputParameterHandler.addParameter('sThumbnail', 'False')
+                
+                # if (function == 'play'):
+                    # oHoster = cHosterGui().checkHoster(siteurl)
+                    # oOutputParameterHandler.addParameter('sHosterIdentifier', oHoster.getPluginIdentifier())
+                    # oOutputParameterHandler.addParameter('sFileName', oHoster.getFileName())
+                    # oOutputParameterHandler.addParameter('sMediaUrl', siteurl)
+                    
+                oGuiElement = cGuiElement()
+    
+                #oGuiElement.setSiteName(site)
+                oGuiElement.setFunction(function)
+                oGuiElement.setTitle(title)
+                oGuiElement.setIcon("mark.png")
+                oGuiElement.setMeta(0)
+                oGuiElement.setThumbnail(thumbnail)
+                
+                oGui.createContexMenuDownload(oGuiElement, oOutputParameterHandler)
+                
+                oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
+                #oGui.addMovie(SITE_IDENTIFIER, 'showHosters', title, 'films.png', '', '', oOutputParameterHandler)
+
+            oGui.setEndOfDirectory()
+        #except: pass
+        
+        return
+        
+    def delDownload(self):
+        
+        oInputParameterHandler = cInputParameterHandler()
+        url = oInputParameterHandler.getValue('sUrl')
+
+        meta = {}      
+        meta['title'] = xbmc.getInfoLabel('ListItem.title')
+        meta['url'] = url
+        
+        try:
+            cDb().del_download(meta)
+        except:
+            pass
+
+        return
+        
+    def AddDownload(self,meta):
+        
+        self.__processIsCanceled = False
+        
+        sTitle = meta['title']
+        sUrl = meta['url']
+        
+        sTitle = self.__createTitle(sUrl, sTitle)
+        sTitle = self.__createDownloadFilename(sTitle)
+        
+        oGui = cConfig()
+        sTitle = oGui.showKeyBoard(sTitle)
+        if (sTitle != False and len(sTitle) > 0):
+
+            #chemin de sauvegarde
+            sPath2 = cConfig().getSetting('Download_Folder')
+
+            dialog = xbmcgui.Dialog()
+            sPath = dialog.browse(3, 'Downloadfolder', 'files', '', False, False , sPath2)
+            
+            if (sPath != ''):
+                cConfig().setSetting('Download_Folder',sPath)
+                
+                sDownloadPath = xbmc.translatePath(sPath +  '%s' % (sTitle, ))
+
+                try:
+                    cConfig().log("Rajout en liste de telechargement " + str(sUrl))
+                    meta['title'] = sTitle
+                    meta['path'] = sDownloadPath
+                    cDb().insert_download(meta)
+                    
+                except:
+                    #print_exc()
+                    cConfig().showInfo('Telechargement impossible', sTitle)
+                    cConfig().log("Telechargement impossible")
+                    pass
+  
+  
+    def AddtoDownloadList(self):
+
+        oInputParameterHandler = cInputParameterHandler()
+        
+        sHosterIdentifier = oInputParameterHandler.getValue('sHosterIdentifier')
+        sMediaUrl = oInputParameterHandler.getValue('sMediaUrl')
+        #bGetRedirectUrl = oInputParameterHandler.getValue('bGetRedirectUrl')
+        sFileName = oInputParameterHandler.getValue('sFileName')
+
+        #if (bGetRedirectUrl == 'True'):
+        #    sMediaUrl = self.__getRedirectUrl(sMediaUrl)
+
+        cConfig().log("Telechargement " + sMediaUrl)
+
+        #oHoster = cHosterHandler().getHoster(sHosterIdentifier)
+        #oHoster.setFileName(sFileName)
+
+        #oHoster.setUrl(sMediaUrl)
+        #aLink = oHoster.getMediaLink()
+
+        meta = {}
+        meta['url'] = sMediaUrl
+        meta['cat'] = oInputParameterHandler.getValue('sCat')
+        meta['title'] = sFileName
+        meta['icon'] = xbmc.getInfoLabel('ListItem.Art(thumb)')
+    
+        self.AddDownload(meta)
+            
+        return   
