@@ -64,7 +64,11 @@ class cDb:
 
         sql_create = "CREATE TABLE IF NOT EXISTS favorite ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""siteurl TEXT, ""site TEXT, ""fav TEXT, ""cat TEXT, ""icon TEXT, ""fanart TEXT, ""UNIQUE(title, site)"");"
         
-        self.dbcur.execute(sql_create)         
+        self.dbcur.execute(sql_create)
+
+        sql_create = "CREATE TABLE IF NOT EXISTS download ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""url TEXT, ""path TEXT, ""cat TEXT, ""icon TEXT, ""UNIQUE(title, url)"");"
+        
+        self.dbcur.execute(sql_create)       
 
         
         cConfig().log('Table initialized') 
