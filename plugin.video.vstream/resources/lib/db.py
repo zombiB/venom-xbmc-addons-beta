@@ -385,3 +385,54 @@ class cDb:
         file(fav_db, "w").write("%r" % watched)
         cConfig().showInfo('Marque-Page', sTitle)
         #fav_db.close()
+
+    def insert_download(self, meta):
+
+        title = self.str_conv(meta['title'])
+        url = urllib.quote_plus(meta['url'])        
+        sIcon = self.str_conv(meta['icon'])
+        sPath = self.str_conv(meta['path'])
+
+        ex = "INSERT INTO download (title, url, path, cat, icon) VALUES (?, ?, ?, ?, ?)"
+        self.dbcur.execute(ex, (title,url, sPath,meta['cat'],sIcon))
+
+        try:
+            self.db.commit() 
+            cConfig().log('SQL INSERT download Successfully') 
+            cConfig().showInfo(meta['title'], 'Enregistré avec succés')
+        except Exception, e:
+            #print ('************* Error attempting to insert into %s cache table: %s ' % (table, e))
+            cConfig().log('SQL ERROR INSERT') 
+            pass
+        self.db.close()
+        
+    def get_Download(self):
+    
+        sql_select = "SELECT * FROM download"
+
+        try:    
+            self.dbcur.execute(sql_select)
+            matchedrow = self.dbcur.fetchall()
+            return matchedrow        
+        except Exception, e:
+            cConfig().log('SQL ERROR EXECUTE') 
+            return None
+        self.dbcur.close()
+        
+        
+    def del_download(self, meta):
+
+        url = urllib.quote_plus(meta['url'])
+
+        sql_select = "DELETE FROM download WHERE url = '%s'" % (url)
+
+        try:    
+            self.dbcur.execute(sql_select)
+            self.db.commit()
+            cConfig().showInfo('vStream', 'Telecargement supprimer')
+            cConfig().update()
+            return False, False
+        except Exception, e:
+            cConfig().log('SQL ERROR EXECUTE') 
+            return False, False
+        self.dbcur.close() 
