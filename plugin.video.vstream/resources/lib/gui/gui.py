@@ -311,6 +311,23 @@ class cGui():
 
         oGuiElement.addContextItem(oContext)
         
+    def createContexMenuDownload(self, oGuiElement, oOutputParameterHandler= ''):
+
+        oContext = cContextElement()
+        oContext.setFile('cDownload')
+        oContext.setSiteName('cDownload')
+        oContext.setFunction('StartDownloadList')
+        oContext.setTitle('Demarrer les telechargements')
+        oContext.setOutputParameterHandler(oOutputParameterHandler)
+        oGuiElement.addContextItem(oContext)
+        
+        oContext = cContextElement()
+        oContext.setFile('cDownload')
+        oContext.setSiteName('cDownload')
+        oContext.setFunction('delDownload')
+        oContext.setTitle('Supprimer telechargement')
+        oContext.setOutputParameterHandler(oOutputParameterHandler)
+        oGuiElement.addContextItem(oContext)
         
     def createContexMenuinfo(self, oGuiElement, oOutputParameterHandler= ''):
         oContext = cContextElement()
