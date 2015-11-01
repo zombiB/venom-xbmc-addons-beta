@@ -153,10 +153,9 @@ class cDownload:
         #oGui = cConfig()
         
         #resolve url
-        #oHoster = cHosterGui().checkHoster(sUrl)
-        #oHoster.setUrl(sUrl)
-        #aLink = oHoster.getMediaLink()
-        aLink = (True,'http://vs23.exashare.com:8777/u6x2mwbi5mm56odwt3zojwfqxct6xc2rrsu3ifq55wynvxy6jrrwbsnzks3a/v.mp4')
+        oHoster = cHosterGui().checkHoster(sUrl)
+        oHoster.setUrl(sUrl)
+        aLink = oHoster.getMediaLink()
 
         if (aLink[0] == True):
             sUrl = aLink[1]
