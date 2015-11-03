@@ -21,6 +21,7 @@ SITE_IDENTIFIER = 'cDownload'
 
 #http://kodi.wiki/view/Add-on:Common_plugin_cache
 #https://pymotw.com/2/threading/
+#https://code.google.com/p/navi-x/source/browse/trunk/Navi-X/src/CDownLoader.py?r=155
 
 class cDownloadProgressBar():
     def __init__(self):
@@ -30,6 +31,7 @@ class cDownloadProgressBar():
         self.f = None
         
         self.__sTitle = ''
+        self.__sUrl = ''
         
         self.__workersByName = {}
         
@@ -45,9 +47,8 @@ class cDownloadProgressBar():
         
         
     def createProcessDialog(self):
-        oDialog = xbmcgui.DialogProgressBG()
-        oDialog.create('Download')            
-        self.__oDialog = oDialog
+        self.__oDialog = xbmcgui.DialogProgressBG()
+        self.__oDialog.create('Download')            
         #xbmc.sleep(1000)
         return self.__oDialog
         
@@ -71,23 +72,36 @@ class cDownloadProgressBar():
         
         chunk = 16 * 1024
         
+        TotDown = 0
+        
         while not (self.processIsCanceled):
             
-            self.iCount = self.iCount +1
+            self.iCount = self.iCount + 1
             data = self.oUrlHandler.read(chunk)
             if not data: break
             self.f.write(data)
+            TotDown = TotDown + data.__len__()
             self.__stateCallBackFunction(self.iCount, chunk, iTotalSize)
             if self.Memorise.get("VstreamDownloaderWorking") == "0":
                 self.processIsCanceled = True
-            
-            
+        
         self.oUrlHandler.close()
         self.f.close()
         self.__oDialog.close()
+        
+        self.StopAll()
+        
+        #if download finish
+        if TotDown == iTotalSize:
+            print 'Fin de telechargement'
+            test = cDownload()
+            test.delDownload(self.__sUrl)
 
 
     def __stateCallBackFunction(self, iCount, iBlocksize, iTotalSize):
+        
+        if self.__oDialog.isFinished():
+            self.createProcessDialog()
 
         iPercent = int(float(iCount * iBlocksize * 100) / iTotalSize)
         self.__oDialog.update(iPercent, self.__sTitle, self.__formatFileSize(float(iCount * iBlocksize))+'/'+self.__formatFileSize(iTotalSize))
@@ -96,18 +110,19 @@ class cDownloadProgressBar():
             self.__processIsCanceled = True
             self.__oDialog.close()
 
-    def download(self, sTitle , oUrlHandler, fpath):
+    def download(self, sTitle , sUrl, fpath):
         if not self.Memorise.lock("VstreamDownloaderLock"):
             cConfig().showInfo('Telechargements deja demarrés', sTitle)
             return
         
         #self.Memorise.set("VstreamDownloaderInstance", repr(self))
+        self.oUrlHandler = urllib2.urlopen(sUrl)
 
         self.__sTitle = sTitle
+        self.__sUrl = sUrl
         self.__instance = repr(self)
-
+        
         self.f = xbmcvfs.File(fpath, 'w')
-        self.oUrlHandler = oUrlHandler
         
         self._run_async(self._StartDownload,'','')
         
@@ -156,6 +171,8 @@ class cDownload:
         oHoster = cHosterGui().checkHoster(sUrl)
         oHoster.setUrl(sUrl)
         aLink = oHoster.getMediaLink()
+        
+        #aLink = (True,'https://github.com/LordVenom/venom-xbmc-addons-beta/blob/master/plugin.video.vstream/Thumbs.db?raw=true')
 
         if (aLink[0] == True):
             sUrl = aLink[1]
@@ -166,7 +183,7 @@ class cDownload:
         try:
             cConfig().log("Telechargement " + str(sUrl))
             test = cDownloadProgressBar()
-            test.download(self.__sTitle,urllib2.urlopen(sUrl), sDownloadPath)
+            test.download(self.__sTitle,sUrl, sDownloadPath)
             cConfig().log("Telechargement ok")
 
         except:
@@ -293,13 +310,13 @@ class cDownload:
         
         return
         
-    def delDownload(self):
+    def delDownload(self,url =''):
         
-        oInputParameterHandler = cInputParameterHandler()
-        url = oInputParameterHandler.getValue('sUrl')
+        if not url:
+            oInputParameterHandler = cInputParameterHandler()
+            url = oInputParameterHandler.getValue('sUrl')
 
         meta = {}      
-        meta['title'] = xbmc.getInfoLabel('ListItem.title')
         meta['url'] = url
         
         try:
