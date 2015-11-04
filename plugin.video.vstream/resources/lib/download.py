@@ -81,6 +81,9 @@ class cDownloadProgressBar():
             if not data: break
             self.f.write(data)
             TotDown = TotDown + data.__len__()
+            #percent 3 chiffre
+            #percent = '{0:.3f}'.format(min(100 * float(TotDown) / float(iTotalSize), 100))
+            
             self.__stateCallBackFunction(self.iCount, chunk, iTotalSize)
             if self.Memorise.get("VstreamDownloaderWorking") == "0":
                 self.processIsCanceled = True
