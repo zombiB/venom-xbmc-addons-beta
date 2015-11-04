@@ -222,15 +222,6 @@ class cDownload:
             cConfig().showInfo('Lien non resolvable', sTitle)
             return
         
-        
-        cConfig().log("Telechargement " + str(sUrl))
-        test = cDownloadProgressBar()
-        test.download(self.__sTitle,sUrl, sDownloadPath,sDBUrl)
-        cConfig().log("Telechargement ok")
-        
-        
-        
-        
         try:
             cConfig().log("Telechargement " + str(sUrl))
             test = cDownloadProgressBar()
