@@ -32,6 +32,7 @@ class cDownloadProgressBar():
         
         self.__sTitle = ''
         self.__sUrl = ''
+        self.__fPath = ''
         
         self.__workersByName = {}
         
@@ -81,8 +82,7 @@ class cDownloadProgressBar():
             if not data: break
             self.f.write(data)
             TotDown = TotDown + data.__len__()
-            #percent 3 chiffre
-            #percent = '{0:.3f}'.format(min(100 * float(TotDown) / float(iTotalSize), 100))
+            self.__updatedb(TotDown,iTotalSize) 
             
             self.__stateCallBackFunction(self.iCount, chunk, iTotalSize)
             if self.Memorise.get("VstreamDownloaderWorking") == "0":
@@ -101,6 +101,22 @@ class cDownloadProgressBar():
             test.delDownload(self.__sUrl)
 
 
+    def __updatedb(self, TotDown, iTotalSize):
+        #percent 3 chiffre
+        percent = '{0:.2f}'.format(min(100 * float(TotDown) / float(iTotalSize), 100))
+        if percent in ['2.00','10.00','20.00','30.00','40.00','50.00','60.00','70.00','80.00','90.00']:
+            meta = {}      
+            meta['path'] = self.__fPath
+            meta['size'] = TotDown
+            meta['totalsize'] = iTotalSize
+            meta['status'] = 1
+            
+            try:
+                cDb().update_download(meta)
+            except:
+                pass
+        
+        
     def __stateCallBackFunction(self, iCount, iBlocksize, iTotalSize):
         
         if self.__oDialog.isFinished():
@@ -123,6 +139,7 @@ class cDownloadProgressBar():
 
         self.__sTitle = sTitle
         self.__sUrl = sUrl
+        self.__fPath = fpath
         self.__instance = repr(self)
         
         self.f = xbmcvfs.File(fpath, 'w')
@@ -162,6 +179,13 @@ class cDownload:
         filename = filename.replace(' .','.')
         #filename = filename.replace(' ','_') #pas besoin de ca, enfin pr moi en tout cas
         return filename
+        
+    def __formatFileSize(self, iBytes):
+        iBytes = int(iBytes)
+        if (iBytes == 0):
+            return '%.*f %s' % (2, 0, 'MB')
+        
+        return '%.*f %s' % (2, iBytes/(1024*1024.0) , 'MB')
    
     def download(self, sUrl, sTitle,sDownloadPath):
 
@@ -281,7 +305,11 @@ class cDownload:
                 title = data[1]
                 url = urllib.unquote_plus(data[2])
                 function = data[3]
-                thumbnail = data[4]
+                cat = data[4]
+                thumbnail = data[5]
+                size = data[6]
+                totalsize = data[7]
+                status = data[8]
 
                 oOutputParameterHandler = cOutputParameterHandler()
                 oOutputParameterHandler.addParameter('sUrl', url)
@@ -293,12 +321,22 @@ class cDownload:
                     # oOutputParameterHandler.addParameter('sHosterIdentifier', oHoster.getPluginIdentifier())
                     # oOutputParameterHandler.addParameter('sFileName', oHoster.getFileName())
                     # oOutputParameterHandler.addParameter('sMediaUrl', siteurl)
-                    
+
+
+                if status == '0':
+                    status = '[COLOR=red]stop[/COLOR]'
+                elif status == '1':
+                    status='[COLOR=green]encours[/COLOR]'
+                                   
+                if size:
+                    sTitle = title+' - '+status+' - [COLOR=green]'+self.__formatFileSize(size)+'/'+self.__formatFileSize(totalsize)+'[/COLOR]'
+                else:
+                    sTitle= title+' - '+status
                 oGuiElement = cGuiElement()
-    
+
                 #oGuiElement.setSiteName(site)
                 oGuiElement.setFunction(function)
-                oGuiElement.setTitle(title)
+                oGuiElement.setTitle(sTitle)
                 oGuiElement.setIcon("mark.png")
                 oGuiElement.setMeta(0)
                 oGuiElement.setThumbnail(thumbnail)
