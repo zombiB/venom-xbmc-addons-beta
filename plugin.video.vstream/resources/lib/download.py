@@ -23,15 +23,18 @@ SITE_IDENTIFIER = 'cDownload'
 #https://pymotw.com/2/threading/
 #https://code.google.com/p/navi-x/source/browse/trunk/Navi-X/src/CDownLoader.py?r=155
 
-class cDownloadProgressBar():
-    def __init__(self):
+class cDownloadProgressBar(threading.Thread):
+    def __init__(self, *args, **kwargs):
+        
+        threading.Thread.__init__(self)
+        
         self.processIsCanceled = False
         self.iCount = 0
         self.oUrlHandler = None
         self.f = None
         
         self.__sTitle = ''
-        self.__sUrl = ''
+        self.__sDBUrl = ''
         self.__fPath = ''
         
         self.__workersByName = {}
@@ -55,6 +58,9 @@ class cDownloadProgressBar():
         
         
     def _StartDownload(self,dummy1 ='',dummy2 = ''):
+
+        print 'Thread'
+        print threading.current_thread().getName()
         
         diag = self.createProcessDialog()
         #diag.isFinished()
@@ -87,6 +93,9 @@ class cDownloadProgressBar():
             self.__stateCallBackFunction(self.iCount, chunk, iTotalSize)
             if self.Memorise.get("VstreamDownloaderWorking") == "0":
                 self.processIsCanceled = True
+                
+            #petite pause, ca ralentit le download mais evite de bouffer 100/100 ressources
+            xbmc.sleep(200)
         
         self.oUrlHandler.close()
         self.f.close()
@@ -98,7 +107,7 @@ class cDownloadProgressBar():
         if TotDown == iTotalSize:
             print 'Fin de telechargement'
             test = cDownload()
-            test.delDownload(self.__sUrl)
+            test.delDownload(self.__sDBUrl)
 
 
     def __updatedb(self, TotDown, iTotalSize):
@@ -129,7 +138,7 @@ class cDownloadProgressBar():
             self.__processIsCanceled = True
             self.__oDialog.close()
 
-    def download(self, sTitle , sUrl, fpath):
+    def download(self, sTitle , sUrl, fpath, DBurl):
         if not self.Memorise.lock("VstreamDownloaderLock"):
             cConfig().showInfo('Telechargements deja demarrés', sTitle)
             return
@@ -138,7 +147,7 @@ class cDownloadProgressBar():
         self.oUrlHandler = urllib2.urlopen(sUrl)
 
         self.__sTitle = sTitle
-        self.__sUrl = sUrl
+        self.__sDBUrl = DBurl
         self.__fPath = fpath
         self.__instance = repr(self)
         
@@ -162,7 +171,7 @@ class cDownloadProgressBar():
         
     def _run_async(self, func, *args, **kwargs):
         from threading import Thread
-        worker = Thread(target=func, args=args, kwargs=kwargs)
+        worker = Thread(name='VstreamDownloader' , target=func, args=args, kwargs=kwargs)
         self.__workersByName[worker.getName()] = worker
         worker.start()
         return worker
@@ -186,8 +195,14 @@ class cDownload:
             return '%.*f %s' % (2, 0, 'MB')
         
         return '%.*f %s' % (2, iBytes/(1024*1024.0) , 'MB')
+        
+    def CheckDownloadActive(self):
+        for t in threading.enumerate():
+            print t
+            print t.getName()
+        return False
    
-    def download(self, sUrl, sTitle,sDownloadPath):
+    def download(self, sDBUrl, sTitle,sDownloadPath):
 
         __processIsCanceled = False
         self.__sTitle = sTitle
@@ -195,8 +210,8 @@ class cDownload:
         #oGui = cConfig()
         
         #resolve url
-        oHoster = cHosterGui().checkHoster(sUrl)
-        oHoster.setUrl(sUrl)
+        oHoster = cHosterGui().checkHoster(sDBUrl)
+        oHoster.setUrl(sDBUrl)
         aLink = oHoster.getMediaLink()
         
         #aLink = (True,'https://github.com/LordVenom/venom-xbmc-addons-beta/blob/master/plugin.video.vstream/Thumbs.db?raw=true')
@@ -207,10 +222,19 @@ class cDownload:
             cConfig().showInfo('Lien non resolvable', sTitle)
             return
         
+        
+        cConfig().log("Telechargement " + str(sUrl))
+        test = cDownloadProgressBar()
+        test.download(self.__sTitle,sUrl, sDownloadPath,sDBUrl)
+        cConfig().log("Telechargement ok")
+        
+        
+        
+        
         try:
             cConfig().log("Telechargement " + str(sUrl))
             test = cDownloadProgressBar()
-            test.download(self.__sTitle,sUrl, sDownloadPath)
+            test.download(self.__sTitle,sUrl, sDownloadPath,sDBUrl)
             cConfig().log("Telechargement ok")
 
         except:
@@ -266,10 +290,20 @@ class cDownload:
         oGui.setEndOfDirectory()
     
     def dummy(self):
+        self.CheckDownloadActive()
         pass
     
-    def StartDownloadList(self):
-        row = cDb().get_Download()
+    def StartDownloadList(self,all = False):
+        if not all:
+            oInputParameterHandler = cInputParameterHandler()
+            url = oInputParameterHandler.getValue('sUrl')
+
+            meta = {}      
+            meta['url'] = url
+        
+            row = cDb().get_Download(meta)
+        else:
+            row = cDb().get_Download()
         
         for data in row:
 
