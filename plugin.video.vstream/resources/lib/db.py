@@ -51,26 +51,23 @@ class cDb:
         
         ''' Create table '''
         sql_create = "CREATE TABLE IF NOT EXISTS history ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""disp TEXT, ""icone TEXT, ""isfolder TEXT, ""level TEXT, ""lastwatched TIMESTAMP "");"
-        
         self.dbcur.execute(sql_create)
         
         sql_create = "CREATE TABLE IF NOT EXISTS resume ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""hoster TEXT, ""point TEXT, ""UNIQUE(title, hoster)"");"
-        
         self.dbcur.execute(sql_create)
 
         sql_create = "CREATE TABLE IF NOT EXISTS watched ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""site TEXT, ""UNIQUE(title, site)"");"
-        
         self.dbcur.execute(sql_create)
 
         sql_create = "CREATE TABLE IF NOT EXISTS favorite ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""siteurl TEXT, ""site TEXT, ""fav TEXT, ""cat TEXT, ""icon TEXT, ""fanart TEXT, ""UNIQUE(title, site)"");"
-        
-        self.dbcur.execute(sql_create)
+        self.dbcur.execute(sql_create)         
 
+        #sql_create = "DROP TABLE download"
+        #self.dbcur.execute(sql_create)
+        
         sql_create = "CREATE TABLE IF NOT EXISTS download ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""url TEXT, ""path TEXT, ""cat TEXT, ""icon TEXT, ""size TEXT,""totalsize TEXT, ""status TEXT, ""UNIQUE(title, url)"");"
-        
-        self.dbcur.execute(sql_create)       
+        self.dbcur.execute(sql_create) 
 
-        
         cConfig().log('Table initialized') 
     
     def str_conv(self, data):
@@ -410,10 +407,14 @@ class cDb:
             pass
         self.db.close()
         
-    def get_Download(self):
+    def get_Download(self, meta = ''):
     
-        sql_select = "SELECT * FROM download"
-
+        if meta == '':
+            sql_select = "SELECT * FROM download"
+        else:
+            url = urllib.quote_plus(meta['url'])
+            sql_select = "SELECT * FROM download WHERE url = '%s'" % (url)
+            
         try:    
             self.dbcur.execute(sql_select)
             matchedrow = self.dbcur.fetchall()
@@ -441,7 +442,6 @@ class cDb:
             return False, False
         self.dbcur.close()
         
-        
     def update_download(self, meta):
 
         path = meta['path']
@@ -459,4 +459,4 @@ class cDb:
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE') 
             return False, False
-        self.dbcur.close()        
+        self.dbcur.close()    
