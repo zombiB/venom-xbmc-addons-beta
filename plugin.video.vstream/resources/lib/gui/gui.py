@@ -316,8 +316,8 @@ class cGui():
         oContext = cContextElement()
         oContext.setFile('cDownload')
         oContext.setSiteName('cDownload')
-        oContext.setFunction('StartDownloadList')
-        oContext.setTitle('Demarrer les telechargements')
+        oContext.setFunction('StartDownloadOneFile')
+        oContext.setTitle('Demarrer ce telechargement')
         oContext.setOutputParameterHandler(oOutputParameterHandler)
         oGuiElement.addContextItem(oContext)
         
@@ -325,7 +325,7 @@ class cGui():
         oContext.setFile('cDownload')
         oContext.setSiteName('cDownload')
         oContext.setFunction('delDownload')
-        oContext.setTitle('Supprimer telechargement')
+        oContext.setTitle('Supprimer ce telechargement')
         oContext.setOutputParameterHandler(oOutputParameterHandler)
         oGuiElement.addContextItem(oContext)
         
