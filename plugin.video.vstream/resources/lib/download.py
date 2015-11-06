@@ -5,12 +5,13 @@ from resources.lib.config import cConfig
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.hosterHandler import cHosterHandler
+from resources.lib.handler.pluginHandler import cPluginHandler
 from resources.lib.gui.gui import cGui
 from resources.lib.gui.guiElement import cGuiElement
 from resources.lib.db import cDb
 #from traceback import print_exc
 import urllib2,urllib
-import xbmc
+import xbmcplugin, xbmc
 import xbmcgui
 import xbmcvfs
 import string
@@ -67,6 +68,7 @@ class cDownloadProgressBar(threading.Thread):
         
         #self.Memorise.set("VstreamDownloaderClass", self)
         #self.Memorise.set("VstreamDownloaderClass", repr(self))
+        
         self.Memorise.set("VstreamDownloaderWorking", "1")
         
         self.iCount = 0
@@ -267,10 +269,27 @@ class cDownload:
 
         
     def getDownload(self):
+        
         oGui = cGui()
+        #test
+        sPluginHandle = cPluginHandler().getPluginHandle();
+        sPluginPath = cPluginHandler().getPluginPath();
+        sItemUrl = '%s?site=%s&function=%s&title=%s' % (sPluginPath, SITE_IDENTIFIER, 'StartDownloadList', 'tittle')
+        meta = {'title': 'demarer1'}
+        
+        item = xbmcgui.ListItem('demarer1')
+        item.setInfo(type="Video", infoLabels = meta)
+        item.setProperty("Video", "true")
+        #IMPORTANT
+        item.setProperty("IsPlayable", "false")
+        # ##
+        xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
+        #xbmcplugin.setContent(sPluginHandle, 'episodes')
+        #xbmcplugin.endOfDirectory(sPluginHandle, cacheToDisc=False)
+        
     
         oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'dummy', 'Demarrer', 'mark.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'StartDownloadList', 'Demarrer', 'mark.png', oOutputParameterHandler)
         
         oOutputParameterHandler = cOutputParameterHandler()
         oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Arreter', 'mark.png', oOutputParameterHandler)
@@ -284,8 +303,9 @@ class cDownload:
         self.CheckDownloadActive()
         pass
     
-    def StartDownloadList(self,all = False):
-        if not all:
+    def StartDownloadList(self, all=False):
+
+        if not all == False:
             oInputParameterHandler = cInputParameterHandler()
             url = oInputParameterHandler.getValue('sUrl')
 
