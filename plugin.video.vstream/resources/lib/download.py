@@ -275,7 +275,7 @@ class cDownload:
         sPluginHandle = cPluginHandler().getPluginHandle();
         sPluginPath = cPluginHandler().getPluginPath();
         sItemUrl = '%s?site=%s&function=%s&title=%s' % (sPluginPath, SITE_IDENTIFIER, 'StartDownloadList', 'tittle')
-        meta = {'title': 'demarer1'}
+        meta = {'title': 'Demarrer la liste complete'}
         
         item = xbmcgui.ListItem('demarer1')
         item.setInfo(type="Video", infoLabels = meta)
@@ -286,10 +286,6 @@ class cDownload:
         xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
         #xbmcplugin.setContent(sPluginHandle, 'episodes')
         #xbmcplugin.endOfDirectory(sPluginHandle, cacheToDisc=False)
-        
-    
-        oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'StartDownloadList', 'Demarrer', 'mark.png', oOutputParameterHandler)
         
         oOutputParameterHandler = cOutputParameterHandler()
         oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Arreter', 'mark.png', oOutputParameterHandler)
@@ -303,9 +299,12 @@ class cDownload:
         self.CheckDownloadActive()
         pass
     
-    def StartDownloadList(self, all=False):
+    def StartDownloadOneFile(self):
+        self.StartDownloadList(True)
+    
+    def StartDownloadList(self, one = False):
 
-        if not all == False:
+        if (one):
             oInputParameterHandler = cInputParameterHandler()
             url = oInputParameterHandler.getValue('sUrl')
 
