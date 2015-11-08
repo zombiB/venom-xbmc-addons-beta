@@ -44,6 +44,11 @@ def listthread():
 class cDownloadProgressBar(threading.Thread):
     def __init__(self, *args, **kwargs):
 
+        self.__sTitle = ''
+        self.__sDBUrl = ''
+        self.__fPath = ''
+        self.__sDBUrl = ''
+    
         if (kwargs):
             self.__sTitle = kwargs['title']
             self.__sUrl = kwargs['url']
@@ -56,10 +61,6 @@ class cDownloadProgressBar(threading.Thread):
         self.iCount = 0
         self.oUrlHandler = None
         self.f = None
-        
-        self.__sTitle = ''
-        self.__sDBUrl = ''
-        self.__fPath = ''
         
         self.__workersByName = {}
         
@@ -111,7 +112,7 @@ class cDownloadProgressBar(threading.Thread):
             self.iCount = self.iCount + 1
             data = self.oUrlHandler.read(chunk)
             if not data: break
-            self.f.write(data)
+            self.file.write(data)
             TotDown = TotDown + data.__len__()
             self.__updatedb(TotDown,iTotalSize) 
             
@@ -174,7 +175,7 @@ class cDownloadProgressBar(threading.Thread):
         
         self.__instance = repr(self)
         
-        self.f = xbmcvfs.File(self.__fPath, 'w')
+        self.file = xbmcvfs.File(self.__fPath, 'w')
         
         #self._run_async(self._StartDownload,'','')
         self._StartDownload()
@@ -231,7 +232,7 @@ class cDownload:
         oHoster = cHosterGui().checkHoster(sDBUrl)
         oHoster.setUrl(sDBUrl)
         aLink = oHoster.getMediaLink()
-        
+
         #aLink = (True,'https://github.com/LordVenom/venom-xbmc-addons-beta/blob/master/plugin.video.vstream/Thumbs.db?raw=true')
 
         if (aLink[0] == True):
