@@ -16,7 +16,8 @@ import xbmcgui
 import xbmcvfs
 import string
 import re
-import threading,os
+import threading,os,sys
+import weakref
 
 SITE_IDENTIFIER = 'cDownload'
 
@@ -24,8 +25,30 @@ SITE_IDENTIFIER = 'cDownload'
 #https://pymotw.com/2/threading/
 #https://code.google.com/p/navi-x/source/browse/trunk/Navi-X/src/CDownLoader.py?r=155
 
+def _run_async(self, func, *args, **kwargs):
+    from threading import Thread
+    worker = Thread(name='VstreamDownloader' , target=func, args=args, kwargs=kwargs)
+    #self.__workersByName[worker.getName()] = worker
+    worker.start()
+    return worker
+
+    
+def listthread():
+    print 'list'
+
+    for t in threading.enumerate():
+        print t
+        #print t.getName()
+    return
+
 class cDownloadProgressBar(threading.Thread):
     def __init__(self, *args, **kwargs):
+
+        if (kwargs):
+            self.__sTitle = kwargs['title']
+            self.__sUrl = kwargs['url']
+            self.__fPath = kwargs['Dpath']
+            self.__sDBUrl = kwargs['DBurl']
         
         threading.Thread.__init__(self)
         
@@ -58,7 +81,7 @@ class cDownloadProgressBar(threading.Thread):
         return self.__oDialog
         
         
-    def _StartDownload(self,dummy1 ='',dummy2 = ''):
+    def _StartDownload(self):
 
         print 'Thread'
         print threading.current_thread().getName()
@@ -83,7 +106,7 @@ class cDownloadProgressBar(threading.Thread):
         
         TotDown = 0
         
-        while not (self.processIsCanceled):
+        while not (self.processIsCanceled or diag.isFinished()):
             
             self.iCount = self.iCount + 1
             data = self.oUrlHandler.read(chunk)
@@ -140,22 +163,21 @@ class cDownloadProgressBar(threading.Thread):
             self.__processIsCanceled = True
             self.__oDialog.close()
 
-    def download(self, sTitle , sUrl, fpath, DBurl):
+    def run(self):
+        
         if not self.Memorise.lock("VstreamDownloaderLock"):
-            cConfig().showInfo('Telechargements deja demarrés', sTitle)
+            cConfig().showInfo('Telechargements deja demarrés', self.__sTitle)
             return
         
         #self.Memorise.set("VstreamDownloaderInstance", repr(self))
-        self.oUrlHandler = urllib2.urlopen(sUrl)
-
-        self.__sTitle = sTitle
-        self.__sDBUrl = DBurl
-        self.__fPath = fpath
+        self.oUrlHandler = urllib2.urlopen(self.__sUrl)
+        
         self.__instance = repr(self)
         
-        self.f = xbmcvfs.File(fpath, 'w')
+        self.f = xbmcvfs.File(self.__fPath, 'w')
         
-        self._run_async(self._StartDownload,'','')
+        #self._run_async(self._StartDownload,'','')
+        self._StartDownload()
         
     def __formatFileSize(self, iBytes):
         iBytes = int(iBytes)
@@ -166,22 +188,16 @@ class cDownloadProgressBar(threading.Thread):
         
     def StopAll(self):
         
+        self.processIsCanceled = True
         self.Memorise.unlock("VstreamDownloaderLock")       
         self.Memorise.set("VstreamDownloaderWorking", "0")
                 
         return
-        
-    def _run_async(self, func, *args, **kwargs):
-        from threading import Thread
-        worker = Thread(name='VstreamDownloader' , target=func, args=args, kwargs=kwargs)
-        self.__workersByName[worker.getName()] = worker
-        worker.start()
-        return worker
-        
+     
         
 class cDownload:  
     def __init__(self):
-        pass
+        self.PBTread = ''
 
     def __createDownloadFilename(self, sTitle):
         sTitle = re.sub(' +',' ',sTitle) #Vire double espace
@@ -223,11 +239,16 @@ class cDownload:
         else:
             cConfig().showInfo('Lien non resolvable', sTitle)
             return
+            
+            
         
         try:
             cConfig().log("Telechargement " + str(sUrl))
-            test = cDownloadProgressBar()
-            test.download(self.__sTitle,sUrl, sDownloadPath,sDBUrl)
+            
+            #background download task
+            self.PBTread = cDownloadProgressBar(title = self.__sTitle , url = sUrl , Dpath = sDownloadPath , DBurl = sDBUrl)
+            self.PBTread.start()
+
             cConfig().log("Telechargement ok")
 
         except:
@@ -292,12 +313,58 @@ class cDownload:
 
         oOutputParameterHandler = cOutputParameterHandler()
         oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Telechargement', 'mark.png', oOutputParameterHandler)
+        
+        sPluginHandle = cPluginHandler().getPluginHandle();
+        sPluginPath = cPluginHandler().getPluginPath();
+        sItemUrl = '%s?site=%s&function=%s&title=%s' % (sPluginPath, SITE_IDENTIFIER, 'dummy1', 'tittle')
+        meta = {'title': 'Debug1'}     
+        item = xbmcgui.ListItem('demarer1')
+        item.setInfo(type="Video", infoLabels = meta)
+        item.setProperty("Video", "true")
+        #IMPORTANT
+        item.setProperty("IsPlayable", "false")
+        # ##
+        xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
+        
+        oOutputParameterHandler = cOutputParameterHandler()
+        oGui.addDir(SITE_IDENTIFIER, 'dummy', 'Debug2', 'mark.png', oOutputParameterHandler)
+        
+        oOutputParameterHandler = cOutputParameterHandler()
+        oGui.addDir(SITE_IDENTIFIER, 'debug', 'Debug3 inf', 'mark.png', oOutputParameterHandler)      
    
         oGui.setEndOfDirectory()
     
+    def worker(self):
+        """thread worker function"""
+        t = threading.currentThread()
+        xbmc.sleep(5000)
+        print t
+        print 'fin'
+        return
+    
+    def debug(self):
+        
+        print 'debug'
+        listthread()
+        #print globals()
+        
+        pass      
+    
+    
+    def dummy1(self):
+
+        print 'start'
+
+        for i in range(3):
+            t = threading.Thread(target=self.worker)
+            t.start()
+        
+        listthread()
+        
+        pass   
+    
     def dummy(self):
-        self.CheckDownloadActive()
-        pass
+        listthread()
     
     def StartDownloadOneFile(self):
         self.StartDownloadList(True)
@@ -328,9 +395,9 @@ class cDownload:
         self.download(url,title,path)
 
     def StopDownloadList(self):
-
-        test = cDownloadProgressBar()    
-        test.StopAll()
+        self.dummy()
+        self.PBTread = cDownloadProgressBar()
+        self.PBTread.StopAll()
 
         return
 
