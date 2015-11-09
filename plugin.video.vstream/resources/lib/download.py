@@ -60,7 +60,7 @@ class cDownloadProgressBar(threading.Thread):
         self.processIsCanceled = False
         self.iCount = 0
         self.oUrlHandler = None
-        self.f = None
+        self.file = None
         
         self.__workersByName = {}
         
@@ -84,7 +84,7 @@ class cDownloadProgressBar(threading.Thread):
         
     def _StartDownload(self):
 
-        print 'Thread'
+        print 'Thread actuel'
         print threading.current_thread().getName()
         
         diag = self.createProcessDialog()
@@ -124,7 +124,7 @@ class cDownloadProgressBar(threading.Thread):
             xbmc.sleep(200)
         
         self.oUrlHandler.close()
-        self.f.close()
+        self.file.close()
         self.__oDialog.close()
         
         self.StopAll()
@@ -194,6 +194,12 @@ class cDownloadProgressBar(threading.Thread):
         self.Memorise.set("VstreamDownloaderWorking", "0")
                 
         return
+        
+    def StopAllBeta(self):
+        
+        self.processIsCanceled = True
+           
+        return    
      
         
 class cDownload:  
@@ -315,54 +321,11 @@ class cDownload:
         oOutputParameterHandler = cOutputParameterHandler()
         oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Telechargement', 'mark.png', oOutputParameterHandler)
         
-        sPluginHandle = cPluginHandler().getPluginHandle();
-        sPluginPath = cPluginHandler().getPluginPath();
-        sItemUrl = '%s?site=%s&function=%s&title=%s' % (sPluginPath, SITE_IDENTIFIER, 'dummy1', 'tittle')
-        meta = {'title': 'Debug1'}     
-        item = xbmcgui.ListItem('demarer1')
-        item.setInfo(type="Video", infoLabels = meta)
-        item.setProperty("Video", "true")
-        #IMPORTANT
-        item.setProperty("IsPlayable", "false")
-        # ##
-        xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
-        
         oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'dummy', 'Debug2', 'mark.png', oOutputParameterHandler)
-        
-        oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'debug', 'Debug3 inf', 'mark.png', oOutputParameterHandler)      
+        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadListBeta', 'Arreter Beta', 'mark.png', oOutputParameterHandler)   
    
-        oGui.setEndOfDirectory()
+        oGui.setEndOfDirectory()   
     
-    def worker(self):
-        """thread worker function"""
-        t = threading.currentThread()
-        xbmc.sleep(5000)
-        print t
-        print 'fin'
-        return
-    
-    def debug(self):
-        
-        print 'debug'
-        listthread()
-        #print globals()
-        
-        pass      
-    
-    
-    def dummy1(self):
-
-        print 'start'
-
-        for i in range(3):
-            t = threading.Thread(target=self.worker)
-            t.start()
-        
-        listthread()
-        
-        pass   
     
     def dummy(self):
         listthread()
@@ -396,9 +359,14 @@ class cDownload:
         self.download(url,title,path)
 
     def StopDownloadList(self):
-        self.dummy()
         self.PBTread = cDownloadProgressBar()
         self.PBTread.StopAll()
+
+        return
+        
+    def StopDownloadListBeta(self):
+        self.PBTread = cDownloadProgressBar()
+        self.PBTread.StopAllBeta()
 
         return
 
