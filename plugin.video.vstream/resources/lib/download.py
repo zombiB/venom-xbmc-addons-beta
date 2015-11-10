@@ -86,6 +86,7 @@ class cDownloadProgressBar(threading.Thread):
 
         print 'Thread actuel'
         print threading.current_thread().getName()
+        cConfig().setSetting('vstream_cancel', 'False')
         
         diag = self.createProcessDialog()
         #diag.isFinished()
@@ -106,8 +107,7 @@ class cDownloadProgressBar(threading.Thread):
         chunk = 16 * 1024
         
         TotDown = 0
-        
-        while not (self.processIsCanceled or diag.isFinished()):
+        while not (self.processIsCanceled or diag.isFinished() or cConfig().getSetting('vstream_cancel') == 'True'):
             
             self.iCount = self.iCount + 1
             data = self.oUrlHandler.read(chunk)
@@ -198,6 +198,7 @@ class cDownloadProgressBar(threading.Thread):
     def StopAllBeta(self):
         
         self.processIsCanceled = True
+        cConfig().setSetting('vstream_cancel', 'True')
            
         return    
      
