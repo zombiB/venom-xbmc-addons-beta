@@ -383,7 +383,7 @@ class cDownload:
         
     def StopDownloadListBeta(self):
         
-        WINDOW_PROGRESS = xbmcgui.Dialog( 10101 )
+        WINDOW_PROGRESS = xbmcgui.Window( 10101 )
         WINDOW_PROGRESS.close()
         
         xbmcgui.Window(10101).setProperty('arret', '1')
