@@ -84,16 +84,17 @@ class cDownloadProgressBar(threading.Thread):
         
     def _StartDownload(self):
 
-        print 'Thread actuel'
-        print threading.current_thread().getName()
-        cConfig().setSetting('vstream_cancel', 'False')
+        #print 'Thread actuel'
+        #print threading.current_thread().getName()
         
         diag = self.createProcessDialog()
+        print diag
         #diag.isFinished()
         
         #self.Memorise.set("VstreamDownloaderClass", self)
         #self.Memorise.set("VstreamDownloaderClass", repr(self))
         
+        xbmcgui.Window(10101).setProperty('arret', '0')
         self.Memorise.set("VstreamDownloaderWorking", "1")
         
         self.iCount = 0
@@ -107,7 +108,8 @@ class cDownloadProgressBar(threading.Thread):
         chunk = 16 * 1024
         
         TotDown = 0
-        while not (self.processIsCanceled or diag.isFinished() or cConfig().getSetting('vstream_cancel') == 'True'):
+        
+        while not (self.processIsCanceled or diag.isFinished()):
             
             self.iCount = self.iCount + 1
             data = self.oUrlHandler.read(chunk)
@@ -119,6 +121,9 @@ class cDownloadProgressBar(threading.Thread):
             self.__stateCallBackFunction(self.iCount, chunk, iTotalSize)
             if self.Memorise.get("VstreamDownloaderWorking") == "0":
                 self.processIsCanceled = True
+            if xbmcgui.Window(10101).getProperty('arret') == '1':
+                self.processIsCanceled = True    
+                
                 
             #petite pause, ca ralentit le download mais evite de bouffer 100/100 ressources
             xbmc.sleep(200)
@@ -198,7 +203,6 @@ class cDownloadProgressBar(threading.Thread):
     def StopAllBeta(self):
         
         self.processIsCanceled = True
-        cConfig().setSetting('vstream_cancel', 'True')
            
         return    
      
@@ -323,10 +327,22 @@ class cDownload:
         oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Telechargement', 'mark.png', oOutputParameterHandler)
         
         oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadListBeta', 'Arreter Beta', 'mark.png', oOutputParameterHandler)   
+        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadListBeta', 'Arreter Beta', 'mark.png', oOutputParameterHandler)
+        
+        sPluginHandle = cPluginHandler().getPluginHandle();
+        sPluginPath = cPluginHandler().getPluginPath();
+        sItemUrl = '%s?site=%s&function=%s&title=%s' % (sPluginPath, SITE_IDENTIFIER, 'aaaa', 'tittle')
+        meta = {'title': 'aaaa'}
+        item = xbmcgui.ListItem('aaaa')
+        item.setInfo(type="Video", infoLabels = meta)
+        item.setProperty("Video", "true")
+        item.setProperty("IsPlayable", "false")
+        xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
    
         oGui.setEndOfDirectory()   
     
+    def aaaa(self):
+        aaaa2()
     
     def dummy(self):
         listthread()
@@ -366,9 +382,12 @@ class cDownload:
         return
         
     def StopDownloadListBeta(self):
-        self.PBTread = cDownloadProgressBar()
-        self.PBTread.StopAllBeta()
-
+        
+        WINDOW_PROGRESS = xbmcgui.Dialog( 10101 )
+        WINDOW_PROGRESS.close()
+        
+        xbmcgui.Window(10101).setProperty('arret', '1')
+        #xbmc.executebuiltin("Dialog.Close(%s, true)" % 10101) 
         return
 
     def getDownloadList(self):
