@@ -17,7 +17,7 @@ import unicodedata,htmlentitydefs
 from resources.lib.cloudflare import CloudflareBypass
  
 SITE_IDENTIFIER = 'series_en_streaming_tv'
-SITE_NAME = 'Series-en-streaming.tv (Beta)'
+SITE_NAME = 'Series-en-streaming.tv'
 SITE_DESC = 'Serie en streaming'
  
 URL_MAIN = 'http://www.series-en-streaming.tv/'
@@ -27,6 +27,27 @@ SERIE_SERIES = ('http://www.series-en-streaming.tv/liste/', 'AlphaSearch')
 
 URL_SEARCH = (URL_MAIN + 'search/', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
+
+def unescape(text):
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":
+                    return unichr(int(text[3:-1], 16))
+                else:
+                    return unichr(int(text[2:-1]))
+            except ValueError:
+                pass
+        else:
+            # named entity
+            try:
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+            except KeyError:
+                pass
+        return text # leave as is
+    return re.sub("&#?\w+;", fixup, text)
 
 def load():
     oGui = cGui()
@@ -41,7 +62,7 @@ def load():
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
-    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'Series Liste complete', 'series.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, SERIE_SERIES[1], 'Séries Liste complete', 'series.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory()
 
@@ -188,12 +209,12 @@ def showHosters():
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
-    sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
+    sTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
 
     sHtmlContent = CloudflareBypass().GetHtml(sUrl)
 
-    sPattern = "<a target='playerFrame' href='(.+?)'>"
+    sPattern = "<a target='playerFrame' href='([^<>]+?)'>(?:<img src='([^<>]+?)'><\/a>)*"
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
     
@@ -207,8 +228,14 @@ def showHosters():
             if dialog.iscanceled():
                 break
 
-            sHosterUrl = str(aEntry)
+            sHosterUrl = str(aEntry[0])
             oHoster = cHosterGui().checkHoster(sHosterUrl)
+            
+            if aEntry[1]:
+                if 'VOSTFR' in aEntry[1]:
+                    sMovieTitle = sTitle + ' [VOSTFR]'
+                else:
+                    sMovieTitle = sTitle + ' [VF]'
         
             if (oHoster != False):         
                 try:
