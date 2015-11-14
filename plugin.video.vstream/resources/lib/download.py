@@ -1,11 +1,11 @@
 #-*- coding: utf-8 -*-
-
 from resources.lib.gui.hoster import cHosterGui
 from resources.lib.config import cConfig
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.hosterHandler import cHosterHandler
 from resources.lib.handler.pluginHandler import cPluginHandler
+from resources.lib.player import cPlayer
 from resources.lib.gui.gui import cGui
 from resources.lib.gui.guiElement import cGuiElement
 from resources.lib.db import cDb
@@ -17,7 +17,7 @@ import xbmcvfs
 import string
 import re
 import threading,os,sys
-import weakref
+
 
 SITE_IDENTIFIER = 'cDownload'
 
@@ -25,44 +25,24 @@ SITE_IDENTIFIER = 'cDownload'
 #https://pymotw.com/2/threading/
 #https://code.google.com/p/navi-x/source/browse/trunk/Navi-X/src/CDownLoader.py?r=155
 
-def _run_async(self, func, *args, **kwargs):
-    from threading import Thread
-    worker = Thread(name='VstreamDownloader' , target=func, args=args, kwargs=kwargs)
-    #self.__workersByName[worker.getName()] = worker
-    worker.start()
-    return worker
-
-    
-def listthread():
-    print 'list'
-
-    for t in threading.enumerate():
-        print t
-        #print t.getName()
-    return
 
 class cDownloadProgressBar(threading.Thread):
     def __init__(self, *args, **kwargs):
 
         self.__sTitle = ''
-        self.__sDBUrl = ''
+        self.__sUrl = ''
         self.__fPath = ''
-        self.__sDBUrl = ''
     
         if (kwargs):
             self.__sTitle = kwargs['title']
             self.__sUrl = kwargs['url']
             self.__fPath = kwargs['Dpath']
-            self.__sDBUrl = kwargs['DBurl']
         
         threading.Thread.__init__(self)
         
         self.processIsCanceled = False
-        self.iCount = 0
         self.oUrlHandler = None
         self.file = None
-        
-        self.__workersByName = {}
         
         try:
             import StorageServer
@@ -95,10 +75,8 @@ class cDownloadProgressBar(threading.Thread):
         #self.Memorise.set("VstreamDownloaderClass", repr(self))
         
         xbmcgui.Window(10101).setProperty('arret', '0')
-        self.Memorise.set("VstreamDownloaderWorking", "1")
-        
-        self.iCount = 0
-        
+        #self.Memorise.set("VstreamDownloaderWorking", "1")
+
         headers = self.oUrlHandler.info()
         
         iTotalSize = -1
@@ -109,18 +87,20 @@ class cDownloadProgressBar(threading.Thread):
         
         TotDown = 0
         
+        #mise a jour pour info taille
+        self.__updatedb(TotDown,iTotalSize)
+        
         while not (self.processIsCanceled or diag.isFinished()):
             
-            self.iCount = self.iCount + 1
             data = self.oUrlHandler.read(chunk)
             if not data: break
             self.file.write(data)
             TotDown = TotDown + data.__len__()
-            self.__updatedb(TotDown,iTotalSize) 
+            self.__updatedb(TotDown,iTotalSize)
             
-            self.__stateCallBackFunction(self.iCount, chunk, iTotalSize)
-            if self.Memorise.get("VstreamDownloaderWorking") == "0":
-                self.processIsCanceled = True
+            self.__stateCallBackFunction(TotDown, iTotalSize)
+            #if self.Memorise.get("VstreamDownloaderWorking") == "0":
+            #    self.processIsCanceled = True
             if xbmcgui.Window(10101).getProperty('arret') == '1':
                 self.processIsCanceled = True    
                 
@@ -135,16 +115,37 @@ class cDownloadProgressBar(threading.Thread):
         self.StopAll()
         
         #if download finish
+        meta = {}      
+        meta['path'] = self.__fPath
+        meta['size'] = TotDown
+        meta['totalsize'] = iTotalSize
+        
         if TotDown == iTotalSize:
             print 'Fin de telechargement'
-            test = cDownload()
-            test.delDownload(self.__sDBUrl)
+            meta['status'] = 2           
+            try:
+                cDb().update_download(meta)
+            except:
+                pass
+        else:
+            meta['status'] = 0            
+            try:
+                cDb().update_download(meta)
+            except:
+                pass
+            return
+            
+        #ok tout est bon on contiinu ou pas ?
+        if self.Memorise.get('SimpleDownloaderQueue') == '1':
+            test.cDownload()
+            data = test.GetNextFile()
+            test.StartDownload(data)
 
 
     def __updatedb(self, TotDown, iTotalSize):
         #percent 3 chiffre
         percent = '{0:.2f}'.format(min(100 * float(TotDown) / float(iTotalSize), 100))
-        if percent in ['2.00','10.00','20.00','30.00','40.00','50.00','60.00','70.00','80.00','90.00']:
+        if percent in ['0.00','10.00','20.00','30.00','40.00','50.00','60.00','70.00','80.00','90.00']:
             meta = {}      
             meta['path'] = self.__fPath
             meta['size'] = TotDown
@@ -157,13 +158,13 @@ class cDownloadProgressBar(threading.Thread):
                 pass
         
         
-    def __stateCallBackFunction(self, iCount, iBlocksize, iTotalSize):
+    def __stateCallBackFunction(self, iDownsize, iTotalSize):
         
         if self.__oDialog.isFinished():
             self.createProcessDialog()
 
-        iPercent = int(float(iCount * iBlocksize * 100) / iTotalSize)
-        self.__oDialog.update(iPercent, self.__sTitle, self.__formatFileSize(float(iCount * iBlocksize))+'/'+self.__formatFileSize(iTotalSize))
+        iPercent = int(float(iDownsize * 100) / iTotalSize)
+        self.__oDialog.update(iPercent, self.__sTitle, self.__formatFileSize(float(iDownsize))+'/'+self.__formatFileSize(iTotalSize))
         
         if (self.__oDialog.isFinished()) and not (self.__processIsCanceled):
             self.__processIsCanceled = True
@@ -182,7 +183,6 @@ class cDownloadProgressBar(threading.Thread):
         
         self.file = xbmcvfs.File(self.__fPath, 'w')
         
-        #self._run_async(self._StartDownload,'','')
         self._StartDownload()
         
     def __formatFileSize(self, iBytes):
@@ -195,8 +195,9 @@ class cDownloadProgressBar(threading.Thread):
     def StopAll(self):
         
         self.processIsCanceled = True
-        self.Memorise.unlock("VstreamDownloaderLock")       
-        self.Memorise.set("VstreamDownloaderWorking", "0")
+        self.Memorise.unlock("VstreamDownloaderLock")
+        self.Memorise.set('SimpleDownloaderQueue', '0')
+        #self.Memorise.set("VstreamDownloaderWorking", "0")
                 
         return
         
@@ -234,10 +235,7 @@ class cDownload:
    
     def download(self, sDBUrl, sTitle,sDownloadPath):
 
-        __processIsCanceled = False
         self.__sTitle = sTitle
-        
-        #oGui = cConfig()
         
         #resolve url
         oHoster = cHosterGui().checkHoster(sDBUrl)
@@ -258,7 +256,7 @@ class cDownload:
             cConfig().log("Telechargement " + str(sUrl))
             
             #background download task
-            self.PBTread = cDownloadProgressBar(title = self.__sTitle , url = sUrl , Dpath = sDownloadPath , DBurl = sDBUrl)
+            self.PBTread = cDownloadProgressBar(title = self.__sTitle , url = sUrl , Dpath = sDownloadPath )
             self.PBTread.start()
 
             cConfig().log("Telechargement ok")
@@ -269,13 +267,10 @@ class cDownload:
             cConfig().log("Telechargement impossible")
             pass
             
-        #self.__oDialog.close()
-            
 
     def __createTitle(self, sUrl, sTitle):
         sTitle = re.sub('[\(\[].+?[\)\]]',' ', sTitle)
-        
-        
+               
         aTitle = sTitle.rsplit('.')
         #Si deja extension
         if (len(aTitle) > 1):
@@ -290,161 +285,205 @@ class cDownload:
         else:
             sTitle = sTitle + '.flv' #Si quedale on en prend une au pif
             
-        #aUrl = sUrl.rsplit('.')
-        #if (len(aUrl) > 1):
-        #    sSuffix = aUrl[-1]
-        #    sTitle = sTitle + '.' + sSuffix
             
         return sTitle
-            
-    
-
 
         
     def getDownload(self):
         
         oGui = cGui()
-        #test
+        
         sPluginHandle = cPluginHandler().getPluginHandle();
         sPluginPath = cPluginHandler().getPluginPath();
         sItemUrl = '%s?site=%s&function=%s&title=%s' % (sPluginPath, SITE_IDENTIFIER, 'StartDownloadList', 'tittle')
         meta = {'title': 'Demarrer la liste complete'}
-        
         item = xbmcgui.ListItem('demarer1')
         item.setInfo(type="Video", infoLabels = meta)
         item.setProperty("Video", "true")
-        #IMPORTANT
         item.setProperty("IsPlayable", "false")
-        # ##
         xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
-        #xbmcplugin.setContent(sPluginHandle, 'episodes')
-        #xbmcplugin.endOfDirectory(sPluginHandle, cacheToDisc=False)
         
         oOutputParameterHandler = cOutputParameterHandler()
         oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Arreter', 'mark.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Telechargement', 'mark.png', oOutputParameterHandler)
-        
-        oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadListBeta', 'Arreter Beta', 'mark.png', oOutputParameterHandler)
-        
-        sPluginHandle = cPluginHandler().getPluginHandle();
-        sPluginPath = cPluginHandler().getPluginPath();
-        sItemUrl = '%s?site=%s&function=%s&title=%s' % (sPluginPath, SITE_IDENTIFIER, 'aaaa', 'tittle')
-        meta = {'title': 'aaaa'}
-        item = xbmcgui.ListItem('aaaa')
-        item.setInfo(type="Video", infoLabels = meta)
-        item.setProperty("Video", "true")
-        item.setProperty("IsPlayable", "false")
-        xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
-   
+          
         oGui.setEndOfDirectory()   
     
-    def aaaa(self):
-        aaaa2()
     
     def dummy(self):
-        listthread()
+        return
     
     def StartDownloadOneFile(self):
-        self.StartDownloadList(True)
-    
-    def StartDownloadList(self, one = False):
-
-        if (one):
-            oInputParameterHandler = cInputParameterHandler()
-            url = oInputParameterHandler.getValue('sUrl')
-
-            meta = {}      
-            meta['url'] = url
+        data = self.GetOnefile()
+        self.StartDownload(data)
         
-            row = cDb().get_Download(meta)
-        else:
-            row = cDb().get_Download()
+    def ReadDownload(self):
+        oInputParameterHandler = cInputParameterHandler()
+        path = oInputParameterHandler.getValue('sPath')
+        sTitle = oInputParameterHandler.getValue('sMovieTitle')
+
+        oGuiElement = cGuiElement()
+        oGuiElement.setSiteName(SITE_IDENTIFIER)
+        oGuiElement.setMediaUrl(path)
+        oGuiElement.setTitle(sTitle)
+        oGuiElement.getInfoLabel()
         
+        oPlayer = cPlayer()
+        oPlayer.clearPlayList()
+        oPlayer.addItemToPlaylist(oGuiElement)
+        oPlayer.startPlayer()
+        
+    def DelFile(self):
+        oInputParameterHandler = cInputParameterHandler()
+        url = oInputParameterHandler.getValue('sUrl')
+        
+    def GetNextFile(self):
+        row = cDb().get_Download()
+
         for data in row:
-
-            title = data[1]
-            url = urllib.unquote_plus(data[2])
-            path = data[3]
-            thumbnail = data[4]
+            status = data[8]
             
-            print 'telechargement de : ' + title
-            break
+            if status == '0':
+                return data
                 
+        return None
+                
+    def GetOnefile(self):
+        oInputParameterHandler = cInputParameterHandler()
+        url = oInputParameterHandler.getValue('sUrl')
+
+        meta = {}      
+        meta['url'] = url
+    
+        row = cDb().get_Download(meta)
+        
+        if not (row):
+            return None
+        
+        return row[0]
+        
+        
+    def StartDownload(self,data):
+        
+        if not (data):
+            return
+        
+        title = data[1]
+        url = urllib.unquote_plus(data[2])
+        path = data[3]
+        thumbnail = data[4]
+        status = data[8]
+                            
         self.download(url,title,path)
+                
+    def StartDownloadList(self):
+
+        try:
+            import StorageServer
+            Memorise = StorageServer.StorageServer("VstreamDownloader")
+            Memorise.set('SimpleDownloaderQueue', '1')
+        except:
+            print 'Le download ne marchera pas correctement'
+        
+        data = self.GetNextFile()
+        
+        print data
+        print '***'
+
+        self.StartDownload(data)
 
     def StopDownloadList(self):
-        self.PBTread = cDownloadProgressBar()
-        self.PBTread.StopAll()
-
-        return
         
-    def StopDownloadListBeta(self):
+        oInputParameterHandler = cInputParameterHandler()
+        path = oInputParameterHandler.getValue('sPath')
+        status = oInputParameterHandler.getValue('sStatus')
         
-        WINDOW_PROGRESS = xbmcgui.Window( 10101 )
-        WINDOW_PROGRESS.close()
-        
+        #WINDOW_PROGRESS = xbmcgui.Window( 10101 )
+        #WINDOW_PROGRESS.close()        
         xbmcgui.Window(10101).setProperty('arret', '1')
-        #xbmc.executebuiltin("Dialog.Close(%s, true)" % 10101) 
+        #xbmc.executebuiltin("Dialog.Close(%s, true)" % 10101)
+        
+        #si bug
+        if status == '1':
+            try:
+                import StorageServer
+                Memorise = StorageServer.StorageServer("VstreamDownloader")
+                Memorise.set('SimpleDownloaderQueue', '1')
+            except:
+                print 'Le download ne marchera pas correctement'
+            
+            if not Memorise.get('VstreamDownloaderLock'):
+
+                oInputParameterHandler = cInputParameterHandler()
+                path = oInputParameterHandler.getValue('sPath')
+
+                meta = {}      
+                meta['path'] = path
+                meta['size'] = ''
+                meta['totalsize'] = ''
+                meta['status'] = 0
+                
+                try:
+                    cDb().update_download(meta)
+                except:
+                    pass
+  
         return
 
     def getDownloadList(self):
         oGui = cGui()
 
-        oInputParameterHandler = cInputParameterHandler()
+        oInputParameterHandler = cInputParameterHandler()        
 
         #try:
         if (1 == 1):
             row = cDb().get_Download()
-            print row
             
             for data in row:
 
                 title = data[1]
                 url = urllib.unquote_plus(data[2])
-                function = data[3]
                 cat = data[4]
                 thumbnail = data[5]
                 size = data[6]
                 totalsize = data[7]
                 status = data[8]
+                path = data[3]
 
                 oOutputParameterHandler = cOutputParameterHandler()
                 oOutputParameterHandler.addParameter('sUrl', url)
                 oOutputParameterHandler.addParameter('sMovieTitle', title)
                 oOutputParameterHandler.addParameter('sThumbnail', 'False')
+                oOutputParameterHandler.addParameter('sPath', path)
+                oOutputParameterHandler.addParameter('sStatus', status)
                 
-                # if (function == 'play'):
-                    # oHoster = cHosterGui().checkHoster(siteurl)
-                    # oOutputParameterHandler.addParameter('sHosterIdentifier', oHoster.getPluginIdentifier())
-                    # oOutputParameterHandler.addParameter('sFileName', oHoster.getFileName())
-                    # oOutputParameterHandler.addParameter('sMediaUrl', siteurl)
-
-
                 if status == '0':
-                    status = '[COLOR=red]stop[/COLOR]'
+                    sStatus = ''
                 elif status == '1':
-                    status='[COLOR=green]encours[/COLOR]'
+                    sStatus='[COLOR=red] [En cours][/COLOR]'
+                elif status == '2':
+                    sStatus='[COLOR=green] [Fini][/COLOR]'    
                                    
                 if size:
-                    sTitle = title+' - '+status+' - [COLOR=green]'+self.__formatFileSize(size)+'/'+self.__formatFileSize(totalsize)+'[/COLOR]'
+                    sTitle = sStatus + title + ' (' + self.__formatFileSize(size)+'/'+self.__formatFileSize(totalsize)+')'
                 else:
-                    sTitle= title+' - '+status
+                    sTitle = sStatus + title
+                    
                 oGuiElement = cGuiElement()
 
                 #oGuiElement.setSiteName(site)
-                oGuiElement.setFunction(function)
+                oGuiElement.setFunction('Xyz')
                 oGuiElement.setTitle(sTitle)
                 oGuiElement.setIcon("mark.png")
                 oGuiElement.setMeta(0)
                 oGuiElement.setThumbnail(thumbnail)
                 
-                oGui.createContexMenuDownload(oGuiElement, oOutputParameterHandler)
+                oGui.createContexMenuDownload(oGuiElement, oOutputParameterHandler,status)
                 
                 oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
-                #oGui.addMovie(SITE_IDENTIFIER, 'showHosters', title, 'films.png', '', '', oOutputParameterHandler)
+
 
             oGui.setEndOfDirectory()
         #except: pass
@@ -462,6 +501,8 @@ class cDownload:
         
         try:
             cDb().del_download(meta)
+            cConfig().showInfo('vStream', 'Liste mise a jour')
+            cConfig().update()
         except:
             pass
 
@@ -469,16 +510,16 @@ class cDownload:
         
     def AddDownload(self,meta):
         
-        self.__processIsCanceled = False
-        
         sTitle = meta['title']
         sUrl = meta['url']
         
+        oGui = cConfig()
+        
+        #titre fichier
         sTitle = self.__createTitle(sUrl, sTitle)
         sTitle = self.__createDownloadFilename(sTitle)
-        
-        oGui = cConfig()
         sTitle = oGui.showKeyBoard(sTitle)
+        
         if (sTitle != False and len(sTitle) > 0):
 
             #chemin de sauvegarde
@@ -518,12 +559,6 @@ class cDownload:
         #    sMediaUrl = self.__getRedirectUrl(sMediaUrl)
 
         cConfig().log("Telechargement " + sMediaUrl)
-
-        #oHoster = cHosterHandler().getHoster(sHosterIdentifier)
-        #oHoster.setFileName(sFileName)
-
-        #oHoster.setUrl(sMediaUrl)
-        #aLink = oHoster.getMediaLink()
 
         meta = {}
         meta['url'] = sMediaUrl
