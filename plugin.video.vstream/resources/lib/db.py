@@ -65,7 +65,7 @@ class cDb:
         #sql_create = "DROP TABLE download"
         #self.dbcur.execute(sql_create)
         
-        sql_create = "CREATE TABLE IF NOT EXISTS download ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""url TEXT, ""path TEXT, ""cat TEXT, ""icon TEXT, ""size TEXT,""totalsize TEXT, ""status TEXT, ""UNIQUE(title, url)"");"
+        sql_create = "CREATE TABLE IF NOT EXISTS download ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""url TEXT, ""path TEXT, ""cat TEXT, ""icon TEXT, ""size TEXT,""totalsize TEXT, ""status TEXT, ""UNIQUE(title, path)"");"
         self.dbcur.execute(sql_create) 
 
         cConfig().log('Table initialized') 
@@ -413,7 +413,7 @@ class cDb:
             sql_select = "SELECT * FROM download"
         else:
             url = urllib.quote_plus(meta['url'])
-            sql_select = "SELECT * FROM download WHERE url = '%s'" % (url)
+            sql_select = "SELECT * FROM download WHERE url = '%s' AND status = '0'" % (url)
             
         try:    
             self.dbcur.execute(sql_select)
@@ -434,8 +434,6 @@ class cDb:
         try:    
             self.dbcur.execute(sql_select)
             self.db.commit()
-            cConfig().showInfo('vStream', 'Telecargement supprimer')
-            cConfig().update()
             return False, False
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE') 
@@ -443,7 +441,7 @@ class cDb:
         self.dbcur.close()
         
     def update_download(self, meta):
-
+    
         path = meta['path']
         size = meta['size']
         totalsize = meta['totalsize']
@@ -454,7 +452,6 @@ class cDb:
         try:    
             self.dbcur.execute(sql_select)
             self.db.commit()
-            cConfig().showInfo('vStream', 'Telechargement Mise a jour')
             return False, False
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE') 
