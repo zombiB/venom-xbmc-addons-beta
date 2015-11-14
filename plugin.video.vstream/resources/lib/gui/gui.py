@@ -311,23 +311,52 @@ class cGui():
 
         oGuiElement.addContextItem(oContext)
         
-    def createContexMenuDownload(self, oGuiElement, oOutputParameterHandler= ''):
+    def createContexMenuDownload(self, oGuiElement, oOutputParameterHandler= '', status = '0'):
 
-        oContext = cContextElement()
-        oContext.setFile('cDownload')
-        oContext.setSiteName('cDownload')
-        oContext.setFunction('StartDownloadOneFile')
-        oContext.setTitle('Demarrer ce telechargement')
-        oContext.setOutputParameterHandler(oOutputParameterHandler)
-        oGuiElement.addContextItem(oContext)
+        if status == '0':
+            oContext = cContextElement()
+            oContext.setFile('cDownload')
+            oContext.setSiteName('cDownload')
+            oContext.setFunction('StartDownloadOneFile')
+            oContext.setTitle('Demarrer ce telechargement')
+            oContext.setOutputParameterHandler(oOutputParameterHandler)
+            oGuiElement.addContextItem(oContext)
         
-        oContext = cContextElement()
-        oContext.setFile('cDownload')
-        oContext.setSiteName('cDownload')
-        oContext.setFunction('delDownload')
-        oContext.setTitle('Supprimer ce telechargement')
-        oContext.setOutputParameterHandler(oOutputParameterHandler)
-        oGuiElement.addContextItem(oContext)
+        if status == '0' or status == '2':
+            oContext = cContextElement()
+            oContext.setFile('cDownload')
+            oContext.setSiteName('cDownload')
+            oContext.setFunction('delDownload')
+            oContext.setTitle('Effacer de la liste')
+            oContext.setOutputParameterHandler(oOutputParameterHandler)
+            oGuiElement.addContextItem(oContext)
+            
+        if status == '1':
+            oContext = cContextElement()
+            oContext.setFile('cDownload')
+            oContext.setSiteName('cDownload')
+            oContext.setFunction('StopDownloadList')
+            oContext.setTitle('Arreter le telechargement')
+            oContext.setOutputParameterHandler(oOutputParameterHandler)
+            oGuiElement.addContextItem(oContext)
+            
+        if status == '2':
+            oContext = cContextElement()
+            oContext.setFile('cDownload')
+            oContext.setSiteName('cDownload')
+            oContext.setFunction('ReadDownload')
+            oContext.setTitle('Lire')
+            oContext.setOutputParameterHandler(oOutputParameterHandler)
+            oGuiElement.addContextItem(oContext)
+            
+            oContext = cContextElement()
+            oContext.setFile('cDownload')
+            oContext.setSiteName('cDownload')
+            oContext.setFunction('DelFile')
+            oContext.setTitle('Effacer fichier')
+            oContext.setOutputParameterHandler(oOutputParameterHandler)
+            oGuiElement.addContextItem(oContext)  
+            
         
     def createContexMenuinfo(self, oGuiElement, oOutputParameterHandler= ''):
         oContext = cContextElement()
