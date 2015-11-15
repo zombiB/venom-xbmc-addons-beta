@@ -328,12 +328,13 @@ class cDownload:
         oGuiElement.setSiteName(SITE_IDENTIFIER)
         oGuiElement.setMediaUrl(path)
         oGuiElement.setTitle(sTitle)
-        oGuiElement.getInfoLabel()
+        #oGuiElement.getInfoLabel()
         
         oPlayer = cPlayer()
-        oPlayer.clearPlayList()
-        oPlayer.addItemToPlaylist(oGuiElement)
-        oPlayer.startPlayer()
+        #oPlayer.clearPlayList()
+        #oPlayer.addItemToPlaylist(oGuiElement)
+        oPlayer.run(oGuiElement, sTitle, path)
+        #oPlayer.startPlayer()
         
     def DelFile(self):
         oInputParameterHandler = cInputParameterHandler()
@@ -473,8 +474,8 @@ class cDownload:
                     
                 oGuiElement = cGuiElement()
 
-                #oGuiElement.setSiteName(site)
-                oGuiElement.setFunction('Xyz')
+                oGuiElement.setSiteName(SITE_IDENTIFIER)
+                oGuiElement.setFunction('ReadDownload')
                 oGuiElement.setTitle(sTitle)
                 oGuiElement.setIcon("mark.png")
                 oGuiElement.setMeta(0)
