@@ -47,7 +47,7 @@ class cUtil:
         string = re.sub('\[\/*COLOR.*?\]','',string)
         
         #pr les tag
-        string = re.sub('([\[\(](?![0-9]{4}).{1,7}[\)\]])',' [COLOR red]\\1[/COLOR] ', str(string))
+        string = re.sub('([\[\(](?![0-9]{4}).{1,7}[\)\]])',' [COLOR coral]\\1[/COLOR] ', str(string))
         #pr les episodes
         SXEX = ''
         m = re.search('(?i)(.pisode ([0-9]+))', string)
