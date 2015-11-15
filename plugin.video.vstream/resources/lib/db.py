@@ -427,10 +427,15 @@ class cDb:
         
     def del_download(self, meta):
 
-        url = urllib.quote_plus(meta['url'])
-
-        sql_select = "DELETE FROM download WHERE url = '%s'" % (url)
-
+        if len(meta['url']) > 1:
+            url = urllib.quote_plus(meta['url'])
+            sql_select = "DELETE FROM download WHERE url = '%s'" % (url)
+        elif len(meta['path']) > 1:
+            path = meta['path']
+            sql_select = "DELETE FROM download WHERE path = '%s'" % (path)
+        else:
+            return
+        
         try:    
             self.dbcur.execute(sql_select)
             self.db.commit()
