@@ -18,6 +18,12 @@ import string
 import re
 import threading,os,sys
 
+try:
+    import StorageServer
+    Memorise = StorageServer.StorageServer("VstreamDownloader")
+except:
+    print 'Le download ne marchera pas correctement'
+
 
 SITE_IDENTIFIER = 'cDownload'
 
@@ -44,11 +50,6 @@ class cDownloadProgressBar(threading.Thread):
         self.oUrlHandler = None
         self.file = None
         
-        try:
-            import StorageServer
-            self.Memorise = StorageServer.StorageServer("VstreamDownloader")
-        except:
-            print 'Le download ne marchera pas correctement'
             
         #queue = self.Memorise.get("SimpleDownloaderQueue")
         #if self.Memorise.lock("SimpleDownloaderQueueLock"):
@@ -125,18 +126,22 @@ class cDownloadProgressBar(threading.Thread):
             meta['status'] = 2           
             try:
                 cDb().update_download(meta)
+                cConfig().showInfo('vStream', 'Liste mise a jour')
+                cConfig().update()
             except:
                 pass
         else:
             meta['status'] = 0            
             try:
                 cDb().update_download(meta)
+                cConfig().showInfo('vStream', 'Liste mise a jour')
+                cConfig().update()
             except:
                 pass
             return
             
         #ok tout est bon on contiinu ou pas ?
-        if self.Memorise.get('SimpleDownloaderQueue') == '1':
+        if Memorise.get('SimpleDownloaderQueue') == '1':
             test.cDownload()
             data = test.GetNextFile()
             test.StartDownload(data)
@@ -154,6 +159,8 @@ class cDownloadProgressBar(threading.Thread):
             
             try:
                 cDb().update_download(meta)
+                cConfig().showInfo('vStream', 'Liste mise a jour')
+                cConfig().update()
             except:
                 pass
         
@@ -172,7 +179,7 @@ class cDownloadProgressBar(threading.Thread):
 
     def run(self):
         
-        if not self.Memorise.lock("VstreamDownloaderLock"):
+        if not Memorise.lock("VstreamDownloaderLock"):
             cConfig().showInfo('Telechargements deja demarrés', self.__sTitle)
             return
         
@@ -195,8 +202,8 @@ class cDownloadProgressBar(threading.Thread):
     def StopAll(self):
         
         self.processIsCanceled = True
-        self.Memorise.unlock("VstreamDownloaderLock")
-        self.Memorise.set('SimpleDownloaderQueue', '0')
+        Memorise.unlock("VstreamDownloaderLock")
+        Memorise.set('SimpleDownloaderQueue', '0')
         #self.Memorise.set("VstreamDownloaderWorking", "0")
                 
         return
@@ -217,6 +224,8 @@ class cDownload:
         valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
         filename = ''.join(c for c in sTitle if c in valid_chars)
         filename = filename.replace(' .','.')
+        if filename.startswith(' '):
+            filename = filename[1:]
         #filename = filename.replace(' ','_') #pas besoin de ca, enfin pr moi en tout cas
         return filename
         
@@ -227,13 +236,17 @@ class cDownload:
         
         return '%.*f %s' % (2, iBytes/(1024*1024.0) , 'MB')
         
-    def CheckDownloadActive(self):
-        for t in threading.enumerate():
-            print t
-            print t.getName()
-        return False
+    def isDownloading(self):
+
+        if not Memorise.get('VstreamDownloaderLock'):
+            return False
+        return True
    
     def download(self, sDBUrl, sTitle,sDownloadPath):
+        
+        if self.isDownloading():
+            cConfig().showInfo('Telechargements deja demarrés', 'Erreur')
+            return
 
         self.__sTitle = sTitle
         
@@ -304,7 +317,7 @@ class cDownload:
         xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
         
         oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Arreter', 'mark.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Tout arreter', 'mark.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Telechargement', 'mark.png', oOutputParameterHandler)
@@ -338,7 +351,20 @@ class cDownload:
         
     def DelFile(self):
         oInputParameterHandler = cInputParameterHandler()
-        url = oInputParameterHandler.getValue('sUrl')
+        path = oInputParameterHandler.getValue('sPath')
+        
+        oDialog = cConfig().createDialogYesNo('Voulez vous vraiment supprimer ce fichier ? Operation non reversible.')
+        if (oDialog == 1):
+            meta = {}
+            meta['url'] = ''
+            meta['path'] = path
+            self.delDownload(meta)
+            
+            try:
+                cConfig().showInfo('vStream', 'Fichier supprime')
+                os.remove(path)
+            except:
+                cConfig().showInfo('vStream', 'Erreur, fichier non supprimable')
         
     def GetNextFile(self):
         row = cDb().get_Download()
@@ -381,18 +407,8 @@ class cDownload:
                 
     def StartDownloadList(self):
 
-        try:
-            import StorageServer
-            Memorise = StorageServer.StorageServer("VstreamDownloader")
-            Memorise.set('SimpleDownloaderQueue', '1')
-        except:
-            print 'Le download ne marchera pas correctement'
-        
+        Memorise.set('SimpleDownloaderQueue', '1')
         data = self.GetNextFile()
-        
-        print data
-        print '***'
-
         self.StartDownload(data)
 
     def StopDownloadList(self):
@@ -408,14 +424,8 @@ class cDownload:
         
         #si bug
         if status == '1':
-            try:
-                import StorageServer
-                Memorise = StorageServer.StorageServer("VstreamDownloader")
-                Memorise.set('SimpleDownloaderQueue', '1')
-            except:
-                print 'Le download ne marchera pas correctement'
-            
-            if not Memorise.get('VstreamDownloaderLock'):
+
+            if not self.isDownloading():
 
                 oInputParameterHandler = cInputParameterHandler()
                 path = oInputParameterHandler.getValue('sPath')
@@ -438,67 +448,64 @@ class cDownload:
 
         oInputParameterHandler = cInputParameterHandler()        
 
-        #try:
-        if (1 == 1):
-            row = cDb().get_Download()
+        row = cDb().get_Download()
+        
+        for data in row:
+
+            title = data[1]
+            url = urllib.unquote_plus(data[2])
+            cat = data[4]
+            thumbnail = data[5]
+            size = data[6]
+            totalsize = data[7]
+            status = data[8]
+            path = data[3]
+
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('sUrl', url)
+            oOutputParameterHandler.addParameter('sMovieTitle', title)
+            oOutputParameterHandler.addParameter('sThumbnail', 'False')
+            oOutputParameterHandler.addParameter('sPath', path)
+            oOutputParameterHandler.addParameter('sStatus', status)
             
-            for data in row:
-
-                title = data[1]
-                url = urllib.unquote_plus(data[2])
-                cat = data[4]
-                thumbnail = data[5]
-                size = data[6]
-                totalsize = data[7]
-                status = data[8]
-                path = data[3]
-
-                oOutputParameterHandler = cOutputParameterHandler()
-                oOutputParameterHandler.addParameter('sUrl', url)
-                oOutputParameterHandler.addParameter('sMovieTitle', title)
-                oOutputParameterHandler.addParameter('sThumbnail', 'False')
-                oOutputParameterHandler.addParameter('sPath', path)
-                oOutputParameterHandler.addParameter('sStatus', status)
+            if status == '0':
+                sStatus = ''
+            elif status == '1':
+                sStatus='[COLOR=red] [En cours][/COLOR]'
+            elif status == '2':
+                sStatus='[COLOR=green] [Fini][/COLOR]'    
+                               
+            if size:
+                sTitle = sStatus + title + ' (' + self.__formatFileSize(size)+'/'+self.__formatFileSize(totalsize)+')'
+            else:
+                sTitle = sStatus + title
                 
-                if status == '0':
-                    sStatus = ''
-                elif status == '1':
-                    sStatus='[COLOR=red] [En cours][/COLOR]'
-                elif status == '2':
-                    sStatus='[COLOR=green] [Fini][/COLOR]'    
-                                   
-                if size:
-                    sTitle = sStatus + title + ' (' + self.__formatFileSize(size)+'/'+self.__formatFileSize(totalsize)+')'
-                else:
-                    sTitle = sStatus + title
-                    
-                oGuiElement = cGuiElement()
+            oGuiElement = cGuiElement()
 
-                oGuiElement.setSiteName(SITE_IDENTIFIER)
-                oGuiElement.setFunction('ReadDownload')
-                oGuiElement.setTitle(sTitle)
-                oGuiElement.setIcon("mark.png")
-                oGuiElement.setMeta(0)
-                oGuiElement.setThumbnail(thumbnail)
-                
-                oGui.createContexMenuDownload(oGuiElement, oOutputParameterHandler,status)
-                
-                oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
+            oGuiElement.setSiteName(SITE_IDENTIFIER)
+            oGuiElement.setFunction('ReadDownload')
+            oGuiElement.setTitle(sTitle)
+            oGuiElement.setIcon("mark.png")
+            oGuiElement.setMeta(0)
+            oGuiElement.setThumbnail(thumbnail)
+            
+            oGui.createContexMenuDownload(oGuiElement, oOutputParameterHandler,status)
+            
+            oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
 
 
-            oGui.setEndOfDirectory()
-        #except: pass
+        oGui.setEndOfDirectory()
         
         return
         
-    def delDownload(self,url =''):
+    def delDownload(self,meta = {}):
         
-        if not url:
+        if not meta:
             oInputParameterHandler = cInputParameterHandler()
             url = oInputParameterHandler.getValue('sUrl')
-
-        meta = {}      
-        meta['url'] = url
+   
+            meta['url'] = url
+            meta['path'] = ''
         
         try:
             cDb().del_download(meta)
