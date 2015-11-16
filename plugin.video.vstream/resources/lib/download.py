@@ -349,7 +349,7 @@ class cDownload:
         oPlayer.run(oGuiElement, sTitle, path)
         #oPlayer.startPlayer()
         
-    def delDownload(self):
+    def DelFile(self):
         oInputParameterHandler = cInputParameterHandler()
         path = oInputParameterHandler.getValue('sPath')
         
@@ -465,7 +465,7 @@ class cDownload:
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('sUrl', url)
             oOutputParameterHandler.addParameter('sMovieTitle', title)
-            oOutputParameterHandler.addParameter('sThumbnail', 'False')
+            oOutputParameterHandler.addParameter('sThumbnail', thumbnail)
             oOutputParameterHandler.addParameter('sPath', path)
             oOutputParameterHandler.addParameter('sStatus', status)
             
@@ -474,7 +474,7 @@ class cDownload:
             elif status == '1':
                 sStatus='[COLOR=red] [En cours][/COLOR]'
             elif status == '2':
-                sStatus='[COLOR=green] [Fini][/COLOR]'    
+                sStatus='[COLOR=green] [Fini][/COLOR]'
                                
             if size:
                 sTitle = sStatus + title + ' (' + self.__formatFileSize(size)+'/'+self.__formatFileSize(totalsize)+')'
@@ -482,11 +482,14 @@ class cDownload:
                 sTitle = sStatus + title
                 
             oGuiElement = cGuiElement()
+            
+            if not thumbnail or thumbnail == 'False':
+                thumbnail = "mark.png"
 
             oGuiElement.setSiteName(SITE_IDENTIFIER)
             oGuiElement.setFunction('ReadDownload')
             oGuiElement.setTitle(sTitle)
-            oGuiElement.setIcon("mark.png")
+            oGuiElement.setIcon(thumbnail)
             oGuiElement.setMeta(0)
             oGuiElement.setThumbnail(thumbnail)
             
@@ -499,14 +502,13 @@ class cDownload:
         
         return
         
-    def delDownload_old(self,meta = {}):
+    def delDownload():
         
-        if not meta:
-            oInputParameterHandler = cInputParameterHandler()
-            url = oInputParameterHandler.getValue('sUrl')
-   
-            meta['url'] = url
-            meta['path'] = ''
+        oInputParameterHandler = cInputParameterHandler()
+        url = oInputParameterHandler.getValue('sUrl')
+
+        meta['url'] = url
+        meta['path'] = ''
         
         try:
             cDb().del_download(meta)
