@@ -247,6 +247,7 @@
 	
 	<category label="30127">
         <setting label="30127" type="lsep"/>
+		<setting id="download_folder" type="folder" label="30145" default=""/>
 		<setting label="Clear Cache Addon" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/clear.py, addon)"/>	
 		<setting label="Clear Cache XBMC" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/clear.py, xbmc)"/>
 		<setting label="30125" type="action" action="XBMC.RunScript(special://home/addons/plugin.video.vstream/resources/lib/about.py, update)"/>

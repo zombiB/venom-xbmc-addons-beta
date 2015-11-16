@@ -349,7 +349,7 @@ class cDownload:
         oPlayer.run(oGuiElement, sTitle, path)
         #oPlayer.startPlayer()
         
-    def DelFile(self):
+    def delDownload(self):
         oInputParameterHandler = cInputParameterHandler()
         path = oInputParameterHandler.getValue('sPath')
         
@@ -358,11 +358,12 @@ class cDownload:
             meta = {}
             meta['url'] = ''
             meta['path'] = path
-            self.delDownload(meta)
             
             try:
+                cDb().del_download(meta)
+                xbmcvfs.delete(path)
                 cConfig().showInfo('vStream', 'Fichier supprime')
-                os.remove(path)
+                cConfig().update()
             except:
                 cConfig().showInfo('vStream', 'Erreur, fichier non supprimable')
         
@@ -498,7 +499,7 @@ class cDownload:
         
         return
         
-    def delDownload(self,meta = {}):
+    def delDownload_old(self,meta = {}):
         
         if not meta:
             oInputParameterHandler = cInputParameterHandler()
@@ -531,15 +532,20 @@ class cDownload:
         if (sTitle != False and len(sTitle) > 0):
 
             #chemin de sauvegarde
-            sPath2 = cConfig().getSetting('Download_Folder')
+            sPath2 = xbmc.translatePath(cConfig().getSetting('download_folder'))
 
             dialog = xbmcgui.Dialog()
             sPath = dialog.browse(3, 'Downloadfolder', 'files', '', False, False , sPath2)
             
             if (sPath != ''):
-                cConfig().setSetting('Download_Folder',sPath)
+                cConfig().setSetting('download_folder',sPath)
                 
                 sDownloadPath = xbmc.translatePath(sPath +  '%s' % (sTitle, ))
+                if xbmcvfs.exists(sDownloadPath):
+                    cConfig().showInfo('Téléchargement en double', sTitle)
+                    return self.AddDownload(meta)
+                else:
+                    xbmcvfs.File(sDownloadPath, 'w')
 
                 try:
                     cConfig().log("Rajout en liste de telechargement " + str(sUrl))
