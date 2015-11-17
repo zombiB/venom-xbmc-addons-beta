@@ -331,6 +331,14 @@ class cGui():
             oContext.setOutputParameterHandler(oOutputParameterHandler)
             oGuiElement.addContextItem(oContext)
             
+            oContext = cContextElement()
+            oContext.setFile('cDownload')
+            oContext.setSiteName('cDownload')
+            oContext.setFunction('DelFile')
+            oContext.setTitle('Effacer fichier')
+            oContext.setOutputParameterHandler(oOutputParameterHandler)
+            oGuiElement.addContextItem(oContext)  
+            
         if status == '1':
             oContext = cContextElement()
             oContext.setFile('cDownload')
@@ -347,16 +355,7 @@ class cGui():
             oContext.setFunction('ReadDownload')
             oContext.setTitle('Lire')
             oContext.setOutputParameterHandler(oOutputParameterHandler)
-            oGuiElement.addContextItem(oContext)
-            
-            oContext = cContextElement()
-            oContext.setFile('cDownload')
-            oContext.setSiteName('cDownload')
-            oContext.setFunction('DelFile')
-            oContext.setTitle('Effacer fichier')
-            oContext.setOutputParameterHandler(oOutputParameterHandler)
-            oGuiElement.addContextItem(oContext)  
-            
+            oGuiElement.addContextItem(oContext)            
         
     def createContexMenuinfo(self, oGuiElement, oOutputParameterHandler= ''):
         oContext = cContextElement()
