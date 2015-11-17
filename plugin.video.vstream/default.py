@@ -16,10 +16,10 @@ from resources.lib.statistic import cStatistic
 from resources.lib.gui.hoster import cHosterGui
 from resources.lib.gui.guiElement import cGuiElement
 from resources.lib.favourite import cFav
-from resources.lib.download import cDownload
 from resources.lib.about import cAbout
 from resources.lib.home import cHome
 from resources.lib.gui.gui import cGui
+from resources.lib.download import cDownload
 from resources.lib.handler.pluginHandler import cPluginHandler
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
@@ -32,77 +32,77 @@ class main:
         cDb()._create_tables()
 
     def parseUrl(self):
-	    oInputParameterHandler = cInputParameterHandler()
+        oInputParameterHandler = cInputParameterHandler()
 
-	    if (oInputParameterHandler.exist('function')):
-	        sFunction = oInputParameterHandler.getValue('function')
-	    else:
-	        cConfig().log('call load methode')
-	        sFunction = "load"
+        if (oInputParameterHandler.exist('function')):
+            sFunction = oInputParameterHandler.getValue('function')
+        else:
+            cConfig().log('call load methode')
+            sFunction = "load"
 
             
-	    if (sFunction=='DoNothing'):
-	        return
+        if (sFunction=='DoNothing'):
+            return
 
-	    if (oInputParameterHandler.exist('site')):
-	        sSiteName = oInputParameterHandler.getValue('site')
-	        cConfig().log('load site ' + sSiteName + ' and call function ' + sFunction)
-	        cStatistic().callStartPlugin(sSiteName)
+        if (oInputParameterHandler.exist('site')):
+            sSiteName = oInputParameterHandler.getValue('site')
+            cConfig().log('load site ' + sSiteName + ' and call function ' + sFunction)
+            cStatistic().callStartPlugin(sSiteName)
 
-	        if (isHosterGui(sSiteName, sFunction) == True):
-	            return
-	        
-	        if (isGui(sSiteName, sFunction) == True):
-	            return
+            if (isHosterGui(sSiteName, sFunction) == True):
+                return
             
-	        if (isFav(sSiteName, sFunction) == True):
-	            return
+            if (isGui(sSiteName, sFunction) == True):
+                return
                 
-	        if (isDl(sSiteName, sFunction) == True):
-	            return
-            
-	        if (isHome(sSiteName, sFunction) == True):
-	            return
+            if (isFav(sSiteName, sFunction) == True):
+                return
 
-	        #if (isAboutGui(sSiteName, sFunction) == True):            
-	            #return
+            if (isHome(sSiteName, sFunction) == True):
+                return
+                
+            if (isDownload(sSiteName, sFunction) == True):
+                return
 
-	        #try:
-	        exec "from resources.sites import " + sSiteName + " as plugin"
-	        exec "plugin."+ sFunction +"()"
-	        #except:
-	        #    cConfig().log('could not load site: ' + sSiteName )
-	    else:
+            #if (isAboutGui(sSiteName, sFunction) == True):            
+                #return
 
-	        if (cConfig().getSetting("home-view") == 'true'):
-	            oHome = cHome()
-	            cAbout()
-	            exec "oHome."+ sFunction +"()"
-	            return
+            #try:
+            exec "from resources.sites import " + sSiteName + " as plugin"
+            exec "plugin."+ sFunction +"()"
+            #except:
+            #    cConfig().log('could not load site: ' + sSiteName )
+        else:
 
-	        oGui = cGui()
-	        oPluginHandler = cPluginHandler()
-	        aPlugins = oPluginHandler.getAvailablePlugins()
-	        if (len(aPlugins) == 0):
-	            oGui.openSettings()
-		    oGui.updateDirectory()
-	        else:
-	            for aPlugin in aPlugins:
+            if (cConfig().getSetting("home-view") == 'true'):
+                oHome = cHome()
+                cAbout()
+                exec "oHome."+ sFunction +"()"
+                return
+
+            oGui = cGui()
+            oPluginHandler = cPluginHandler()
+            aPlugins = oPluginHandler.getAvailablePlugins()
+            if (len(aPlugins) == 0):
+                oGui.openSettings()
+                oGui.updateDirectory()
+            else:
+                for aPlugin in aPlugins:
                     
-	                # oGuiElement = cGuiElement()
-	                # oGuiElement.setTitle(aPlugin[0])
-	                # oGuiElement.setSiteName(aPlugin[1])
-	                # oGuiElement.setDescription(aPlugin[2])
-	                # oGuiElement.setFunction(sFunction)
-	                # oGuiElement.setIcon("icon.png")
-	                # oGui.addFolder(oGuiElement)
+                    # oGuiElement = cGuiElement()
+                    # oGuiElement.setTitle(aPlugin[0])
+                    # oGuiElement.setSiteName(aPlugin[1])
+                    # oGuiElement.setDescription(aPlugin[2])
+                    # oGuiElement.setFunction(sFunction)
+                    # oGuiElement.setIcon("icon.png")
+                    # oGui.addFolder(oGuiElement)
                     
-                        oOutputParameterHandler = cOutputParameterHandler()
-                        oOutputParameterHandler.addParameter('siteUrl', 'test')
-                        oGui.addDir(aPlugin[1], sFunction, aPlugin[0], 'icon.png', oOutputParameterHandler)
+                    oOutputParameterHandler = cOutputParameterHandler()
+                    oOutputParameterHandler.addParameter('siteUrl', 'test')
+                    oGui.addDir(aPlugin[1], sFunction, aPlugin[0], 'icon.png', oOutputParameterHandler)
 
-	        oGui.setEndOfDirectory()
-	
+            oGui.setEndOfDirectory()
+    
 
 def isHosterGui(sSiteName, sFunction):
     if (sSiteName == 'cHosterGui'):
@@ -125,17 +125,17 @@ def isFav(sSiteName, sFunction):
         return True
     return False
 
-def isDl(sSiteName, sFunction):
-    if (sSiteName == 'cDownload'):
-        oDownload = cDownload()
-        exec "oDownload."+ sFunction +"()"
-        return True
-    return False
-
 def isHome(sSiteName, sFunction):
     if (sSiteName == 'cHome'):
         oHome = cHome()
         exec "oHome."+ sFunction +"()"
+        return True
+    return False
+    
+def isDownload(sSiteName, sFunction):
+    if (sSiteName == 'cDownload'):
+        oDownload = cDownload()
+        exec "oDownload."+ sFunction +"()"
         return True
     return False
 
