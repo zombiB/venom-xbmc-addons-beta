@@ -305,22 +305,23 @@ class cDownload:
     def getDownload(self):
         
         oGui = cGui()
-        
         sPluginHandle = cPluginHandler().getPluginHandle();
         sPluginPath = cPluginHandler().getPluginPath();
         sItemUrl = '%s?site=%s&function=%s&title=%s' % (sPluginPath, SITE_IDENTIFIER, 'StartDownloadList', 'tittle')
-        meta = {'title': 'Demarrer la liste complete'}
-        item = xbmcgui.ListItem('demarer1')
+        meta = {'title': 'Demarrer la liste'}
+        item = xbmcgui.ListItem('demarer1', iconImage=cConfig().getRootArt()+'download.png')
+        item.setProperty("Fanart_Image", cConfig().getSetting('images_downloads'))
+        
         item.setInfo(type="Video", infoLabels = meta)
         item.setProperty("Video", "true")
         item.setProperty("IsPlayable", "false")
         xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
         
         oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Tout arreter', 'mark.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Tout arreter', 'download.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Telechargement', 'mark.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Telechargement', 'download.png', oOutputParameterHandler)
           
         oGui.setEndOfDirectory()   
     
@@ -489,7 +490,8 @@ class cDownload:
             oGuiElement.setSiteName(SITE_IDENTIFIER)
             oGuiElement.setFunction('ReadDownload')
             oGuiElement.setTitle(sTitle)
-            oGuiElement.setIcon(thumbnail)
+            oGuiElement.setIcon('download.png')
+            oGuiElement.setFanart(cConfig().getRootArt()+'download_fanart.jpg')
             oGuiElement.setMeta(0)
             oGuiElement.setThumbnail(thumbnail)
             
@@ -502,11 +504,11 @@ class cDownload:
         
         return
         
-    def delDownload():
+    def delDownload(self):
         
         oInputParameterHandler = cInputParameterHandler()
         url = oInputParameterHandler.getValue('sUrl')
-
+        meta = {}
         meta['url'] = url
         meta['path'] = ''
         

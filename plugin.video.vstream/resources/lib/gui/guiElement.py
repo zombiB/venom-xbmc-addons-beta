@@ -37,6 +37,7 @@ class cGuiElement:
         self.__sFanart_buzz = self.__sRootArt+'buzz_fanart.jpg'
         self.__sFanart_mark = self.__sRootArt+'mark_fanart.jpg'
         self.__sFanart_host = self.__sRootArt+'host_fanart.jpg'
+        self.__sFanart_download = self.__sRootArt+'download_fanart.jpg'
         
         self.__aItemValues = {}
         self.__aProperties = {}
@@ -185,6 +186,9 @@ class cGuiElement:
             
         elif sIcon == 'host.png':
             self.__sFanart = cConfig().getSetting('images_hosts')
+         
+        elif sIcon == 'download.png':
+            self.__sFanart = cConfig().getSetting('images_downloads')
             
         elif xbmc.getInfoLabel('ListItem.Art(fanart)') != '':
             self.__sFanart = xbmc.getInfoLabel('ListItem.Art(fanart)')
