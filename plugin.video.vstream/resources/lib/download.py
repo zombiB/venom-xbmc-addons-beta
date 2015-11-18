@@ -427,24 +427,8 @@ class cDownload:
         xbmcgui.Window(10101).setProperty('arret', '1')
         #xbmc.executebuiltin("Dialog.Close(%s, true)" % 10101)
         
-        #si bug
-        if status == '1':
-
-            if not self.isDownloading():
-
-                oInputParameterHandler = cInputParameterHandler()
-                path = oInputParameterHandler.getValue('sPath')
-
-                meta = {}      
-                meta['path'] = path
-                meta['size'] = ''
-                meta['totalsize'] = ''
-                meta['status'] = 0
-                
-                try:
-                    cDb().update_download(meta)
-                except:
-                    pass
+        #On remet tout les status a 0 ou 2
+        cDb().Cancel_download()
   
         return
 
