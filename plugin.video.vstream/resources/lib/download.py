@@ -435,13 +435,6 @@ class cDownload:
         #si bug
         else:
             cDownloadProgressBar().StopAll()
-            
-        
-        #si pas de thread
-        print '**'
-        print xbmcgui.Window(10101).getProperty('arret')
-        print self.isDownloading()
-        
         
         #On remet tout les status a 0 ou 2
         cDb().Cancel_download()
