@@ -445,6 +445,17 @@ class cDb:
             return False, False
         self.dbcur.close()
         
+    def Cancel_download(self):
+        sql_select = "UPDATE download SET status = '0' WHERE status = '1'"
+        try:    
+            self.dbcur.execute(sql_select)
+            self.db.commit()
+            return False, False
+        except Exception, e:
+            cConfig().log('SQL ERROR EXECUTE') 
+            return False, False
+        self.dbcur.close()   
+        
     def update_download(self, meta):
     
         path = meta['path']
