@@ -130,7 +130,7 @@ class cDownloadProgressBar(threading.Thread):
             meta['status'] = 2           
             try:
                 cDb().update_download(meta)
-                cConfig().showInfo('Téléchargements Terminer', self.__sTitle)
+                cConfig().showInfo('Téléchargements Termine', self.__sTitle)
                 #cConfig().update()
             except:
                 pass
@@ -138,7 +138,7 @@ class cDownloadProgressBar(threading.Thread):
             meta['status'] = 0            
             try:
                 cDb().update_download(meta)
-                cConfig().showInfo('Téléchargements Arreter', self.__sTitle)
+                cConfig().showInfo('Téléchargements Arrete', self.__sTitle)
                 #cConfig().update()
             except:
                 pass
@@ -208,6 +208,7 @@ class cDownloadProgressBar(threading.Thread):
         Memorise.unlock("VstreamDownloaderLock")
         Memorise.set('SimpleDownloaderQueue', '0')
         #self.Memorise.set("VstreamDownloaderWorking", "0")
+        xbmcgui.Window(10101).setProperty('arret', '1')
                 
         return
         
@@ -418,14 +419,29 @@ class cDownload:
 
     def StopDownloadList(self):
         
-        oInputParameterHandler = cInputParameterHandler()
-        path = oInputParameterHandler.getValue('sPath')
-        status = oInputParameterHandler.getValue('sStatus')
+        #oInputParameterHandler = cInputParameterHandler()
+        #path = oInputParameterHandler.getValue('sPath')
+        #status = oInputParameterHandler.getValue('sStatus')
         
+
         #WINDOW_PROGRESS = xbmcgui.Window( 10101 )
         #WINDOW_PROGRESS.close()        
-        xbmcgui.Window(10101).setProperty('arret', '1')
+        #xbmcgui.Window(10101).setProperty('arret', '1')
         #xbmc.executebuiltin("Dialog.Close(%s, true)" % 10101)
+        
+        #thread actif
+        if xbmcgui.Window(10101).getProperty('arret') == '0':
+            xbmcgui.Window(10101).setProperty('arret', '1')
+        #si bug
+        else:
+            cDownloadProgressBar().StopAll()
+            
+        
+        #si pas de thread
+        print '**'
+        print xbmcgui.Window(10101).getProperty('arret')
+        print self.isDownloading()
+        
         
         #On remet tout les status a 0 ou 2
         cDb().Cancel_download()
@@ -460,9 +476,9 @@ class cDownload:
             if status == '0':
                 sStatus = ''
             elif status == '1':
-                sStatus='[COLOR=red] [En cours][/COLOR]'
+                sStatus='[COLOR=red][En cours] [/COLOR]'
             elif status == '2':
-                sStatus='[COLOR=green] [Fini][/COLOR]'
+                sStatus='[COLOR=green][Fini] [/COLOR]'
                                
             if size:
                 sTitle = sStatus + title + ' (' + self.__formatFileSize(size)+'/'+self.__formatFileSize(totalsize)+')'
