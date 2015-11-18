@@ -327,7 +327,7 @@ class cGui():
             oContext.setFile('cDownload')
             oContext.setSiteName('cDownload')
             oContext.setFunction('delDownload')
-            oContext.setTitle('Effacer de la liste')
+            oContext.setTitle('Supprimer de la liste')
             oContext.setOutputParameterHandler(oOutputParameterHandler)
             oGuiElement.addContextItem(oContext)
             
@@ -335,7 +335,7 @@ class cGui():
             oContext.setFile('cDownload')
             oContext.setSiteName('cDownload')
             oContext.setFunction('DelFile')
-            oContext.setTitle('Effacer fichier')
+            oContext.setTitle('[COLOR=red]Supprimer definitivement[/COLOR]')
             oContext.setOutputParameterHandler(oOutputParameterHandler)
             oGuiElement.addContextItem(oContext)  
             

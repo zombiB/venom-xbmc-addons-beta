@@ -90,6 +90,7 @@ class cDownloadProgressBar(threading.Thread):
         
         #mise a jour pour info taille
         self.__updatedb(TotDown,iTotalSize)
+        cConfig().showInfo('vStream', 'Téléchargement Démarrer')
         
         while not (self.processIsCanceled or diag.isFinished()):
             
@@ -121,21 +122,24 @@ class cDownloadProgressBar(threading.Thread):
         meta['size'] = TotDown
         meta['totalsize'] = iTotalSize
         
+        #status = 0 => pas telechargé
+        #status = 1 => en cours de DL (ou bloque si bug)
+        #status = 2 => fini de DL
+        
         if TotDown == iTotalSize:
-            print 'Fin de telechargement'
             meta['status'] = 2           
             try:
                 cDb().update_download(meta)
-                cConfig().showInfo('vStream', 'Liste mise a jour')
-                cConfig().update()
+                cConfig().showInfo('Téléchargements Terminer', self.__sTitle)
+                #cConfig().update()
             except:
                 pass
         else:
             meta['status'] = 0            
             try:
                 cDb().update_download(meta)
-                cConfig().showInfo('vStream', 'Liste mise a jour')
-                cConfig().update()
+                cConfig().showInfo('Téléchargements Arreter', self.__sTitle)
+                #cConfig().update()
             except:
                 pass
             return
@@ -159,8 +163,7 @@ class cDownloadProgressBar(threading.Thread):
             
             try:
                 cDb().update_download(meta)
-                cConfig().showInfo('vStream', 'Liste mise a jour')
-                cConfig().update()
+                #cConfig().update()
             except:
                 pass
         
@@ -309,19 +312,19 @@ class cDownload:
         sPluginPath = cPluginHandler().getPluginPath();
         sItemUrl = '%s?site=%s&function=%s&title=%s' % (sPluginPath, SITE_IDENTIFIER, 'StartDownloadList', 'tittle')
         meta = {'title': 'Demarrer la liste'}
-        item = xbmcgui.ListItem('demarer1', iconImage=cConfig().getRootArt()+'download.png')
+        item = xbmcgui.ListItem('Demarrer la liste', iconImage=cConfig().getRootArt()+'download.png')
         item.setProperty("Fanart_Image", cConfig().getSetting('images_downloads'))
         
         item.setInfo(type="Video", infoLabels = meta)
-        item.setProperty("Video", "true")
-        item.setProperty("IsPlayable", "false")
+        #item.setProperty("Video", "true")
+        #item.setProperty("IsPlayable", "false")
         xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
         
         oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Tout arreter', 'download.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Arreter la liste', 'download.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Telechargement', 'download.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Téléchargement', 'download.png', oOutputParameterHandler)
           
         oGui.setEndOfDirectory()   
     
@@ -363,7 +366,7 @@ class cDownload:
             try:
                 cDb().del_download(meta)
                 xbmcvfs.delete(path)
-                cConfig().showInfo('vStream', 'Fichier supprime')
+                cConfig().showInfo('vStream', 'Fichier supprimé')
                 cConfig().update()
             except:
                 cConfig().showInfo('vStream', 'Erreur, fichier non supprimable')
@@ -556,6 +559,8 @@ class cDownload:
                     meta['title'] = sTitle
                     meta['path'] = sDownloadPath
                     cDb().insert_download(meta)
+                    if not self.isDownloading():
+                        self.StartDownloadList()
                     
                 except:
                     #print_exc()
