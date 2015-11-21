@@ -372,7 +372,7 @@ def showSeriesEpisode():
             oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
             oOutputParameterHandler.addParameter('disp', 'search2')
             oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
-            oOutputParameterHandler.addParameter('sSeason', sSeason))  
+            oOutputParameterHandler.addParameter('sSeason', sSeason)
             oOutputParameterHandler.addParameter('sEpisode', str(sEpNumber))   
             
             oGui.addTVDB(SITE_IDENTIFIER, 'showHosters', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
@@ -474,6 +474,8 @@ def showHosters():
     sUrl = oInputParameterHandler.getValue('siteUrl')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
+    sSeason = oInputParameterHandler.getValue('sSeason')
+    sEpisode = oInputParameterHandler.getValue('sEpisode')
     
     sDisp = oInputParameterHandler.getValue('disp')
     
@@ -497,6 +499,10 @@ def showHosters():
     sMovieTitle = re.sub('\(.+?\)',' ', sMovieTitle) #vire les parentheses
     sMovieTitle = re.sub(' +',' ',sMovieTitle) #vire les espaces multiples et on laisse les espaces sans modifs car certains codent avec %20 d'autres avec +
     #print 'apres ' + sMovieTitle
+    
+    #si c'est une serie
+    if sSeason and sEpisode:
+        sMovieTitle = sMovieTitle + ' S' + "%02d" % int(sEpisode) + 'E' + "%02d" % int(sEpisode)
     
     if ret > -1:
         
