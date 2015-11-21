@@ -83,10 +83,36 @@ def load():
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/person/popular')
     oGui.addDir(SITE_IDENTIFIER, 'showActors', 'Acteurs Populaires', 'films.png', oOutputParameterHandler)
     
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', API_URL+'/search/movie')
+    oGui.addDir(SITE_IDENTIFIER, 'showSearchMovie', 'Recherche de film', 'films.png', oOutputParameterHandler)
+    
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', API_URL+'/search/tv')
+    oGui.addDir(SITE_IDENTIFIER, 'showSearchSerie', 'Recherche de serie', 'series.png', oOutputParameterHandler)
+    
     oGui.setEndOfDirectory()
  
-    
- 
+def showSearchMovie():
+    oGui = cGui()
+
+    sSearchText = oGui.showKeyBoard()
+    if (sSearchText != False):
+        sUrl = API_URL+'/search/movie?query=' + sSearchText
+        showMovies(sUrl)
+        oGui.setEndOfDirectory()
+        return
+        
+def showSearchSerie():
+    oGui = cGui()
+
+    sSearchText = oGui.showKeyBoard()
+    if (sSearchText != False):
+        sUrl = API_URL+'/search/tv?query=' + sSearchText
+        showSeries(sUrl)
+        oGui.setEndOfDirectory()
+        return
+        
 def showGenre():
     oGui = cGui()
 
@@ -114,11 +140,17 @@ def showGenre():
     oGui.setEndOfDirectory()
     
 
-def showMovies():
-    oGui = cGui()
- 
+def showMovies(sSearch = ''):
+    
     oInputParameterHandler = cInputParameterHandler()
-    sUrl = oInputParameterHandler.getValue('siteUrl')
+    
+    if sSearch:
+        sUrl = sSearch
+
+    else:
+        sUrl = oInputParameterHandler.getValue('siteUrl')
+    
+    oGui = cGui()
 
     iPage = 1
     if (oInputParameterHandler.exist('page')):
@@ -168,11 +200,16 @@ def showMovies():
     #bmcgui.ListItem.select(1)
     
     
-def showSeries():
-    oGui = cGui()
- 
+def showSeries(sSearch=''):
     oInputParameterHandler = cInputParameterHandler()
-    sUrl = oInputParameterHandler.getValue('siteUrl')
+    
+    if sSearch:
+        sUrl = sSearch
+
+    else:
+        sUrl = oInputParameterHandler.getValue('siteUrl')
+    
+    oGui = cGui()
 
     iPage = 1
     if (oInputParameterHandler.exist('page')):
@@ -187,7 +224,7 @@ def showSeries():
     result = json.loads(sHtmlContent)
     
     total = len(sHtmlContent)
-    print result['results']
+    #print result['results']
     if (total > 0):
         for i in result['results']:
             sId, sTitle, sOtitle, sThumbnail, sFanart = i['id'], i['name'], i['original_name'], i['poster_path'], i['backdrop_path']
