@@ -241,10 +241,10 @@ def showSeries(sSearch=''):
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str('none'))
             oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
-            oOutputParameterHandler.addParameter('disp', 'search2')
-            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))          
+            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
+            oOutputParameterHandler.addParameter('sId', str(sId))
             
-            oGui.addTVDB(SITE_IDENTIFIER, 'showHosters', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
+            oGui.addTVDB(SITE_IDENTIFIER, 'showSeriesSaison', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
             
         if (iPage > 0):
             iNextPage = int(iPage) + 1
@@ -258,6 +258,137 @@ def showSeries(sSearch=''):
     #test pr chnagement mode
     xbmc.executebuiltin('Container.SetViewMode(500)')
 
+def showSeriesSaison():
+    
+    oInputParameterHandler = cInputParameterHandler()
+    #sUrl = oInputParameterHandler.getValue('siteUrl')
+    sId = oInputParameterHandler.getValue('sId')
+    sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
+    
+    sUrl = API_URL+'/tv/' + sId
+    
+    oGui = cGui()
+
+    iPage = 1
+    if (oInputParameterHandler.exist('page')):
+        iPage = oInputParameterHandler.getValue('page')
+   
+    oRequestHandler = cRequestHandler(sUrl)
+    oRequestHandler.addParameters('api_key', API_KEY)
+    oRequestHandler.addParameters('language', 'fr')
+    oRequestHandler.addParameters('page', iPage)
+
+    sHtmlContent = oRequestHandler.request()
+    result = json.loads(sHtmlContent)
+    
+    total = len(sHtmlContent)
+    #print result['results']
+    if (total > 0):
+        for i in result['seasons']:
+            
+            #sId, sTitle, sOtitle, sThumbnail, sFanart = i['id'], i['name'], i['original_name'], i['poster_path'], i['backdrop_path']
+            sdate, sNbreEp, sIdSeason, sThumbnail, SSeasonNum = i['air_date'], i['episode_count'], i['id'], i['poster_path'], i['season_number']
+            
+            if sThumbnail:
+                sThumbnail = POSTER_URL+sThumbnail
+            else: sThumbnail = '' 
+            
+            sFanart = ''
+            if sFanart:
+                sFanart = FANART_URL+sFanart
+            else : sFanart = ''
+
+            sTitle = sMovieTitle + ' Saison ' + str(SSeasonNum) + ' (' + str(sNbreEp) + ')'
+
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', str('none'))
+            oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
+            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
+            oOutputParameterHandler.addParameter('sId', sId)
+            oOutputParameterHandler.addParameter('sSeason', str(SSeasonNum))             
+            
+            oGui.addTVDB(SITE_IDENTIFIER, 'showSeriesEpisode', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
+            
+        if (iPage > 0):
+            iNextPage = int(iPage) + 1
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', sUrl)
+            oOutputParameterHandler.addParameter('page', iNextPage)
+            oGui.addDir(SITE_IDENTIFIER, 'showSeriesSaison', '[COLOR teal]Page '+str(iNextPage)+' >>>[/COLOR]', 'next.png', oOutputParameterHandler)
+
+    oGui.setEndOfDirectory()
+    
+    #test pr chnagement mode
+    xbmc.executebuiltin('Container.SetViewMode(500)')   
+    
+
+def showSeriesEpisode():
+    
+    oInputParameterHandler = cInputParameterHandler()
+    #sUrl = oInputParameterHandler.getValue('siteUrl')
+    sId = oInputParameterHandler.getValue('sId')
+    sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
+    sSeason = oInputParameterHandler.getValue('sSeason')
+    
+    sUrl = API_URL+'/tv/' + sId + '/season/' + sSeason
+    
+    oGui = cGui()
+
+    iPage = 1
+    if (oInputParameterHandler.exist('page')):
+        iPage = oInputParameterHandler.getValue('page')
+   
+    oRequestHandler = cRequestHandler(sUrl)
+    oRequestHandler.addParameters('api_key', API_KEY)
+    oRequestHandler.addParameters('language', 'fr')
+    oRequestHandler.addParameters('page', iPage)
+
+    sHtmlContent = oRequestHandler.request()
+    result = json.loads(sHtmlContent)
+    
+    total = len(sHtmlContent)
+    #print result['results']
+    if (total > 0):
+        for i in result['episodes']:
+            
+            #sId, sTitle, sOtitle, sThumbnail, sFanart = i['id'], i['name'], i['original_name'], i['poster_path'], i['backdrop_path']
+            sdate, sIdEp, sEpNumber, sName, sThumbnail, SResume = i['air_date'], i['id'], i['episode_number'], i['name'], i['still_path'], i['overview']
+            
+            sName = sName.encode("utf-8")
+            
+            if sThumbnail:
+                sThumbnail = POSTER_URL+sThumbnail
+            else: sThumbnail = ''
+            
+            sFanart = ''
+            if sFanart:
+                sFanart = FANART_URL+sFanart
+            else : sFanart = ''
+
+            sTitle = sMovieTitle + ' S' + sSeason + 'E' + str(sEpNumber)
+
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', str('none'))
+            oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
+            oOutputParameterHandler.addParameter('disp', 'search2')
+            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
+            oOutputParameterHandler.addParameter('sSeason', sSeason))  
+            oOutputParameterHandler.addParameter('sEpisode', str(sEpNumber))   
+            
+            oGui.addTVDB(SITE_IDENTIFIER, 'showHosters', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
+            
+        if (iPage > 0):
+            iNextPage = int(iPage) + 1
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', sUrl)
+            oOutputParameterHandler.addParameter('page', iNextPage)
+            oGui.addDir(SITE_IDENTIFIER, 'showSeriesEpisode', '[COLOR teal]Page '+str(iNextPage)+' >>>[/COLOR]', 'next.png', oOutputParameterHandler)
+
+    oGui.setEndOfDirectory()
+    
+    #test pr chnagement mode
+    xbmc.executebuiltin('Container.SetViewMode(500)')   
+    
 def showActors():
     oGui = cGui()
     
