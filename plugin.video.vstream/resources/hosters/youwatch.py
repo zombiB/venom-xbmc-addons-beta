@@ -114,6 +114,8 @@ class cHoster(iHoster):
         #host = urlresolver.HostedMediaFile(self.__sUrl)
         #if host: resolver = urlresolver.resolve(self.__sUrl)
         #api_call = resolver
+        
+        #print self.__sUrl
                     
         oRequest = cRequestHandler(self.__sUrl)
         sHtmlContent = oRequest.request()
@@ -121,7 +123,7 @@ class cHoster(iHoster):
         oParser = cParser()
         
         #1 er test en cas de fausse page
-        sPattern ='<iframe[^<>]+? src="(.+?)" [^<>]+?> <\/iframe>'
+        sPattern ='<iframe[^<>]+?src="(.+?)" [^<>]+?> *<\/iframe>'
         aResult = oParser.parse(sHtmlContent, sPattern)
         if (aResult[0] == True):
             UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0'
@@ -157,13 +159,15 @@ class cHoster(iHoster):
             r = re.findall('file:"(.*)",provider', flashvars)
             if r:
                 return True, r[0]
-            else:
-                cGui().showInfo(self.__sDisplayName, 'File not found or removed' , 5)
 
-        else:
-            cGui().showInfo(self.__sDisplayName, 'Fichier introuvable' , 5)
-            return False, False
-            
+        #3 eme test
+        sPattern ='\[{file:"(.+?)",label:"(.+?)"}\]'
+        aResult = oParser.parse(sHtmlContent, sPattern)
+        if (aResult[0] == True):
+            return True , aResult[1][0][0]
+        
+        cGui().showInfo(self.__sDisplayName, 'Fichier introuvable' , 5)
+        
         return False, False
         
         
