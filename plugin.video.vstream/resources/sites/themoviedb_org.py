@@ -39,6 +39,11 @@ FANART_URL = 'https://image.tmdb.org/t/p/w1280/'
 
 #https://api.themoviedb.org/3/movie/popular?api_key=92ab39516970ab9d86396866456ec9b6
 
+#<views>551,504,503,508,515,50,51,500,550,560,501,572,573,574,570,571,505,511</views>
+#viewmode = 500 Film
+#viewmode = 503 Film + Information
+#viewmode = 50  Liste
+
 
 def load():
     oGui = cGui()
@@ -193,11 +198,12 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('page', iNextPage)
             oGui.addDir(SITE_IDENTIFIER, 'showMovies', '[COLOR teal]Page '+str(iNextPage)+' >>>[/COLOR]', 'next.png', oOutputParameterHandler)
 
-    oGui.setEndOfDirectory()
-    
+            
     #test pr chnagement mode
     xbmc.executebuiltin('Container.SetViewMode(500)')
-    #bmcgui.ListItem.select(1)
+    #bmcgui.ListItem.select(1)        
+            
+    oGui.setEndOfDirectory()
     
     
 def showSeries(sSearch=''):
@@ -243,6 +249,7 @@ def showSeries(sSearch=''):
             oOutputParameterHandler.addParameter('sMovieTitle', str(sTitle))
             oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
             oOutputParameterHandler.addParameter('sId', str(sId))
+            oOutputParameterHandler.addParameter('sFanart', str(sFanart))
             
             oGui.addTVDB(SITE_IDENTIFIER, 'showSeriesSaison', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
             
@@ -253,10 +260,10 @@ def showSeries(sSearch=''):
             oOutputParameterHandler.addParameter('page', iNextPage)
             oGui.addDir(SITE_IDENTIFIER, 'showSeries', '[COLOR teal]Page '+str(iNextPage)+' >>>[/COLOR]', 'next.png', oOutputParameterHandler)
 
-    oGui.setEndOfDirectory()
-    
     #test pr chnagement mode
-    xbmc.executebuiltin('Container.SetViewMode(500)')
+    xbmc.executebuiltin('Container.SetViewMode(500)')         
+            
+    oGui.setEndOfDirectory()
 
 def showSeriesSaison():
     
@@ -264,6 +271,7 @@ def showSeriesSaison():
     #sUrl = oInputParameterHandler.getValue('siteUrl')
     sId = oInputParameterHandler.getValue('sId')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
+    sFanart = oInputParameterHandler.getValue('sFanart')
     
     sUrl = API_URL+'/tv/' + sId
     
@@ -286,26 +294,21 @@ def showSeriesSaison():
     if (total > 0):
         for i in result['seasons']:
             
-            #sId, sTitle, sOtitle, sThumbnail, sFanart = i['id'], i['name'], i['original_name'], i['poster_path'], i['backdrop_path']
             sdate, sNbreEp, sIdSeason, sThumbnail, SSeasonNum = i['air_date'], i['episode_count'], i['id'], i['poster_path'], i['season_number']
             
             if sThumbnail:
                 sThumbnail = POSTER_URL+sThumbnail
             else: sThumbnail = '' 
-            
-            sFanart = ''
-            if sFanart:
-                sFanart = FANART_URL+sFanart
-            else : sFanart = ''
 
-            sTitle = sMovieTitle + ' Saison ' + str(SSeasonNum) + ' (' + str(sNbreEp) + ')'
+            sTitle = 'Saison ' + str(SSeasonNum) + ' (' + str(sNbreEp) + ')'
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str('none'))
             oOutputParameterHandler.addParameter('sMovieTitle', sMovieTitle)
             oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
             oOutputParameterHandler.addParameter('sId', sId)
-            oOutputParameterHandler.addParameter('sSeason', str(SSeasonNum))             
+            oOutputParameterHandler.addParameter('sSeason', str(SSeasonNum))
+            oOutputParameterHandler.addParameter('sFanart', str(sFanart))            
             
             oGui.addTVDB(SITE_IDENTIFIER, 'showSeriesEpisode', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
             
@@ -316,10 +319,10 @@ def showSeriesSaison():
             oOutputParameterHandler.addParameter('page', iNextPage)
             oGui.addDir(SITE_IDENTIFIER, 'showSeriesSaison', '[COLOR teal]Page '+str(iNextPage)+' >>>[/COLOR]', 'next.png', oOutputParameterHandler)
 
-    oGui.setEndOfDirectory()
-    
     #test pr chnagement mode
-    xbmc.executebuiltin('Container.SetViewMode(500)')   
+    xbmc.executebuiltin('Container.SetViewMode(500)')         
+            
+    oGui.setEndOfDirectory() 
     
 
 def showSeriesEpisode():
@@ -329,6 +332,8 @@ def showSeriesEpisode():
     sId = oInputParameterHandler.getValue('sId')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sSeason = oInputParameterHandler.getValue('sSeason')
+    sFanart = oInputParameterHandler.getValue('sFanart')
+    
     
     sUrl = API_URL+'/tv/' + sId + '/season/' + sSeason
     
@@ -355,17 +360,14 @@ def showSeriesEpisode():
             sdate, sIdEp, sEpNumber, sName, sThumbnail, SResume = i['air_date'], i['id'], i['episode_number'], i['name'], i['still_path'], i['overview']
             
             sName = sName.encode("utf-8")
+            if sName == '':
+                sName = sMovieTitle
             
             if sThumbnail:
                 sThumbnail = POSTER_URL+sThumbnail
             else: sThumbnail = ''
-            
-            sFanart = ''
-            if sFanart:
-                sFanart = FANART_URL+sFanart
-            else : sFanart = ''
 
-            sTitle = sMovieTitle + ' S' + sSeason + 'E' + str(sEpNumber)
+            sTitle = '[COLOR coral]S' + sSeason + 'E' + str(sEpNumber) + '[/COLOR] - ' + sName
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', str('none'))
@@ -384,10 +386,12 @@ def showSeriesEpisode():
             oOutputParameterHandler.addParameter('page', iNextPage)
             oGui.addDir(SITE_IDENTIFIER, 'showSeriesEpisode', '[COLOR teal]Page '+str(iNextPage)+' >>>[/COLOR]', 'next.png', oOutputParameterHandler)
 
+    #test pr chnagement mode
+    xbmc.executebuiltin('Container.SetViewMode(50)')         
+            
     oGui.setEndOfDirectory()
     
-    #test pr chnagement mode
-    xbmc.executebuiltin('Container.SetViewMode(500)')   
+  
     
 def showActors():
     oGui = cGui()
@@ -469,26 +473,14 @@ def __checkForNextPage(sHtmlContent):
     
 
 def showHosters():
-    oGui = cGui()
+
     oInputParameterHandler = cInputParameterHandler()
-    sUrl = oInputParameterHandler.getValue('siteUrl')
+    #sUrl = oInputParameterHandler.getValue('siteUrl')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
     sSeason = oInputParameterHandler.getValue('sSeason')
     sEpisode = oInputParameterHandler.getValue('sEpisode')
-    
-    sDisp = oInputParameterHandler.getValue('disp')
-    
-    dialog2 = xbmcgui.Dialog()
-    dialog_select = [cConfig().getSetting('search1_label'), cConfig().getSetting('search2_label'), cConfig().getSetting('search3_label'), cConfig().getSetting('search4_label')]
-    
-    disp = ['search1','search2','search3','search4']
-    
-    if (sDisp == 'none'):
-        ret = dialog2.select('Select Recherche',dialog_select)
-    else:
-        ret = disp.index(sDisp)
-    
+      
     #nettoyage du nom pr la recherche
     #print 'avant ' + sMovieTitle
     sMovieTitle = unicode(sMovieTitle, 'utf-8')#converti en unicode pour aider aux convertions
@@ -502,7 +494,38 @@ def showHosters():
     
     #si c'est une serie
     if sSeason and sEpisode:
-        sMovieTitle = sMovieTitle + ' S' + "%02d" % int(sEpisode) + 'E' + "%02d" % int(sEpisode)
+        sExtraTitle = ' S' + "%02d" % int(sEpisode) + 'E' + "%02d" % int(sEpisode)
+        
+    dialog3 = xbmcgui.Dialog()
+    ret = dialog3.select('Selectionner un Moteur de Recherche',['Vstream (Fiable mais plus complexe)','Alluc (Simple mais resultats non garantis)'])
+
+    if ret == 0:
+        VstreamSearch(sMovieTitle)
+    elif ret == 1:
+        AllucSearch(sMovieTitle + sExtraTitle)
+        
+        
+
+
+def VstreamSearch(sMovieTitle):
+    
+    oGui = cGui()
+    oInputParameterHandler = cInputParameterHandler()
+    sUrl = oInputParameterHandler.getValue('siteUrl')
+    
+    #Type de recherche
+    sDisp = oInputParameterHandler.getValue('disp')
+    disp = ['search1','search2','search3','search4']
+    #non defini => on demande
+    if (sDisp == 'none'):
+        dialog2 = xbmcgui.Dialog()
+        dialog_select = [cConfig().getSetting('search1_label'), cConfig().getSetting('search2_label'), cConfig().getSetting('search3_label'), cConfig().getSetting('search4_label')]
+
+        ret = dialog2.select('Select Recherche',dialog_select)
+    
+    else:
+        ret = disp.index(sDisp)
+    
     
     if ret > -1:
         
@@ -513,14 +536,23 @@ def showHosters():
                 oOutputParameterHandler = cOutputParameterHandler()
                 oOutputParameterHandler.addParameter('siteUrl', sUrl)
                 oGui.addDir(aPlugin[1], 'load', '[COLOR olive]'+ aPlugin[1] +'[/COLOR]', 'search.png', oOutputParameterHandler)
-            
-                exec "from resources.sites import "+aPlugin[1]+" as search"
-                sUrl = aPlugin[0]+sMovieTitle
-                searchUrl = "search.%s('%s')" % (aPlugin[2], sUrl)
+                
+                exec "from resources.sites import "+aPlugin[1]+" as search"               
+                sUrl = aPlugin[0]+sMovieTitle               
                 exec searchUrl
             except:       
                 pass
                 
+    oGui.setEndOfDirectory()
+    
+def AllucSearch(sMovieTitle):
+    oGui = cGui()
+    
+    exec "from resources.sites import alluc_ee as search"
+    sUrl = 'http://www.alluc.ee/stream/lang%3Afr+' + sMovieTitle 
+    searchUrl = "search.%s('%s')" % ('showMovies', sUrl)
+    exec searchUrl
+    
     oGui.setEndOfDirectory()
     
 def addMoviedb(sId, sFunction, sLabel, sIcon, sThumbnail, fanart, oOutputParameterHandler = ''):
@@ -538,4 +570,3 @@ def addMoviedb(sId, sFunction, sLabel, sIcon, sThumbnail, fanart, oOutputParamet
     
     #cGui.addFolder(oGuiElement, oOutputParameterHandler)
     oGui.addFolder(oGuiElement, oOutputParameterHandler, False)
-
