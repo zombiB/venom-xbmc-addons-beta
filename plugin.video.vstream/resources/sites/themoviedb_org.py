@@ -31,9 +31,9 @@ API_KEY = '92ab39516970ab9d86396866456ec9b6'
 API_VERS = '3'
 API_URL = URL_MAIN+API_VERS
 
-POSTER_URL = 'https://image.tmdb.org/t/p/w396/'
+POSTER_URL = 'https://image.tmdb.org/t/p/w396'
 #FANART_URL = 'https://image.tmdb.org/t/p/w780/'
-FANART_URL = 'https://image.tmdb.org/t/p/w1280/'
+FANART_URL = 'https://image.tmdb.org/t/p/w1280'
 #FANART_URL = 'https://image.tmdb.org/t/p/original/'
 
 
@@ -236,7 +236,8 @@ def showSeries(sSearch=''):
             sId, sTitle, sOtitle, sThumbnail, sFanart = i['id'], i['name'], i['original_name'], i['poster_path'], i['backdrop_path']
             if sThumbnail:
                 sThumbnail = POSTER_URL+sThumbnail
-            else: sThumbnail = '' 
+            else:
+                sThumbnail = '' 
                 
             if sFanart:
                 sFanart = FANART_URL+sFanart
@@ -375,7 +376,7 @@ def showSeriesEpisode():
             oOutputParameterHandler.addParameter('disp', 'search2')
             oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
             oOutputParameterHandler.addParameter('sSeason', sSeason)
-            oOutputParameterHandler.addParameter('sEpisode', str(sEpNumber))   
+            oOutputParameterHandler.addParameter('sEpisode', str(sEpNumber))
             
             oGui.addTVDB(SITE_IDENTIFIER, 'showHosters', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
             
@@ -532,16 +533,17 @@ def VstreamSearch(sMovieTitle):
         oHandler = cRechercheHandler()
         aPlugins = oHandler.getAvailablePlugins(disp[ret])
         for aPlugin in aPlugins:
-            try:                   
+            #try:                   
                 oOutputParameterHandler = cOutputParameterHandler()
                 oOutputParameterHandler.addParameter('siteUrl', sUrl)
                 oGui.addDir(aPlugin[1], 'load', '[COLOR olive]'+ aPlugin[1] +'[/COLOR]', 'search.png', oOutputParameterHandler)
                 
-                exec "from resources.sites import "+aPlugin[1]+" as search"               
-                sUrl = aPlugin[0]+sMovieTitle               
+                exec "from resources.sites import "+aPlugin[1]+" as search"        
+                sUrl = aPlugin[0]+sMovieTitle
+                searchUrl = "search.%s('%s')" % (aPlugin[2], sUrl)
                 exec searchUrl
-            except:       
-                pass
+           #except:       
+           #     pass
                 
     oGui.setEndOfDirectory()
     
