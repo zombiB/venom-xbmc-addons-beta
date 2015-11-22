@@ -32,6 +32,14 @@ SITE_IDENTIFIER = 'cDownload'
 #https://code.google.com/p/navi-x/source/browse/trunk/Navi-X/src/CDownLoader.py?r=155
 
 
+#status = 0 => pas telechargé
+#status = 1 => en cours de DL (ou bloque si bug)
+#status = 2 => fini de DL
+
+#GetProperty('arret') = '0' => Telechargement en cours
+#GetProperty('arret') = '1' => Arret demandé
+#GetProperty('arret') = '' =>  Jamais eu de telechargement
+
 class cDownloadProgressBar(threading.Thread):
     def __init__(self, *args, **kwargs):
 
@@ -63,22 +71,20 @@ class cDownloadProgressBar(threading.Thread):
         return self.__oDialog
         
         
-    def _StartDownload(self):
+    def _StartDownload(self): 
 
         #print 'Thread actuel'
         #print threading.current_thread().getName()
         
         diag = self.createProcessDialog()
-        print diag
         #diag.isFinished()
-        
-        #self.Memorise.set("VstreamDownloaderClass", self)
-        #self.Memorise.set("VstreamDownloaderClass", repr(self))
         
         xbmcgui.Window(10101).setProperty('arret', '0')
         #self.Memorise.set("VstreamDownloaderWorking", "1")
 
         headers = self.oUrlHandler.info()
+        
+        print headers
         
         iTotalSize = -1
         if "content-length" in headers:
@@ -122,11 +128,7 @@ class cDownloadProgressBar(threading.Thread):
         meta['size'] = TotDown
         meta['totalsize'] = iTotalSize
         
-        #status = 0 => pas telechargé
-        #status = 1 => en cours de DL (ou bloque si bug)
-        #status = 2 => fini de DL
-        
-        if TotDown == iTotalSize:
+        if (TotDown == iTotalSize) and (iTotalSize > 10000):
             meta['status'] = 2           
             try:
                 cDb().update_download(meta)
@@ -182,16 +184,23 @@ class cDownloadProgressBar(threading.Thread):
 
     def run(self):
         
-        if not Memorise.lock("VstreamDownloaderLock"):
-            cConfig().showInfo('Telechargements deja demarrés', self.__sTitle)
+        try:
+            #1 seul header a l'air necessaire pour le moment
+            headers = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36' }
+            url = self.__sUrl.split('|')[0]
+            req = urllib2.Request(url, None, headers)
+            self.oUrlHandler = urllib2.urlopen(req)
+            #self.__instance = repr(self)
+            self.file = xbmcvfs.File(self.__fPath, 'w')
+        except:
+            print 'download error'
+            print self.__sUrl
+            cConfig().showInfo('Erreur initialisation', 'Download error')
             return
         
-        #self.Memorise.set("VstreamDownloaderInstance", repr(self))
-        self.oUrlHandler = urllib2.urlopen(self.__sUrl)
-        
-        self.__instance = repr(self)
-        
-        self.file = xbmcvfs.File(self.__fPath, 'w')
+        if not Memorise.lock("VstreamDownloaderLock"):
+            cConfig().showInfo('Telechargements deja demarrés', 'Download error')
+            return
         
         self._StartDownload()
         
@@ -267,7 +276,10 @@ class cDownload:
             cConfig().showInfo('Lien non resolvable', sTitle)
             return
             
-            
+        if not sUrl.startswith('http') or sUrl.endswith('.m3u8'):
+            cConfig().showInfo('Format non supporte', sTitle)
+            print sUrl
+            return           
         
         try:
             cConfig().log("Telechargement " + str(sUrl))
@@ -552,6 +564,8 @@ class cDownload:
                     meta['title'] = sTitle
                     meta['path'] = sDownloadPath
                     cDb().insert_download(meta)
+                    
+                    #telechargement direct ou pas ?
                     if not self.isDownloading():
                         self.StartDownloadList()
                     
