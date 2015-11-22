@@ -47,10 +47,6 @@ FANART_URL = 'https://image.tmdb.org/t/p/w1280'
 
 def load():
     oGui = cGui()
-    
-    # oOutputParameterHandler = cOutputParameterHandler()
-    # oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-    # oGui.addDir(SITE_IDENTIFIER, 'showSearch', 'Recherche', 'search.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/movie/popular')
@@ -66,7 +62,7 @@ def load():
    
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/genre/movie/list')
-    oGui.addDir(SITE_IDENTIFIER, 'showGenre', 'Films Genres', 'genres.png', oOutputParameterHandler)
+    oGui.addDir(SITE_IDENTIFIER, 'showGenreMovie', 'Films Genres', 'genres.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/tv/popular')
@@ -80,9 +76,9 @@ def load():
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/tv/top_rated')
     oGui.addDir(SITE_IDENTIFIER, 'showSeries', 'Séries les mieux notés', 'series.png', oOutputParameterHandler)
 
-    # oOutputParameterHandler = cOutputParameterHandler()
-    # oOutputParameterHandler.addParameter('siteUrl', API_URL+'/genre/tv/list')
-    # oGui.addDir(SITE_IDENTIFIER, 'showGenre2', 'Séries Genres', 'genres.png', oOutputParameterHandler)
+    oOutputParameterHandler = cOutputParameterHandler()
+    oOutputParameterHandler.addParameter('siteUrl', API_URL+'/genre/tv/list')
+    oGui.addDir(SITE_IDENTIFIER, 'showGenreTV', 'Séries Genres', 'genres.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', API_URL+'/person/popular')
@@ -118,7 +114,7 @@ def showSearchSerie():
         oGui.setEndOfDirectory()
         return
         
-def showGenre():
+def showGenreMovie():
     oGui = cGui()
 
     oInputParameterHandler = cInputParameterHandler()
@@ -143,7 +139,34 @@ def showGenre():
             oGui.addDir(SITE_IDENTIFIER, 'showMovies', str(sTitle), 'genres.png', oOutputParameterHandler)
            
     oGui.setEndOfDirectory()
+
+def showGenreTV():
+    oGui = cGui()
+
+    oInputParameterHandler = cInputParameterHandler()
+    sUrl = oInputParameterHandler.getValue('siteUrl')
+
+    oRequestHandler = cRequestHandler(sUrl)
+    oRequestHandler.addParameters('api_key', API_KEY)
+    oRequestHandler.addParameters('language', 'fr')
     
+    sHtmlContent = oRequestHandler.request(); 
+    result = json.loads(sHtmlContent)       
+
+    total = len(sHtmlContent)
+    if (total > 0):
+        for i in result['genres']:
+            sId, sTitle = i['id'], i['name']
+
+            sTitle = sTitle.encode("utf-8")
+            #sUrl = API_URL+'/genre/'+str(sId)+'/tv'
+            sUrl = API_URL+'/discover/tv?with_genres=' + str(sId)
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', sUrl)
+            oGui.addDir(SITE_IDENTIFIER, 'showSeries', str(sTitle), 'genres.png', oOutputParameterHandler)
+           
+    oGui.setEndOfDirectory()
+        
 
 def showMovies(sSearch = ''):
     
@@ -533,7 +556,7 @@ def VstreamSearch(sMovieTitle):
         oHandler = cRechercheHandler()
         aPlugins = oHandler.getAvailablePlugins(disp[ret])
         for aPlugin in aPlugins:
-            #try:                   
+            try:                   
                 oOutputParameterHandler = cOutputParameterHandler()
                 oOutputParameterHandler.addParameter('siteUrl', sUrl)
                 oGui.addDir(aPlugin[1], 'load', '[COLOR olive]'+ aPlugin[1] +'[/COLOR]', 'search.png', oOutputParameterHandler)
@@ -542,8 +565,8 @@ def VstreamSearch(sMovieTitle):
                 sUrl = aPlugin[0]+sMovieTitle
                 searchUrl = "search.%s('%s')" % (aPlugin[2], sUrl)
                 exec searchUrl
-           #except:       
-           #     pass
+            except:       
+                pass
                 
     oGui.setEndOfDirectory()
     
