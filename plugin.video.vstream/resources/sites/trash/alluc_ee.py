@@ -17,8 +17,6 @@ SITE_DESC = 'Moteur de recherche alluc'
 
 URL_MAIN = 'http://www.alluc.ee/'
 
-MOVIE_NETS = ('http://www.videobuzzy.com/top-video.php', 'showMovies')
-
 #URL_SEARCH = ('http://www.notre-ecole.net/?s=', 'showMovies')
 #FUNCTION_SEARCH = 'showMovies'
     
@@ -47,6 +45,7 @@ def showMovies(sSearch = ''):
     
     if sSearch:
       sUrl = sSearch
+      sSearch = sSearch.replace(' ','+')
 
     else:
         oInputParameterHandler = cInputParameterHandler()
@@ -102,7 +101,7 @@ def showMovies(sSearch = ''):
                 else:
                     sthumb = URL_MAIN + sthumb
                 
-                sTitle = re.sub('l\/(.+?)\/','\\1',sUrl)
+                sTitle = re.sub('l\/(.+?)\/.+$','\\1',sUrl)
                 
                 sUrl = URL_MAIN + sUrl
                 
