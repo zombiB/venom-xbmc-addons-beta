@@ -344,7 +344,7 @@ class cGuiElement:
             self.__sTrailerUrl = meta['trailer']
         if meta['cover_url']:
             self.__sThumbnail = meta['cover_url']
-        return
+        return meta
 
     def getItemValues(self):
         self.__aItemValues['Title'] = self.getTitle()

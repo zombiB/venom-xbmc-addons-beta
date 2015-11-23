@@ -361,16 +361,23 @@ class cGui():
         oContext = cContextElement()
         oContext.setFile('cGui')
         oContext.setSiteName(oGuiElement.getSiteName())
-        oContext.setFunction('viewinfo')
+        if cConfig().getSetting('meta-view') == 'true':
+            oContext.setFunction('viewinfo2')
+        else:
+            oContext.setFunction('viewinfo')
         oContext.setTitle('[COLOR azure]Information[/COLOR]')
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('sTitle', oGuiElement.getTitle())
+        oOutputParameterHandler.addParameter('sFileName', oGuiElement.getFileName())
         oOutputParameterHandler.addParameter('sId', oGuiElement.getSiteName())
+        oOutputParameterHandler.addParameter('sMeta', oGuiElement.getMeta())
       
         oContext.setOutputParameterHandler(oOutputParameterHandler)
 
         oGuiElement.addContextItem(oContext)
+        
+
     
     def createContexMenuSimil(self, oGuiElement, oOutputParameterHandler= ''):
         oContext = cContextElement()
@@ -605,13 +612,29 @@ class cGui():
         
         
     def viewinfo(self):
+ 
         oGuiElement = cGuiElement()
         oInputParameterHandler = cInputParameterHandler()
 
         sTitle = oInputParameterHandler.getValue('sTitle')
         sId = oInputParameterHandler.getValue('sId')
+        sFileName = oInputParameterHandler.getValue('sFileName')
+        sMeta = oInputParameterHandler.getValue('sMeta')
+ 
+        #1 film #2serie
+        ui = cConfig().WindowsBoxes(sFileName, sMeta)      
+        
+        
+    def viewinfo2(self):
+ 
+        oGuiElement = cGuiElement()
+        oInputParameterHandler = cInputParameterHandler()
 
-        xbmc.executebuiltin( "Action(Info)")
+        sTitle = oInputParameterHandler.getValue('sTitle')
+        sId = oInputParameterHandler.getValue('sId')
+        sFileName = oInputParameterHandler.getValue('sFileName')          
+        
+        xbmc.executebuiltin("Action(Info)")
         
     def direct_epg(self):
         oGuiElement = cGuiElement()
