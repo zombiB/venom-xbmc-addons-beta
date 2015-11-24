@@ -17,6 +17,7 @@ class cGuiElement:
         self.__sPlaycount = 0
         self.__sTrailerUrl = ''
         self.__sMetaAddon = cConfig().getSetting('meta-view')
+        self.__sImdb = ''
         self.__sMediaUrl = ''
         self.__sSiteUrl = ''
         self.__sTitle = ''
@@ -56,6 +57,12 @@ class cGuiElement:
 
     def getType(self):
         return self.__sType
+        
+    def setImdb(self, sImdb):
+        self.__sImdb = sImdb
+
+    def getImdb(self):
+        return self.__sImdb
         
     def setCat(self, sCat):
         self.__sCat = sCat
@@ -329,13 +336,15 @@ class cGuiElement:
         else:
             return
         del meta['playcount']
-               
+        
         if meta['title']:
             meta['title'] = self.getTitle()
             
         for key, value in meta.items():
             self.addItemValues(key, value)
          
+        if meta['imdb_id']:
+            self.__sImdb = meta['imdb_id']           
         if meta['backdrop_url']:
             self.addItemProperties('fanart_image', meta['backdrop_url'])
             self.__sFanart = meta['backdrop_url']
@@ -344,7 +353,7 @@ class cGuiElement:
             self.__sTrailerUrl = meta['trailer']
         if meta['cover_url']:
             self.__sThumbnail = meta['cover_url']
-        return meta
+        return
 
     def getItemValues(self):
         self.__aItemValues['Title'] = self.getTitle()

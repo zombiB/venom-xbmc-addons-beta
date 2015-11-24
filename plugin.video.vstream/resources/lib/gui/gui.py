@@ -35,14 +35,6 @@ class cGui():
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
-            
-        self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
-        self.createContexMenuSimil(oGuiElement, oOutputParameterHandler)
-        self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
-        
-        self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
-        
-
 
         self.addFolder(oGuiElement, oOutputParameterHandler)
         
@@ -64,10 +56,6 @@ class cGui():
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
         
-        
-        self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
-        self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
-        self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
         
         self.addFolder(oGuiElement, oOutputParameterHandler)
         
@@ -230,6 +218,17 @@ class cGui():
         
         
         sItemUrl = self.__createItemUrl(oGuiElement, oOutputParameterHandler)
+        
+        #new context prend en charge les metas
+        if cGui.CONTENT == "movies":
+            self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
+            self.createContexMenuSimil(oGuiElement, oOutputParameterHandler)
+            self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
+            self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
+        elif cGui.CONTENT == "tvshows":
+            self.createContexMenuWatch(oGuiElement, oOutputParameterHandler)
+            self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
+            self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
 
         oListItem = self.__createContextMenu(oGuiElement, oListItem)
        
@@ -361,6 +360,7 @@ class cGui():
         oContext = cContextElement()
         oContext.setFile('cGui')
         oContext.setSiteName(oGuiElement.getSiteName())
+        #oGuiElement.getImdb()
         if cConfig().getSetting('meta-view') == 'true':
             oContext.setFunction('viewinfo2')
         else:
@@ -627,7 +627,6 @@ class cGui():
         
     def viewinfo2(self):
  
-        oGuiElement = cGuiElement()
         oInputParameterHandler = cInputParameterHandler()
 
         sTitle = oInputParameterHandler.getValue('sTitle')

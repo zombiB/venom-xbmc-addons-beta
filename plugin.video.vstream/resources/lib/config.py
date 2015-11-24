@@ -224,7 +224,8 @@ class cConfig():
                 from metahandler import metahandlers
                 grab = metahandlers.MetaData(preparezip=False)
                 meta = grab.get_meta('movie',sFileName)
-            except:
+            except:         
+                xbmc.executebuiltin("Action(Info)")
                 return
         elif num == "2":
             try:
@@ -232,6 +233,7 @@ class cConfig():
                 grab = metahandlers.MetaData(preparezip=False)
                 meta = grab.get_meta('tvshow',sFileName)
             except:
+                xbmc.executebuiltin("Action(Info)")
                 return
                 
         class XMLDialog(xbmcgui.WindowXMLDialog):
@@ -278,22 +280,6 @@ class cConfig():
                                 
                         else:
                             xbmcgui.Window(10000).setProperty(property, str(meta[e]))
-                    #xbmcgui.Window(10000).setProperty(property, u,(meta[e]))
-                
-                # xbmcgui.Window(10000).setProperty("ListItem.Director", meta['director'])
-                # xbmcgui.Window(10000).setProperty("ListItem.Writer", meta['writer'])
-                # xbmcgui.Window(10000).setProperty("ListItem.Studio", meta['studio'])
-                # xbmcgui.Window(10000).setProperty("ListItem.Genre", meta['genre'])
-                
-                # xbmcgui.Window(10000).setProperty("ListItem.Year", str(meta['year']))
-                # xbmcgui.Window(10000).setProperty("ListItem.Duration", meta['duration'])
-                # vote = '%s (%s votes)' % (meta['rating'] , meta['votes'])
-                # xbmcgui.Window(10000).setProperty("ListItem.RatingAndVotes", str(vote))
-                
-                # xbmcgui.Window(10000).setProperty("ListItem.Director", meta['director'])
-                # xbmcgui.Window(10000).setProperty("ListItem.Writer", meta['writer'])
-                # xbmcgui.Window(10000).setProperty("ListItem.Studio", meta['studio'])
-                # xbmcgui.Window(10000).setProperty("ListItem.Genre", meta['genre'])
                 
                 
 
