@@ -516,6 +516,7 @@ def showHosters():
     sMovieTitle = re.sub(' +',' ',sMovieTitle) #vire les espaces multiples et on laisse les espaces sans modifs car certains codent avec %20 d'autres avec +
     #print 'apres ' + sMovieTitle
     
+    sExtraTitle = ''
     #si c'est une serie
     if sSeason and sEpisode:
         sExtraTitle = ' S' + "%02d" % int(sEpisode) + 'E' + "%02d" % int(sEpisode)
