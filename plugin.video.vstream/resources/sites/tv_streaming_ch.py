@@ -38,7 +38,7 @@ ANIM_VOSTFRS = ('http://tv-streaming.ch/category/manga-vf/manga-vostfr/', 'showM
 
 DOC_DOCS = ('http://tv-streaming.ch/category/television/documentaire/', 'showMovies')
 
-SPORT_SPORTS = ('http://tv-streaming.ch/category/sport/', 'showMovies')
+SPORT_SPORTS = ('http://tv-streaming.ch/category/sport/', 'showReplay')
 
 REPLAYTV_REPLAYTV = ('http://', 'ReplayTV')
 
@@ -187,7 +187,7 @@ def showMovies(sSearch = ''):
     ##fh.write(sHtmlContent)
     #fh.close()
     
-    sPattern = '<div.*?class="moviefilm"><a.*?href="([^<]+)">.*?<img.*?src="([^<]+)" alt="(.+?)".+?>'
+    sPattern = '<div.*?class="moviefilm"> *<a.*?href="([^<]+)">.*?<img.*?src="([^<]+)" alt="(.+?)".+?>'
     
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
