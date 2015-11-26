@@ -539,8 +539,6 @@ def VstreamSearch(sMovieTitle):
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
     
-    print sMovieTitle
-    
     #Type de recherche
     sDisp = oInputParameterHandler.getValue('disp')
     disp = ['search1','search2','search3','search4']
