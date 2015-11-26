@@ -510,7 +510,8 @@ def showHosters():
     sMovieTitle = unicode(sMovieTitle, 'utf-8')#converti en unicode pour aider aux convertions
     sMovieTitle = unicodedata.normalize('NFD', sMovieTitle).encode('ascii', 'ignore').decode("unicode_escape")#vire accent et '\'
     sMovieTitle = sMovieTitle.encode("utf-8").lower() #on repasse en utf-8
-    sMovieTitle = re.sub(r'[^(\w| )]', ' ', sMovieTitle) #vire les caracteres a la con qui peuvent trainer
+    #modif venom si le titre comporte un - il doit le chercher
+    #sMovieTitle = re.sub(r'[^(\w| )]', ' ', sMovieTitle) #vire les caracteres a la con qui peuvent trainer
     sMovieTitle = re.sub('( |^)(le|la|les|du|au|a|l)( |$)',' ', sMovieTitle) #vire les articles
     sMovieTitle = re.sub('\(.+?\)',' ', sMovieTitle) #vire les parentheses
     sMovieTitle = re.sub(' +',' ',sMovieTitle) #vire les espaces multiples et on laisse les espaces sans modifs car certains codent avec %20 d'autres avec +
@@ -537,6 +538,8 @@ def VstreamSearch(sMovieTitle):
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
+    
+    print sMovieTitle
     
     #Type de recherche
     sDisp = oInputParameterHandler.getValue('disp')
