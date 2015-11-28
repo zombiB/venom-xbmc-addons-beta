@@ -116,6 +116,8 @@ class cRechercheHandler:
     def getAvailablePlugins(self):
         oConfig = cConfig()
         sText = self.getText()
+        if not sText:
+            return False
         sLabel = self.getDisp()
         sFolder =  self.getRootFolder()
         sFolder = os.path.join(sFolder, 'resources/sites')
@@ -131,7 +133,7 @@ class cRechercheHandler:
                 
             aPlugin = self.__importPlugin(sFileName, sLabel, sText)
 
-        return
+        return True
 
     def __createAvailablePluginsItem(self, sPluginName, sPluginIdentifier, sPluginDesc):
         aPluginEntry = []

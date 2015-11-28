@@ -319,31 +319,41 @@ class cHome:
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
         oOutputParameterHandler.addParameter('disp', 'search1')
         oOutputParameterHandler.addParameter('readdb', readdb)
-        oGui.addDir(SITE_IDENTIFIER, 'searchMovie', cConfig().getSetting('search1_label'), 'search.png', oOutputParameterHandler)
+        sLabel1 = cConfig().getlanguage(30077)+": "+cConfig().getSetting('search1_label')
+        oGui.addDir(SITE_IDENTIFIER, 'searchMovie', sLabel1, 'search.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
         oOutputParameterHandler.addParameter('disp', 'search2')
         oOutputParameterHandler.addParameter('readdb', readdb)
-        oGui.addDir(SITE_IDENTIFIER, 'searchMovie', cConfig().getSetting('search2_label'), 'search.png', oOutputParameterHandler)
+        sLabel2 = cConfig().getlanguage(30089)+": "+cConfig().getSetting('search2_label')
+        oGui.addDir(SITE_IDENTIFIER, 'searchMovie', sLabel2, 'search.png', oOutputParameterHandler)
         
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
         oOutputParameterHandler.addParameter('disp', 'search3')
         oOutputParameterHandler.addParameter('readdb', readdb)
-        oGui.addDir(SITE_IDENTIFIER, 'searchMovie', cConfig().getSetting('search3_label'), 'search.png', oOutputParameterHandler)
+        sLabel3 = cConfig().getlanguage(30090)+": "+cConfig().getSetting('search3_label')
+        oGui.addDir(SITE_IDENTIFIER, 'searchMovie', sLabel3, 'search.png', oOutputParameterHandler)
         
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
         oOutputParameterHandler.addParameter('disp', 'search4')
         oOutputParameterHandler.addParameter('readdb', readdb)
-        oGui.addDir(SITE_IDENTIFIER, 'searchMovie', cConfig().getSetting('search4_label'), 'search.png', oOutputParameterHandler)
+        sLabel4 = cConfig().getlanguage(30091)+": "+cConfig().getSetting('search4_label')
+        oGui.addDir(SITE_IDENTIFIER, 'searchMovie', sLabel4, 'search.png', oOutputParameterHandler)
         
-
+        oOutputParameterHandler = cOutputParameterHandler()
+        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oGui.addDir('alluc_ee', 'showSearch', '[COLOR orange]Recherche: Alluc_ee[/COLOR]', 'search.png', oOutputParameterHandler)
+        
+        
         #history
         if (cConfig().getSetting("history-view") == 'true'):
 
             row = cDb().get_history()
+            if row:
+                oGui.addText(SITE_IDENTIFIER, "[COLOR azure]Votre Historique[/COLOR]")
             for match in row:
                 
                 oOutputParameterHandler = cOutputParameterHandler()
@@ -351,7 +361,7 @@ class cHome:
                 oOutputParameterHandler.addParameter('searchtext', match[1])
                 oOutputParameterHandler.addParameter('disp', match[2])
                 oOutputParameterHandler.addParameter('readdb', 'False')
-                oGui.addDir(SITE_IDENTIFIER, 'searchMovie', match[1], 'search.png', oOutputParameterHandler)
+                oGui.addDir(SITE_IDENTIFIER, 'searchMovie', "- "+match[1], 'search.png', oOutputParameterHandler)
              
             if row:
 
@@ -402,7 +412,9 @@ class cHome:
         oHandler.setDisp(sDisp)
         aPlugins = oHandler.getAvailablePlugins()
         
-        if (sReadDB != 'False'):
+        print aPlugins
+        
+        if (sReadDB != 'False' and aPlugins == True):
             meta = {}      
             meta['title'] = oHandler.getText()
             meta['disp'] = oHandler.getDisp()
