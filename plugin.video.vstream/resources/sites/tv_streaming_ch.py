@@ -38,7 +38,7 @@ ANIM_VOSTFRS = ('http://tv-streaming.ch/category/manga-vf/manga-vostfr/', 'showM
 
 DOC_DOCS = ('http://tv-streaming.ch/category/television/documentaire/', 'showMovies')
 
-SPORT_SPORTS = ('http://tv-streaming.ch/category/sport/', 'showMovies')
+SPORT_SPORTS = ('http://tv-streaming.ch/category/sport/', 'showReplay')
 
 REPLAYTV_REPLAYTV = ('http://', 'ReplayTV')
 
@@ -168,20 +168,20 @@ def showMovies(sSearch = ''):
    
     #print sUrl
      
-    #oRequestHandler = cRequestHandler(sUrl)
-    #sHtmlContent = oRequestHandler.request()
+    sHtmlContent = ''
 
     headers = {'User-Agent' : 'Mozilla 5.10'}
     request = urllib2.Request(sUrl,None,headers)
       
     try: 
         reponse = urllib2.urlopen(request)
+        sHtmlContent = reponse.read()
+        reponse.close()
+        
     except urllib2.HTTPError, e:
         print e.read()
         print e.reason
       
-    sHtmlContent = reponse.read()
-    reponse.close()
     
     #fh = open('c:\\test.txt', "w")
     ##fh.write(sHtmlContent)
