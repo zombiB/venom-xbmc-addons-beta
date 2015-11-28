@@ -398,29 +398,15 @@ class cHome:
         sDisp = oInputParameterHandler.getValue('disp')
 
         oHandler = cRechercheHandler()
-        aPlugins = oHandler.getAvailablePlugins(sDisp)
-        if not sSearchText:
-            sSearchText = oGui.showKeyBoard()
-            sSearchText = urllib.quote(sSearchText)
-        if (sSearchText != False):
-            if (sReadDB != 'False'):
-                meta = {}      
-                meta['title'] = sSearchText
-                meta['disp'] = sDisp
-                cDb().insert_history(meta)
-            #print aPlugins
-            for aPlugin in aPlugins:
-                    try:                   
-                        oOutputParameterHandler = cOutputParameterHandler()
-                        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-                        oGui.addDir(SITE_IDENTIFIER, 'showSearch', '[COLOR olive]'+ aPlugin[1] +'[/COLOR]', 'search.png', oOutputParameterHandler)
-                    
-                        exec "from resources.sites import "+aPlugin[1]+" as search"
-                        sUrl = aPlugin[0]+sSearchText
-                        searchUrl = "search.%s('%s')" % (aPlugin[2], sUrl)
-                        exec searchUrl
-                    except:       
-                        pass
-        else: return
+        oHandler.setText(sSearchText)
+        oHandler.setDisp(sDisp)
+        aPlugins = oHandler.getAvailablePlugins()
+        
+        if (sReadDB != 'False'):
+            meta = {}      
+            meta['title'] = oHandler.getText()
+            meta['disp'] = oHandler.getDisp()
+            cDb().insert_history(meta)
+
         oGui.setEndOfDirectory()
 

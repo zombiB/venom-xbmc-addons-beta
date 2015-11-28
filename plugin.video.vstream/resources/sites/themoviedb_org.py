@@ -450,6 +450,7 @@ def showActors():
             oOutputParameterHandler.addParameter('siteUrl', str(sUrl))
             oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail)) 
             
+            sName = sName.encode('utf-8')
             
             oGui.addMovieDB(SITE_IDENTIFIER, 'showActors', '[COLOR red]'+str(sName)+'[/COLOR]', '', sThumbnail, '', oOutputParameterHandler)
 
@@ -459,11 +460,15 @@ def showActors():
                     
                 except: sTitle = "Aucune information"
                 sId = e['id']
-                sFanart = FANART_URL+e['backdrop_path']
+                try:
+                    sFanart = FANART_URL+e['backdrop_path']
+                except:
+                    sFanart = ''
                                                                 
-                if sThumbnail:
+                try:
                     sThumbnail = POSTER_URL+e['poster_path']
-                else: sThumbnail = ''
+                except: 
+                    sThumbnail = ''
 
                 #sTitle = sTitle.encode("utf-8")
 
@@ -541,34 +546,11 @@ def VstreamSearch(sMovieTitle):
     
     #Type de recherche
     sDisp = oInputParameterHandler.getValue('disp')
-    disp = ['search1','search2','search3','search4']
-    #non defini => on demande
-    if (sDisp == 'none'):
-        dialog2 = xbmcgui.Dialog()
-        dialog_select = [cConfig().getSetting('search1_label'), cConfig().getSetting('search2_label'), cConfig().getSetting('search3_label'), cConfig().getSetting('search4_label')]
-
-        ret = dialog2.select('Select Recherche',dialog_select)
     
-    else:
-        ret = disp.index(sDisp)
-    
-    
-    if ret > -1:
-        
-        oHandler = cRechercheHandler()
-        aPlugins = oHandler.getAvailablePlugins(disp[ret])
-        for aPlugin in aPlugins:
-            try:                   
-                oOutputParameterHandler = cOutputParameterHandler()
-                oOutputParameterHandler.addParameter('siteUrl', sUrl)
-                oGui.addDir(aPlugin[1], 'load', '[COLOR olive]'+ aPlugin[1] +'[/COLOR]', 'search.png', oOutputParameterHandler)
-                
-                exec "from resources.sites import "+aPlugin[1]+" as search"        
-                sUrl = aPlugin[0]+sMovieTitle
-                searchUrl = "search.%s('%s')" % (aPlugin[2], sUrl)
-                exec searchUrl
-            except:       
-                pass
+    oHandler = cRechercheHandler()
+    oHandler.setText(sMovieTitle)
+    oHandler.setDisp(sDisp)
+    aPlugins = oHandler.getAvailablePlugins()
                 
     oGui.setEndOfDirectory()
     

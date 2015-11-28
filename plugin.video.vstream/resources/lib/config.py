@@ -219,6 +219,10 @@ class cConfig():
         
     def WindowsBoxes(self, sFileName, num):
         
+        if self.getSetting('meta-view') == 'true':
+            xbmc.executebuiltin("Action(Info)")
+            return
+        
         if num == "1":
             try:
                 from metahandler import metahandlers
@@ -235,6 +239,9 @@ class cConfig():
             except:
                 xbmc.executebuiltin("Action(Info)")
                 return
+        else:
+            xbmc.executebuiltin("Action(Info)")
+            return
                 
         class XMLDialog(xbmcgui.WindowXMLDialog):
             """

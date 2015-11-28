@@ -166,9 +166,13 @@ class cGui():
         oGuiElement.setFunction(sFunction)
         oGuiElement.setTitle(sLabel)
         oGuiElement.setIcon(sIcon)
-        oGuiElement.setMeta(0)
+        oGuiElement.setMeta(1)
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setFanart(sFanart)
+        
+        if oOutputParameterHandler.getValue('sMovieTitle'):
+            sTitle = oOutputParameterHandler.getValue('sMovieTitle')
+            oGuiElement.setFileName(sTitle)
         
         self.addFolder(oGuiElement, oOutputParameterHandler)
         
@@ -180,9 +184,13 @@ class cGui():
         oGuiElement.setFunction(sFunction)
         oGuiElement.setTitle(sLabel)
         oGuiElement.setIcon(sIcon)
-        oGuiElement.setMeta(0)
+        oGuiElement.setMeta(2)
         oGuiElement.setThumbnail(sThumbnail)
         oGuiElement.setFanart(sFanart)
+        
+        if oOutputParameterHandler.getValue('sMovieTitle'):
+            sTitle = oOutputParameterHandler.getValue('sMovieTitle')
+            oGuiElement.setFileName(sTitle)
         
         self.addFolder(oGuiElement, oOutputParameterHandler)
 
@@ -361,10 +369,7 @@ class cGui():
         oContext.setFile('cGui')
         oContext.setSiteName(oGuiElement.getSiteName())
         #oGuiElement.getImdb()
-        if cConfig().getSetting('meta-view') == 'true':
-            oContext.setFunction('viewinfo2')
-        else:
-            oContext.setFunction('viewinfo')
+        oContext.setFunction('viewinfo')
         oContext.setTitle('[COLOR azure]Information[/COLOR]')
 
         oOutputParameterHandler = cOutputParameterHandler()
@@ -625,15 +630,15 @@ class cGui():
         ui = cConfig().WindowsBoxes(sFileName, sMeta)      
         
         
-    def viewinfo2(self):
+    # def viewinfo2(self):
  
-        oInputParameterHandler = cInputParameterHandler()
+        # oInputParameterHandler = cInputParameterHandler()
 
-        sTitle = oInputParameterHandler.getValue('sTitle')
-        sId = oInputParameterHandler.getValue('sId')
-        sFileName = oInputParameterHandler.getValue('sFileName')          
+        # sTitle = oInputParameterHandler.getValue('sTitle')
+        # sId = oInputParameterHandler.getValue('sId')
+        # sFileName = oInputParameterHandler.getValue('sFileName')          
         
-        xbmc.executebuiltin("Action(Info)")
+        # xbmc.executebuiltin("Action(Info)")
         
     def direct_epg(self):
         oGuiElement = cGuiElement()
