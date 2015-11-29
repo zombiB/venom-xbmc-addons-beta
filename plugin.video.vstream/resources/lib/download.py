@@ -96,7 +96,7 @@ class cDownloadProgressBar(threading.Thread):
         
         #mise a jour pour info taille
         self.__updatedb(TotDown,iTotalSize)
-        cConfig().showInfo('vStream', 'Téléchargement Démarrer')
+        cConfig().showInfo('vStream', 'Téléchargement Démarré')
         
         while not (self.processIsCanceled or diag.isFinished()):
             
