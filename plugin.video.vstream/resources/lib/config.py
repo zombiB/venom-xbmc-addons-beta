@@ -217,7 +217,7 @@ class cConfig():
                 return
         TextBox()
         
-    def WindowsBoxes(self, sFileName, num):
+    def WindowsBoxes(self, sFileName, num,year = ''):
         
         if self.getSetting('meta-view') == 'true':
             xbmc.executebuiltin("Action(Info)")
@@ -236,10 +236,14 @@ class cConfig():
                 from metahandler import metahandlers
                 grab = metahandlers.MetaData(preparezip=False)
                 meta = grab.get_meta('tvshow',sFileName)
+                print meta
+                print sFileName
             except:
                 xbmc.executebuiltin("Action(Info)")
                 return
-        if not meta['tmdb_id']:
+        
+        #if not meta['tmdb_id']:
+        if ('tmdb_id' not in meta) and ('tvdb_id'not in meta):
             xbmc.executebuiltin("Action(Info)")
             return
                 
