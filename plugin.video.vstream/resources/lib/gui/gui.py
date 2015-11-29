@@ -368,7 +368,6 @@ class cGui():
         oContext = cContextElement()
         oContext.setFile('cGui')
         oContext.setSiteName(oGuiElement.getSiteName())
-        #oGuiElement.getImdb()
         oContext.setFunction('viewinfo')
         oContext.setTitle('[COLOR azure]Information[/COLOR]')
 

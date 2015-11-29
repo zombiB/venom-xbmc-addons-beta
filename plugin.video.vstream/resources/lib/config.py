@@ -239,7 +239,7 @@ class cConfig():
             except:
                 xbmc.executebuiltin("Action(Info)")
                 return
-        else:
+        if not meta['tmdb_id']:
             xbmc.executebuiltin("Action(Info)")
             return
                 
@@ -260,8 +260,7 @@ class cConfig():
                 # self.close()
 
             def onInit(self):
-                #par default le resumer#
-                #print meta
+                #par default le resumer#                    
                 self.getControl(50).setVisible(False)
                 #title
                 #self.getControl(1).setLabel(meta['title'])

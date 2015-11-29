@@ -17,7 +17,7 @@ class cGuiElement:
         self.__sPlaycount = 0
         self.__sTrailerUrl = ''
         self.__sMetaAddon = cConfig().getSetting('meta-view')
-        self.__sImdb = ''
+        self.__sTmdb = ''
         self.__sMediaUrl = ''
         self.__sSiteUrl = ''
         self.__sTitle = ''
@@ -58,11 +58,11 @@ class cGuiElement:
     def getType(self):
         return self.__sType
         
-    def setImdb(self, sImdb):
-        self.__sImdb = sImdb
+    def setTmdb(self, sTmdb):
+        self.__sTmdb = sTmdb
 
-    def getImdb(self):
-        return self.__sImdb
+    def getTmdb(self):
+        return self.__sTmdb
         
     def setCat(self, sCat):
         self.__sCat = sCat
