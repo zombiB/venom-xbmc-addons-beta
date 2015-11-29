@@ -169,20 +169,10 @@ def showMovies(sSearch = ''):
     #print sUrl
      
     sHtmlContent = ''
-
-    headers = {'User-Agent' : 'Mozilla 5.10'}
-    request = urllib2.Request(sUrl,None,headers)
       
-    try: 
-        reponse = urllib2.urlopen(request)
-        sHtmlContent = reponse.read()
-        reponse.close()
-        
-    except urllib2.HTTPError, e:
-        print e.read()
-        print e.reason
+    oRequestHandler = cRequestHandler(sUrl)
+    sHtmlContent = oRequestHandler.request()
       
-    
     #fh = open('c:\\test.txt', "w")
     ##fh.write(sHtmlContent)
     #fh.close()
