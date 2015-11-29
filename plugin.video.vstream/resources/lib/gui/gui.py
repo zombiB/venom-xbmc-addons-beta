@@ -14,6 +14,36 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 import urllib
+import unicodedata,re
+
+def CleanName(str):
+    
+    #vire accent et '\'
+    try:
+        str = unicode(str, 'utf-8')#converti en unicode pour aider aux convertions
+    except:
+        pass
+    str = unicodedata.normalize('NFD', str).encode('ascii', 'ignore').decode("unicode_escape")
+    str = str.encode("utf-8") #on repasse en utf-8
+    
+    #vire tag
+    str = re.sub('[\(\[].+?[\)\]]','', str)
+    #vire caractere special
+    str = re.sub("[^a-zA-Z0-9 ]", "",str)
+    #tout en minuscule
+    str = str.lower()
+    #vire espace double
+    str = re.sub(' +',' ',str)
+
+    #vire espace a la fin
+    if str.endswith(' '):
+        str = str[:-1]
+        
+
+    return str
+
+
+
 class cGui():
 
     SITE_NAME = 'cGui'
@@ -623,10 +653,18 @@ class cGui():
         sTitle = oInputParameterHandler.getValue('sTitle')
         sId = oInputParameterHandler.getValue('sId')
         sFileName = oInputParameterHandler.getValue('sFileName')
+        sYear = oInputParameterHandler.getValue('sYear')
         sMeta = oInputParameterHandler.getValue('sMeta')
  
         #1 film #2serie
-        ui = cConfig().WindowsBoxes(sFileName, sMeta)      
+        sCleanTitle = CleanName(sTitle)
+        
+        #on vire saison et episode
+        sCleanTitle = re.sub('(?i).pisode [0-9]+', '',sCleanTitle)
+        sCleanTitle = re.sub('(?i)saison [0-9]+', '',sCleanTitle)
+        sCleanTitle = re.sub('(?i)S[0-9]+E[0-9]+', '',sCleanTitle)
+        
+        ui = cConfig().WindowsBoxes(sCleanTitle, sMeta,sYear)      
         
         
     # def viewinfo2(self):
