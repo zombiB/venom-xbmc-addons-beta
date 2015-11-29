@@ -84,7 +84,7 @@ class cDownloadProgressBar(threading.Thread):
 
         headers = self.oUrlHandler.info()
         
-        print headers
+        #print headers
         
         iTotalSize = -1
         if "content-length" in headers:
@@ -306,7 +306,6 @@ class cDownload:
             return sTitle
         
         #recherche d'une extension
-        print sUrl
         sUrl = sUrl.lower()
         m = re.search('(flv|avi|mp4|mpg|mpeg)', sUrl)
         if m:
@@ -334,7 +333,7 @@ class cDownload:
         xbmcplugin.addDirectoryItem(sPluginHandle,sItemUrl,item,isFolder=False)
         
         oOutputParameterHandler = cOutputParameterHandler()
-        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Arreter la liste', 'download.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'StopDownloadList', 'Arreter les Téléchargements', 'download.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oGui.addDir(SITE_IDENTIFIER, 'getDownloadList', 'Liste de Téléchargement', 'download.png', oOutputParameterHandler)
@@ -345,9 +344,11 @@ class cDownload:
     def dummy(self):
         return
     
-    def StartDownloadOneFile(self):
-        data = self.GetOnefile()
-        self.StartDownload(data)
+    def StartDownloadOneFile(self,meta = []):
+        if not meta:
+            meta = self.GetOnefile()
+
+        self.StartDownload(meta)
         
     def ReadDownload(self):
         oInputParameterHandler = cInputParameterHandler()
@@ -450,6 +451,8 @@ class cDownload:
         
         #On remet tout les status a 0 ou 2
         cDb().Cancel_download()
+        
+        cConfig().update()
   
         return
 
@@ -496,7 +499,11 @@ class cDownload:
                 thumbnail = "mark.png"
 
             oGuiElement.setSiteName(SITE_IDENTIFIER)
-            oGuiElement.setFunction('ReadDownload')
+            if status == '2':
+                oGuiElement.setFunction('ReadDownload')
+            else:
+                #oGuiElement.setFunction('StartDownloadOneFile') #marche pas a cause de fenetre xbmc
+                oGuiElement.setFunction('ReadDownload')
             oGuiElement.setTitle(sTitle)
             oGuiElement.setIcon('download.png')
             oGuiElement.setFanart(cConfig().getRootArt()+'download_fanart.jpg')
@@ -566,9 +573,10 @@ class cDownload:
                     cDb().insert_download(meta)
                     
                     #telechargement direct ou pas ?
-                    if not self.isDownloading():
-                        self.StartDownloadList()
-                    
+                    if not self.isDownloading(): 
+                        row = cDb().get_Download(meta)
+                        if row:
+                            self.StartDownloadOneFile(row[0])
                 except:
                     #print_exc()
                     cConfig().showInfo('Telechargement impossible', sTitle)
