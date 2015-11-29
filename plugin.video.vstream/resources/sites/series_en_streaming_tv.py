@@ -96,7 +96,9 @@ def AlphaDisplay():
             sTitle = aEntry[1]
             sTitle = cUtil().unescape(sTitle)
             sTitle = cUtil().removeHtmlTags(sTitle)
-            sTitle = sTitle.encode( "utf-8")            
+            sTitle = unicode(sTitle, 'utf-8')
+            sTitle = unicodedata.normalize('NFD', sTitle).encode('ascii', 'ignore')
+            sTitle = sTitle.encode( "utf-8")           
 
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', aEntry[0])
@@ -168,7 +170,9 @@ def showMovies(sSearch = ''):
             sTitle = aEntry[2]
             sTitle = cUtil().unescape(sTitle)
             sTitle = cUtil().removeHtmlTags(sTitle)
-            sTitle = sTitle.encode( "utf-8")
+            sTitle = unicode(sTitle, 'utf-8')
+            sTitle = unicodedata.normalize('NFD', sTitle).encode('ascii', 'ignore')
+            sTitle = sTitle.encode( "utf-8")  
             
             #sDisplayTitle = cUtil().DecoTitle(sTitle)
            
