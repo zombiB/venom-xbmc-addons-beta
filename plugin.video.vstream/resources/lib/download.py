@@ -57,6 +57,7 @@ class cDownloadProgressBar(threading.Thread):
         self.processIsCanceled = False
         self.oUrlHandler = None
         self.file = None
+        self.__oDialog = None
         
             
         #queue = self.Memorise.get("SimpleDownloaderQueue")
@@ -218,6 +219,10 @@ class cDownloadProgressBar(threading.Thread):
         Memorise.set('SimpleDownloaderQueue', '0')
         #self.Memorise.set("VstreamDownloaderWorking", "0")
         xbmcgui.Window(10101).setProperty('arret', '1')
+        try:
+            self.__oDialog.close()
+        except:
+            pass
                 
         return
         
@@ -441,6 +446,7 @@ class cDownload:
         #WINDOW_PROGRESS.close()        
         #xbmcgui.Window(10101).setProperty('arret', '1')
         #xbmc.executebuiltin("Dialog.Close(%s, true)" % 10101)
+        #xbmc.getCondVisibility('Window.IsActive(10101)'))
         
         #thread actif
         if xbmcgui.Window(10101).getProperty('arret') == '0':
