@@ -236,14 +236,12 @@ class cConfig():
                 from metahandler import metahandlers
                 grab = metahandlers.MetaData(preparezip=False)
                 meta = grab.get_meta('tvshow',sFileName)
-                print meta
-                print sFileName
             except:
                 xbmc.executebuiltin("Action(Info)")
                 return
         
-        #if not meta['tmdb_id']:
-        if ('tmdb_id' not in meta) and ('tvdb_id'not in meta):
+
+        if (not meta['imdb_id']):
             xbmc.executebuiltin("Action(Info)")
             return
                 
