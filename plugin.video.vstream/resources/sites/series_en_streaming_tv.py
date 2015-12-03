@@ -28,6 +28,16 @@ SERIE_SERIES = ('http://www.series-en-streaming.tv/liste/', 'AlphaSearch')
 URL_SEARCH = (URL_MAIN + 'search/', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
 
+def CleanTitle(title):
+    title = cUtil().unescape(title)
+    title = cUtil().removeHtmlTags(title)
+    try:
+        title = unicode(title, 'utf-8')
+    except:
+        pass
+    title = unicodedata.normalize('NFD', title).encode('ascii', 'ignore')
+    return title.encode( "utf-8")
+
 def load():
     oGui = cGui()
  
@@ -93,13 +103,8 @@ def AlphaDisplay():
             if dialog.iscanceled():
                 break
                 
-            sTitle = aEntry[1]
-            sTitle = cUtil().unescape(sTitle)
-            sTitle = cUtil().removeHtmlTags(sTitle)
-            sTitle = unicode(sTitle, 'utf-8')
-            sTitle = unicodedata.normalize('NFD', sTitle).encode('ascii', 'ignore')
-            sTitle = sTitle.encode( "utf-8")           
-
+            sTitle = CleanTitle(aEntry[1])
+            
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', aEntry[0])
             oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
@@ -167,12 +172,7 @@ def showMovies(sSearch = ''):
             #sTitle = sTitle.encode( "utf-8")
             #sTitle = sTitle.encode('ascii', 'ignore').decode('ascii')
             
-            sTitle = aEntry[2]
-            sTitle = cUtil().unescape(sTitle)
-            sTitle = cUtil().removeHtmlTags(sTitle)
-            sTitle = unicode(sTitle, 'utf-8')
-            sTitle = unicodedata.normalize('NFD', sTitle).encode('ascii', 'ignore')
-            sTitle = sTitle.encode( "utf-8")  
+            sTitle = CleanTitle(aEntry[2])
             
             #sDisplayTitle = cUtil().DecoTitle(sTitle)
            
