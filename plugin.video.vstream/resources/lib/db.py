@@ -272,7 +272,7 @@ class cDb:
         try:    
             self.dbcur.execute(sql_select)
             self.db.commit()
-            cConfig().showInfo('vStream', 'Favoris supprimer')
+            cConfig().showInfo('vStream', 'Favoris supprimé')
             cConfig().update()
             return False, False
         except Exception, e:
