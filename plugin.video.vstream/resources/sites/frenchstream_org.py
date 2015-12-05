@@ -25,8 +25,10 @@ MOVIE_COMMENTS = ('http://frenchstream.org/les-plus-commentes/', 'showMovies')
 MOVIE_NOTES = ('http://frenchstream.org/les-mieux-notes/', 'showMovies')
 MOVIE_GENRES = ('http://frenchstream.org/films-par-genre/', 'showGenre')
 
-SERIE_SERIES = ('http://frenchstream.org/tv-series/', 'showMovies')
-SERIE_NEWS = ('http://frenchstream.org/tv-series/', 'showMovies')
+#SERIE_SERIES = ('http://frenchstream.org/tv-series/', 'showMovies')
+#SERIE_NEWS = ('http://frenchstream.org/tv-series/', 'showMovies')
+
+ANIM_ANIMS = ('http://frenchstream1.com/mangas-anime', 'showMovies')
 
 URL_SEARCH = ('http://frenchstream.org/?s=', 'showMovies')
 FUNCTION_SEARCH = 'showMovies'
@@ -75,12 +77,12 @@ def load():
     oGui.addDir(SITE_IDENTIFIER, 'showLag', 'Films Langues', 'films.png', oOutputParameterHandler)
         
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
+    oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
     oGui.addDir(SITE_IDENTIFIER, 'showPlt', 'Films Plateforme', 'films.png', oOutputParameterHandler)
     
     oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', SERIE_SERIES[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', 'Series Nouveautés', 'series.png', oOutputParameterHandler)
+    oOutputParameterHandler.addParameter('siteUrl', ANIM_ANIMS[0])
+    oGui.addDir(SITE_IDENTIFIER, ANIM_ANIMS[1], 'Animes', 'series.png', oOutputParameterHandler)
     
             
     oGui.setEndOfDirectory()
@@ -470,6 +472,8 @@ def showMovies(sSearch = ''):
             oOutputParameterHandler.addParameter('sMovieTitle', str(aEntry[2]))
             oOutputParameterHandler.addParameter('sThumbnail', str(aEntry[1]))
             if '/tv-series' in sUrl or '/tv-series' in aEntry[0]:
+                oGui.addTV(SITE_IDENTIFIER, 'showSeries', aEntry[2],'', aEntry[1], '', oOutputParameterHandler)
+            elif '/mangas-anime' in sUrl or '/mangas-anime' in aEntry[0]:
                 oGui.addTV(SITE_IDENTIFIER, 'showSeries', aEntry[2],'', aEntry[1], '', oOutputParameterHandler)
             else:
                 oGui.addMovie(SITE_IDENTIFIER, 'showLinks', aEntry[2], '', aEntry[1], '', oOutputParameterHandler)           
