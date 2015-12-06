@@ -300,15 +300,10 @@ def showSeriesSaison():
     sUrl = API_URL+'/tv/' + sId
     
     oGui = cGui()
-
-    iPage = 1
-    if (oInputParameterHandler.exist('page')):
-        iPage = oInputParameterHandler.getValue('page')
    
     oRequestHandler = cRequestHandler(sUrl)
     oRequestHandler.addParameters('api_key', API_KEY)
     oRequestHandler.addParameters('language', 'fr')
-    oRequestHandler.addParameters('page', iPage)
 
     sHtmlContent = oRequestHandler.request()
     result = json.loads(sHtmlContent)
@@ -336,12 +331,6 @@ def showSeriesSaison():
             
             oGui.addTVDB(SITE_IDENTIFIER, 'showSeriesEpisode', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
             
-        if (iPage > 0):
-            iNextPage = int(iPage) + 1
-            oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', sUrl)
-            oOutputParameterHandler.addParameter('page', iNextPage)
-            oGui.addDir(SITE_IDENTIFIER, 'showSeriesSaison', '[COLOR teal]Page '+str(iNextPage)+' >>>[/COLOR]', 'next.png', oOutputParameterHandler)
 
     #test pr chnagement mode
     xbmc.executebuiltin('Container.SetViewMode(500)')         
@@ -362,15 +351,10 @@ def showSeriesEpisode():
     sUrl = API_URL+'/tv/' + sId + '/season/' + sSeason
     
     oGui = cGui()
-
-    iPage = 1
-    if (oInputParameterHandler.exist('page')):
-        iPage = oInputParameterHandler.getValue('page')
    
     oRequestHandler = cRequestHandler(sUrl)
     oRequestHandler.addParameters('api_key', API_KEY)
     oRequestHandler.addParameters('language', 'fr')
-    oRequestHandler.addParameters('page', iPage)
 
     sHtmlContent = oRequestHandler.request()
     result = json.loads(sHtmlContent)
@@ -403,12 +387,6 @@ def showSeriesEpisode():
             
             oGui.addTVDB(SITE_IDENTIFIER, 'showHosters', sTitle, 'series.png', sThumbnail, sFanart, oOutputParameterHandler)
             
-        if (iPage > 0):
-            iNextPage = int(iPage) + 1
-            oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', sUrl)
-            oOutputParameterHandler.addParameter('page', iNextPage)
-            oGui.addDir(SITE_IDENTIFIER, 'showSeriesEpisode', '[COLOR teal]Page '+str(iNextPage)+' >>>[/COLOR]', 'next.png', oOutputParameterHandler)
 
     #test pr chnagement mode
     xbmc.executebuiltin('Container.SetViewMode(50)')         
