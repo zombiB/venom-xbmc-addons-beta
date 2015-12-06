@@ -343,10 +343,12 @@ class cHome:
         sLabel4 = cConfig().getlanguage(30091)+": "+cConfig().getSetting('search4_label')
         oGui.addDir(SITE_IDENTIFIER, 'searchMovie', sLabel4, 'search.png', oOutputParameterHandler)
         
+        
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-        oGui.addDir('alluc_ee', 'showSearch', '[COLOR orange]Recherche: Alluc_ee[/COLOR]', 'search.png', oOutputParameterHandler)
-        
+        oOutputParameterHandler.addParameter('disp', 'search10')
+        oOutputParameterHandler.addParameter('readdb', readdb)
+        oGui.addDir(SITE_IDENTIFIER, 'searchMovie', '[COLOR orange]Recherche: Alluc_ee[/COLOR]', 'search.png', oOutputParameterHandler)
         
         #history
         if (cConfig().getSetting("history-view") == 'true'):
@@ -411,8 +413,6 @@ class cHome:
         oHandler.setText(sSearchText)
         oHandler.setDisp(sDisp)
         aPlugins = oHandler.getAvailablePlugins()
-        
-        print aPlugins
         
         if (sReadDB != 'False' and aPlugins == True):
             meta = {}      

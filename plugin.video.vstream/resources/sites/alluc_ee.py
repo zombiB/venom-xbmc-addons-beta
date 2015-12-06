@@ -17,8 +17,8 @@ SITE_DESC = 'Moteur de recherche alluc'
 
 URL_MAIN = 'http://www.alluc.ee/'
 
-#URL_SEARCH = ('http://www.notre-ecole.net/?s=', 'showMovies')
-#FUNCTION_SEARCH = 'showMovies'
+URL_SEARCH = ('http://www.alluc.ee/stream/lang%3Afr+', 'showMovies')
+FUNCTION_SEARCH = 'showMovies'
     
 def load():
    
