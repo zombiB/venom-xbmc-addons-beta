@@ -29,13 +29,14 @@
 		<setting id="plugin_full_stream_org" type="bool" label="Full Stream (Films, Séries)" default="true"/>
 		<setting id="plugin_full_streamvk_com" type="bool" label="Full Streamvk.com (Films)" default="true"/>
 		<setting id="plugin_fullmoviz_org" type="bool" label="FullMoviz (Films)" default="true"/>
-		<setting id="plugin_lestream_net" type="bool" label="leStream.net (Films)" default="true"/>
+
 		<setting id="plugin_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="true"/>
 		<setting id="plugin_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="true"/>
 		<setting id="plugin_poypi_com" type="bool" label="Poypi.com (Films)" default="true"/>
 		<setting id="plugin_regarder_films" type="bool" label="Regarder.films (Séries)" default="true"/>
 		<setting id="plugin_reportagestv_com" type="bool" label="ReportagesTV (Documentaires)" default="true"/>
 		<setting id="plugin_seriefr_com" type="bool" label="Seriefr.com (Séries)" default="true"/>
+		<setting id="plugin_series_en_streaming_tv" type="bool" label="Series En Streaming.tv (Séries)" default="true"/>
 		<setting id="plugin_streaming_series_org" type="bool" label="StreamingSeries.org (Séries)" default="true"/>
 		<setting id="plugin_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="true"/>
 		<setting id="plugin_streamingk_com" type="bool" label="StreamingK.com (Films, Séries, Animes)" default="true"/>
@@ -68,13 +69,13 @@
 		<setting id="search1_full_stream_org" type="bool" label="Full Stream (Films, Séries)" default="false"/>
 		<setting id="search1_full_streamvk_com" type="bool" label="Full Streamvk.com (Films)" default="false"/>
 		<setting id="search1_fullmoviz_org" type="bool" label="FullMoviz (Films)" default="true"/>
-		<setting id="search1_lestream_net" type="bool" label="leStream.net (Films)" default="false"/>
 		<setting id="search1_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="true"/>		
 		<setting id="search1_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="false"/>
 		<setting id="search1_poypi_com" type="bool" label="Poypi.com (Films)" default="true"/>
 		<setting id="search1_regarder_films" type="bool" label="Regarder.films (Séries)" default="false"/>
 		<setting id="search1_reportagestv_com" type="bool" label="ReportagesTV (Documentaires)" default="false"/>
 		<setting id="search1_seriefr_com" type="bool" label="Seriefr.com (Séries)" default="false"/>
+		<setting id="search1_series_en_streaming_tv" type="bool" label="Series En Streaming.tv (Séries)" default="false"/>
 		<setting id="search1_streaming_series_org" type="bool" label="StreamingSeries.org (Séries)" default="false"/>
 		<setting id="search1_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false"/>
 		<setting id="search1_streamingk_com" type="bool" label="StreamingK.com (Films, Séries, Animes)" default="true"/>
@@ -103,13 +104,13 @@
 		<setting id="search2_full_stream_org" type="bool" label="Full Stream (Films, Séries)" default="false"/>
 		<setting id="search2_full_streamvk_com" type="bool" label="Full Streamvk.com (Films)" default="false"/>
 		<setting id="search2_fullmoviz_org" type="bool" label="FullMoviz (Films)" default="false"/>
-		<setting id="search2_lestream_net" type="bool" label="leStream.net (Films)" default="false"/>
 		<setting id="search2_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="true"/>
 		<setting id="search2_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="false"/>
 		<setting id="search2_poypi_com" type="bool" label="Poypi.com (Films)" default="false"/>
 		<setting id="search2_regarder_films" type="bool" label="Regarder.films (Séries)" default="false"/>
 		<setting id="search2_reportagestv_com" type="bool" label="ReportagesTV (Documentaires)" default="false"/>
 		<setting id="search2_seriefr_com" type="bool" label="Seriefr.com (Séries)" default="true"/>
+		<setting id="search2_series_en_streaming_tv" type="bool" label="Series En Streaming.tv (Séries)" default="true"/>
 		<setting id="search2_streaming_series_org" type="bool" label="StreamingSeries.org (Séries)" default="true"/>
 		<setting id="search2_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false"/>
 		<setting id="search2_streamingk_com" type="bool" label="StreamingK.com (Films, Séries, Animes)" default="true"/>
@@ -139,13 +140,13 @@
 		<setting id="search3_full_stream_org" type="bool" label="Full Stream (Films, Séries)" default="false"/>
 		<setting id="search3_full_streamvk_com" type="bool" label="Full Streamvk.com (Films)" default="false"/>
 		<setting id="search3_fullmoviz_org" type="bool" label="FullMoviz (Films)" default="false"/>
-		<setting id="search3_lestream_net" type="bool" label="leStream.net (Films)" default="false"/>
 		<setting id="search3_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="false"/>
 		<setting id="search3_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="true"/>
 		<setting id="search3_poypi_com" type="bool" label="Poypi.com (Films)" default="false"/>
 		<setting id="search3_regarder_films" type="bool" label="Regarder.films (Séries)" default="false"/>
 		<setting id="search3_reportagestv_com" type="bool" label="ReportagesTV (Documentaires)" default="false"/>
 		<setting id="search3_seriefr_com" type="bool" label="Seriefr.com (Séries)" default="false"/>
+		<setting id="search3_series_en_streaming_tv" type="bool" label="Series En Streaming.tv (Séries)" default="false"/>
 		<setting id="search3_streaming_series_org" type="bool" label="StreamingSeries.org (Séries)" default="false"/>
 		<setting id="search3_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false"/>
 		<setting id="search3_streamingk_com" type="bool" label="StreamingK.com (Films, Séries, Animes)" default="true"/>
@@ -175,13 +176,13 @@
 		<setting id="search4_full_stream_org" type="bool" label="Full Stream (Films, Séries)" default="false"/>
 		<setting id="search4_full_streamvk_com" type="bool" label="Full Streamvk.com (Films)" default="false"/>
 		<setting id="search4_fullmoviz_org" type="bool" label="FullMoviz (Films)" default="false"/>
-		<setting id="search4_lestream_net" type="bool" label="leStream.net (Films)" default="false"/>
 		<setting id="search4_libre_stream_org" type="bool" label="Libre-stream.org (Films, séries)" default="false"/>
 		<setting id="search4_mangacity_org" type="bool" label="Mangacity.org (Animes)" default="false"/>
 		<setting id="search4_poypi_com" type="bool" label="Poypi.com (Films)" default="false"/>
 		<setting id="search4_regarder_films" type="bool" label="Regarder.films (Séries)" default="false"/>
 		<setting id="search4_reportagestv_com" type="bool" label="ReportagesTV (Documentaires)" default="true"/>
 		<setting id="search4_seriefr_com" type="bool" label="Seriefr.com (Séries)" default="false"/>
+		<setting id="search4_series_en_streaming_tv" type="bool" label="Series En Streaming.tv (Séries)" default="false"/>
 		<setting id="search4_streaming_series_org" type="bool" label="StreamingSeries.org (Séries)" default="false"/>
 		<setting id="search4_streamingfilms_fr" type="bool" label="StreamingFilms.fr (Films)" default="false"/>
 		<setting id="search4_streamingk_com" type="bool" label="StreamingK.com (Films, Séries, Animes)" default="false"/>
