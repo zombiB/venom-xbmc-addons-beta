@@ -11,6 +11,8 @@ from resources.lib.config import cConfig #config
 from resources.lib.parser import cParser #recherche de code
 from resources.lib.util import cUtil
 import re
+
+from resources.lib.sucuri import SucurieBypass
  
  
 SITE_IDENTIFIER = 'film_illimit_fr' #identifant nom de votre fichier remplacer les espaces et les . par _ aucun caractere speciale
@@ -129,11 +131,10 @@ def showMovies(sSearch = ''):
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
     
-    oRequestHandler = cRequestHandler(sUrl)
-    sHtmlContent = oRequestHandler.request()
+    sHtmlContent = SucurieBypass().GetHtml(sUrl)
     
-
     sPattern = '<div class="item"><a href="([^<]+)">.+?<img src="(.+?)" alt="(.+?)" />.+?<span class="calidad2">(.+?)</span>'
+    #sPattern = '<div class="item">.*<a href="([^<]+)">.+?<img src="(.+?)" alt="(.+?)" \/>.+?<span class="calidad2">(.+?)<\/span>'
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
    
@@ -151,8 +152,15 @@ def showMovies(sSearch = ''):
                 
             sName = aEntry[2].replace(' en Streaming HD','')
             sName = sName.replace(' Streaming HD','')
+            sName = cUtil().unescape(sName)
+            try:
+                sName = sName.encode("utf-8")
+            except:
+                pass
+            print '******************'
+            print sName
             
-            sTitle = sName + ' [COLOR coral] '+aEntry[3]+'[/COLOR]'
+            sTitle = sName + ' [COLOR coral] ' + aEntry[3] + '[/COLOR]'
             sUrl = aEntry[0].replace('http://official-film-illimité.fr', 'http://xn--official-film-illimit-v5b.fr')
             sThumbnail = aEntry[1].replace('http://official-film-illimité.fr', 'http://xn--official-film-illimit-v5b.fr')
 
@@ -197,8 +205,12 @@ def showHosters():
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
  
-    oRequestHandler = cRequestHandler(sUrl)
-    sHtmlContent = oRequestHandler.request()
+    sHtmlContent = SucurieBypass().GetHtml(sUrl)
+    
+    fh = open('c:\\test.txt', "w")
+    fh.write(sHtmlContent)
+    fh.close()
+    
     sHtmlContent = sHtmlContent.replace('<iframe width="420" height="315" src="https://www.youtube.com/', '')
     sPattern = '<iframe.+?src="(.+?)"'
     
@@ -227,8 +239,8 @@ def serieHosters():
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
  
-    oRequestHandler = cRequestHandler(sUrl)
-    sHtmlContent = oRequestHandler.request()
+    sHtmlContent = SucurieBypass().GetHtml(sUrl)
+
     sHtmlContent = sHtmlContent.replace('<iframe width="420" height="315" src="https://www.youtube.com/', '')
     sPattern = '<div class="su-tabs-pane su-clearfix"><iframe src="(.+?)"[^<>]+?><\/iframe><\/div>'
     
