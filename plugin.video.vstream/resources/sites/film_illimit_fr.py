@@ -157,8 +157,6 @@ def showMovies(sSearch = ''):
                 sName = sName.encode("utf-8")
             except:
                 pass
-            print '******************'
-            print sName
             
             sTitle = sName + ' [COLOR coral] ' + aEntry[3] + '[/COLOR]'
             sUrl = aEntry[0].replace('http://official-film-illimité.fr', 'http://xn--official-film-illimit-v5b.fr')
