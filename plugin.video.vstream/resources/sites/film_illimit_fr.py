@@ -207,9 +207,9 @@ def showHosters():
  
     sHtmlContent = SucurieBypass().GetHtml(sUrl)
     
-    fh = open('c:\\test.txt', "w")
-    fh.write(sHtmlContent)
-    fh.close()
+    #fh = open('c:\\test.txt', "w")
+    #fh.write(sHtmlContent)
+    #fh.close()
     
     sHtmlContent = sHtmlContent.replace('<iframe width="420" height="315" src="https://www.youtube.com/', '')
     sPattern = '<iframe.+?src="(.+?)"'
